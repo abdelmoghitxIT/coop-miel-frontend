@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import FormulaireCommande from './FormulaireCommande';
+
 const CATEGORIES = [
   { id: "tous", label: "Tous les produits" },
   { id: "miels", label: "Miels" },
@@ -143,9 +144,9 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
           </div>
           <button
             onClick={() => {
-  if (!utilisateur) onDemanderConnexion();
-  else onCommander();
-}}
+              if (!utilisateur) onDemanderConnexion();
+              else onCommander();
+            }}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
               background: "#b45309", color: "white", fontWeight: "700",
@@ -170,11 +171,13 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
   const [panierOuvert, setPanierOuvert] = useState(false);
   const [produits, setProduits] = useState([]);
   const [chargement, setChargement] = useState(true);
-const [commandeEnCours, setCommandeEnCours] = useState(false);
-const [commandeConfirmee, setCommandeConfirmee] = useState(null);
+  const [commandeEnCours, setCommandeEnCours] = useState(false);
+  const [commandeConfirmee, setCommandeConfirmee] = useState(null);
+
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
-    fetch("process.env.REACT_APP_API_URL/api/produits")
+    fetch(`${API_URL}/api/produits`)
       .then((res) => res.json())
       .then((data) => {
         setProduits(data);
@@ -184,7 +187,7 @@ const [commandeConfirmee, setCommandeConfirmee] = useState(null);
         console.error("Erreur:", err);
         setChargement(false);
       });
-  }, []);
+  }, [API_URL]);
 
   const ajouterAuPanier = (produit) => {
     setPanier((prev) => {
@@ -247,6 +250,18 @@ const [commandeConfirmee, setCommandeConfirmee] = useState(null);
               <span style={{ fontSize: "14px", color: "#6b6055" }}>
                 Bonjour, {utilisateur.nom} 👋
               </span>
+              {utilisateur?.role === 'admin' && (
+                <button
+                  onClick={onDashboard}
+                  style={{
+                    background: "#78350f", color: "white", border: "none",
+                    borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+                    fontSize: "13px", fontWeight: "700",
+                  }}
+                >
+                  👑 Dashboard
+                </button>
+              )}
               <button
                 onClick={onDeconnexion}
                 style={{
@@ -255,18 +270,6 @@ const [commandeConfirmee, setCommandeConfirmee] = useState(null);
                   fontSize: "13px", color: "#6b6055",
                 }}
               >
-                {utilisateur?.role === 'admin' && (
-  <button
-    onClick={onDashboard}
-    style={{
-      background: "#78350f", color: "white", border: "none",
-      borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-      fontSize: "13px", fontWeight: "700",
-    }}
-  >
-    👑 Dashboard
-  </button>
-)}
                 Déconnexion
               </button>
             </>
@@ -379,57 +382,56 @@ const [commandeConfirmee, setCommandeConfirmee] = useState(null);
             onFermer={() => setPanierOuvert(false)}
             utilisateur={utilisateur}
             onDemanderConnexion={() => { setPanierOuvert(false); onDemanderConnexion(); }}
-onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
+            onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
           />
         </>
       )}
-    
-    {commandeEnCours && utilisateur && (
-  <FormulaireCommande
-    panier={panier}
-    utilisateur={utilisateur}
-    onAnnuler={() => setCommandeEnCours(false)}
-    onSuccess={(commande) => {
-      setCommandeEnCours(false);
-      setCommandeConfirmee(commande);
-      setPanier([]);
-    }}
-  />
-)}
 
-{commandeConfirmee && (
-  <div style={{
-    position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-    zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center",
-  }}>
-    <div style={{
-      background: "white", borderRadius: "20px", padding: "40px",
-      maxWidth: "400px", width: "90%", textAlign: "center",
-    }}>
-      <div style={{ fontSize: "64px", marginBottom: "16px" }}>🎉</div>
-      <h2 style={{ margin: "0 0 8px", fontSize: "22px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
-        Commande confirmée !
-      </h2>
-      <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#6b6055" }}>
-        Numéro de commande : <strong>#{commandeConfirmee.id}</strong>
-      </p>
-      <p style={{ margin: "0 0 24px", fontSize: "13px", color: "#a8977f" }}>
-        Vous serez contacté pour la livraison. Paiement à la réception.
-      </p>
-      <button
-        onClick={() => setCommandeConfirmee(null)}
-        style={{
-          width: "100%", padding: "13px", borderRadius: "12px", border: "none",
-          background: "#b45309", color: "white", fontWeight: "700",
-          fontSize: "15px", cursor: "pointer",
-        }}
-      >
-        Continuer mes achats
-      </button>
-    </div>
-  </div>
-)}
+      {commandeEnCours && utilisateur && (
+        <FormulaireCommande
+          panier={panier}
+          utilisateur={utilisateur}
+          onAnnuler={() => setCommandeEnCours(false)}
+          onSuccess={(commande) => {
+            setCommandeEnCours(false);
+            setCommandeConfirmee(commande);
+            setPanier([]);
+          }}
+        />
+      )}
 
+      {commandeConfirmee && (
+        <div style={{
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+          zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center",
+        }}>
+          <div style={{
+            background: "white", borderRadius: "20px", padding: "40px",
+            maxWidth: "400px", width: "90%", textAlign: "center",
+          }}>
+            <div style={{ fontSize: "64px", marginBottom: "16px" }}>🎉</div>
+            <h2 style={{ margin: "0 0 8px", fontSize: "22px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
+              Commande confirmée !
+            </h2>
+            <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#6b6055" }}>
+              Numéro de commande : <strong>#{commandeConfirmee.id}</strong>
+            </p>
+            <p style={{ margin: "0 0 24px", fontSize: "13px", color: "#a8977f" }}>
+              Vous serez contacté pour la livraison. Paiement à la réception.
+            </p>
+            <button
+              onClick={() => setCommandeConfirmee(null)}
+              style={{
+                width: "100%", padding: "13px", borderRadius: "12px", border: "none",
+                background: "#b45309", color: "white", fontWeight: "700",
+                fontSize: "15px", cursor: "pointer",
+              }}
+            >
+              Continuer mes achats
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
