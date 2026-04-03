@@ -200,6 +200,25 @@ export default function Dashboard({ utilisateur, onRetour }) {
     }
   };
 
+  const uploaderImages = async (id, files) => {
+  const formData = new FormData();
+  for (const file of files) {
+    formData.append('images', file);
+  }
+  try {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const res = await fetch(`${API_URL}/api/produits/${id}/images`, {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data.images } : p));
+    alert('Photos uploadées avec succès ! ✅');
+  } catch (err) {
+    alert('Erreur lors de l\'upload');
+  }
+};
+
   const supprimerProduit = async (id) => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
     try {
@@ -386,6 +405,21 @@ export default function Dashboard({ utilisateur, onRetour }) {
                             )}
                           </td>
                           <td>
+                            <label style={{
+  background: "#e0f2fe", color: "#075985", border: "none",
+  borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+  fontSize: "12px", fontWeight: "700", marginRight: "6px",
+  display: "inline-block",
+}}>
+  📷 Photos
+  <input
+    type="file"
+    accept="image/*"
+    multiple
+    style={{ display: "none" }}
+    onChange={(e) => uploaderImages(p.id, e.target.files)}
+  />
+</label>
                             <button
                               onClick={() => supprimerProduit(p.id)}
                               style={{
