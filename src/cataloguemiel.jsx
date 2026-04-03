@@ -9,7 +9,7 @@ const CATEGORIES = [
   { id: "coffrets", label: "Coffrets" },
 ];
 
-function CarteProduit({ produit, onAjouterPanier }) {
+function CarteProduit({ produit, onAjouterPanier, onVoirProduit }) {
   const [ajoute, setAjoute] = useState(false);
 
   const handleAjouter = () => {
@@ -22,6 +22,7 @@ function CarteProduit({ produit, onAjouterPanier }) {
 
   return (
     <div
+      onClick={() => onVoirProduit && onVoirProduit(produit.id)}
       style={{
         background: "white",
         borderRadius: "16px",
@@ -31,6 +32,7 @@ function CarteProduit({ produit, onAjouterPanier }) {
         flexDirection: "column",
         transition: "transform 0.2s, box-shadow 0.2s",
         boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+        cursor: "pointer",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-4px)";
@@ -164,10 +166,10 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
   );
 }
 
-export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard }) {
+export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier }) {
   const [categorieActive, setCategorieActive] = useState("tous");
   const [recherche, setRecherche] = useState("");
-  const [panier, setPanier] = useState([]);
+  
   const [panierOuvert, setPanierOuvert] = useState(false);
   const [produits, setProduits] = useState([]);
   const [chargement, setChargement] = useState(true);
@@ -368,8 +370,8 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
             <p style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>Aucun produit trouvé</p>
           </div>
         ) : (
-          produitsFiltres.map((produit) => (
-            <CarteProduit key={produit.id} produit={produit} onAjouterPanier={ajouterAuPanier} />
+        produitsFiltres.map((produit) => (
+  <CarteProduit key={produit.id} produit={produit} onAjouterPanier={ajouterAuPanier} onVoirProduit={onVoirProduit} />  
           ))
         )}
       </div>
