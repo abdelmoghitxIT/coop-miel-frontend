@@ -43,21 +43,30 @@ function CarteProduit({ produit, onAjouterPanier, onVoirProduit }) {
         e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
       }}
     >
-      <div
-        style={{
-          height: "160px",
-          background: "repeating-linear-gradient(45deg,#fef9ee,#fef9ee 10px,#fdf3d8 10px,#fdf3d8 20px)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "52px",
-        }}
-      >
-        {produit.categorie_nom?.toLowerCase().includes("miel") && "🍯"}
-        {produit.categorie_nom?.toLowerCase().includes("pollen") && "🌼"}
-        {produit.categorie_nom?.toLowerCase().includes("cire") && "🕯️"}
-        {produit.categorie_nom?.toLowerCase().includes("coffret") && "🎁"}
-      </div>
+      <div style={{
+  height: "160px",
+  background: "repeating-linear-gradient(45deg,#fef9ee,#fef9ee 10px,#fdf3d8 10px,#fdf3d8 20px)",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "52px",
+  overflow: "hidden",
+}}>
+  {produit.images && produit.images[0] ? (
+    <img
+      src={produit.images[0]}
+      alt={produit.nom}
+      style={{ width: "100%", height: "100%", objectFit: "cover" }}
+    />
+  ) : (
+    <>
+      {produit.categorie_nom?.toLowerCase().includes("miel") && "🍯"}
+      {produit.categorie_nom?.toLowerCase().includes("pollen") && "🌼"}
+      {produit.categorie_nom?.toLowerCase().includes("cire") && "🕯️"}
+      {produit.categorie_nom?.toLowerCase().includes("coffret") && "🎁"}
+    </>
+  )}
+</div>
 
       <div style={{ padding: "18px", flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
         <h3 style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#1c1008", lineHeight: "1.3" }}>

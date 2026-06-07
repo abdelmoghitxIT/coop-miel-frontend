@@ -201,24 +201,36 @@ export default function Dashboard({ utilisateur, onRetour }) {
   };
 
   const uploaderImages = async (id, files) => {
-  const formData = new FormData();
-  for (const file of files) {
-    formData.append('images', file);
-  }
   try {
+    const urls = [];
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'zfw84yvz');
+      formData.append('folder', 'coop-miel');
+
+      const res = await fetch(
+        'https://api.cloudinary.com/v1_1/dvqb5othw/image/upload',
+        { method: 'POST', body: formData }
+      );
+      const data = await res.json();
+      urls.push(data.secure_url);
+    }
+
     const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-    const res = await fetch(`${API_URL}/api/produits/${id}/images`, {
+    const res2 = await fetch(`${API_URL}/api/produits/${id}/images`, {
       method: 'POST',
-      body: formData,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ urls }),
     });
-    const data = await res.json();
-    setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data.images } : p));
+    const data2 = await res2.json();
+    setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data2.images } : p));
     alert('Photos uploadées avec succès ! ✅');
   } catch (err) {
+    console.error(err);
     alert('Erreur lors de l\'upload');
   }
 };
-
   const supprimerProduit = async (id) => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
     try {
