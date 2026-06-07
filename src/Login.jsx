@@ -84,7 +84,11 @@ export default function Login({ onConnexion, onAnnuler }) {
       >
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <div style={{ fontSize: "48px", marginBottom: "8px" }}>🍯</div>
+          <img 
+  src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
+  alt="logo" 
+  style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }} 
+/>
           <h1
             style={{
               margin: 0,
@@ -94,7 +98,7 @@ export default function Login({ onConnexion, onAnnuler }) {
               fontFamily: "'Playfair Display', serif",
             }}
           >
-            Nhal Tlemcen
+            التعاونية الفلاحية لتربية النحل كاويت
           </h1>
           <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#a57c3a" }}>
             Coopérative apicole

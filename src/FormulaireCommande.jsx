@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function FormulaireCommande({ panier, utilisateur, onAnnuler, onSuccess }) {
+export default function FormulaireCommande({ panier, utilisateur, onAnnuler, onSuccess, t, isAr }) {
   const [adresse, setAdresse] = useState("");
   const [telephone, setTelephone] = useState(utilisateur?.telephone || "");
   const [chargement, setChargement] = useState(false);

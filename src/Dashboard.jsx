@@ -271,12 +271,16 @@ export default function Dashboard({ utilisateur, onRetour }) {
         boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ fontSize: "24px" }}>🍯</span>
+        <img 
+  src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
+  alt="logo" 
+  style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} 
+/>
           <div>
             <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
               Dashboard Admin
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>Coop. Nhal Tlemcen</p>
+            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>التعاونية الفلاحية لتربية النحل كاويت</p>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
