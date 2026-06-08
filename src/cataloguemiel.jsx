@@ -163,10 +163,7 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
             <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>{total.toLocaleString()} DA</span>
           </div>
           <button
-            onClick={() => {
-              if (!utilisateur) onDemanderConnexion();
-              else onCommander();
-            }}
+            onClick={() => onCommander()}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
               background: "#b45309", color: "white", fontWeight: "700",
@@ -174,7 +171,7 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}
           >
-            {utilisateur ? t.commander : t.seConnecterCommander}
+           {t.commander}
           </button>
           <p style={{ textAlign: "center", margin: "10px 0 0", fontSize: "12px", color: "#a8977f" }}>
             {t.livraison}
@@ -193,6 +190,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
   const [produits, setProduits] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [commandeEnCours, setCommandeEnCours] = useState(false);
+  
   const [commandeConfirmee, setCommandeConfirmee] = useState(null);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -448,14 +446,28 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
       )}
 
       {/* Formulaire commande */}
-      {commandeEnCours && utilisateur && (
+      {commandeEnCours && (
         <FormulaireCommande
           panier={panier}
           utilisateur={utilisateur}
           onAnnuler={() => setCommandeEnCours(false)}
-          onSuccess={(commande) => {
+          onSuccess={(commande, infoClient) => {
             setCommandeEnCours(false);
-            setCommandeConfirmee(commande);
+            const telClient = infoClient.telephone?.replace(/\s/g, '').replace(/^0/, '213');
+            
+            const ADMIN_WHATSAPP = "213696242396"; // Ton numéro WhatsApp Admin
+            
+            const msgAdmin = `🍯 *Nouvelle commande #${commande.id}*\n👤 Client : ${infoClient.nom}\n📞 Téléphone : ${infoClient.telephone}\n📍 Adresse : ${infoClient.adresse}\n💰 Total : ${infoClient.total} DA\n🛒 Produits :\n${infoClient.produits}\n⏳ En attente de confirmation`;
+            
+            const msgClient = `🍯 *التعاونية الفلاحية لتربية النحل كاويت*\nمرحباً ${infoClient.nom} !\n✅ تم تأكيد طلبك بنجاح\n💰 المجموع : ${infoClient.total} DA\n🚚 سيتم التواصل معك قريباً للتوصيل\nشكراً لثقتكم 🌟`;
+
+            setCommandeConfirmee({
+              ...commande,
+              msgAdmin: ADMIN_WHATSAPP ? msgAdmin : null,
+              adminTel: ADMIN_WHATSAPP,
+              msgClient,
+              telClient,
+            });
             setPanier([]);
           }}
           t={t}
@@ -466,31 +478,65 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
       {/* Confirmation commande */}
       {commandeConfirmee && (
         <div style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-          zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center",
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000,
+          display: "flex", alignItems: "center", justifyContent: "center", padding: "20px"
         }}>
           <div style={{
-            background: "white", borderRadius: "20px", padding: "40px",
-            maxWidth: "400px", width: "90%", textAlign: "center",
-            direction: isAr ? "rtl" : "ltr",
-            fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+            background: "white", padding: "40px 20px", borderRadius: "16px",
+            textAlign: "center", maxWidth: "400px", width: "100%",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.2)"
           }}>
             <div style={{ fontSize: "64px", marginBottom: "16px" }}>🎉</div>
             <h2 style={{ margin: "0 0 8px", fontSize: "22px", fontWeight: "800", color: "#1c1008" }}>
               {t.commandeConfirmee}
             </h2>
-            <p style={{ margin: "0 0 8px", fontSize: "14px", color: "#6b6055" }}>
-              {t.numerCommande} : <strong>#{commandeConfirmee.id}</strong>
-            </p>
-            <p style={{ margin: "0 0 24px", fontSize: "13px", color: "#a8977f" }}>
+            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#a8977f" }}>
               {t.commandeDesc}
             </p>
+
+            {/* Bouton WhatsApp Client (Visible uniquement pour les clients / visiteurs) */}
+            {utilisateur?.role !== 'admin' && commandeConfirmee?.msgAdmin && (
+              <a 
+                href={`https://wa.me/${commandeConfirmee.adminTel}?text=${encodeURIComponent(commandeConfirmee.msgAdmin)}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  width: "100%", padding: "13px", borderRadius: "12px", border: "none",
+                  background: "#25D366", color: "white", fontWeight: "700",
+                  fontSize: "14px", cursor: "pointer", marginBottom: "10px",
+                  textDecoration: "none",
+                }}
+              >
+                📲 Envoyer à l'admin via WhatsApp
+              </a>
+            )}
+
+            {/* Bouton WhatsApp Admin (Visible uniquement pour l'administrateur) */}
+            {utilisateur?.role === 'admin' && commandeConfirmee?.msgClient && commandeConfirmee?.telClient && (
+              <a 
+                href={`https://wa.me/${commandeConfirmee.telClient}?text=${encodeURIComponent(commandeConfirmee.msgClient)}`}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                  width: "100%", padding: "13px", borderRadius: "12px", border: "none",
+                  background: "#25D366", color: "white", fontWeight: "700",
+                  fontSize: "14px", cursor: "pointer", marginBottom: "10px",
+                  textDecoration: "none",
+                }}
+              >
+                📲 Envoyer confirmation au client
+              </a>
+            )}
+
             <button
               onClick={() => setCommandeConfirmee(null)}
               style={{
                 width: "100%", padding: "13px", borderRadius: "12px", border: "none",
                 background: "#b45309", color: "white", fontWeight: "700",
                 fontSize: "15px", cursor: "pointer",
+                marginTop: "10px"
               }}
             >
               {t.continuerAchats}

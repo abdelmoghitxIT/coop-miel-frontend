@@ -152,6 +152,137 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
   );
 }
 
+function GestionPhotos({ produit, onFermer, onMiseAJour }) {
+  const [chargement, setChargement] = useState(false);
+
+  const supprimerImage = async (imageUrl) => {
+    try {
+      const res = await fetch(`${API_URL}/api/produits/${produit.id}/images`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrl }),
+      });
+      const data = await res.json();
+      onMiseAJour(data);
+    } catch (err) {
+      alert("Erreur lors de la suppression");
+    }
+  };
+
+  const ajouterImage = async (files) => {
+    setChargement(true);
+    try {
+      const urls = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'zfw84yvz');
+        formData.append('folder', 'coop-miel');
+        const res = await fetch(
+          'https://api.cloudinary.com/v1_1/dvqb5othw/image/upload',
+          { method: 'POST', body: formData }
+        );
+        const data = await res.json();
+        urls.push(data.secure_url);
+      }
+      const res2 = await fetch(`${API_URL}/api/produits/${produit.id}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls }),
+      });
+      const data2 = await res2.json();
+      onMiseAJour(data2);
+    } catch (err) {
+      alert("Erreur lors de l'upload");
+    }
+    setChargement(false);
+  };
+
+  const images = (produit.images || []).filter(Boolean);
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+    }}>
+      <div style={{
+        background: "white", borderRadius: "20px", padding: "32px",
+        width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto",
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#1c1008" }}>
+            📷 Photos — {produit.nom}
+          </h2>
+          <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+        </div>
+
+        <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
+          Photos actuelles ({images.length})
+        </p>
+
+        {images.length === 0 ? (
+          <div style={{ textAlign: "center", padding: "24px", background: "#fdf8f0", borderRadius: "12px", marginBottom: "20px", color: "#a8977f" }}>
+            <div style={{ fontSize: "32px", marginBottom: "8px" }}>📷</div>
+            <p style={{ margin: 0, fontSize: "13px" }}>Aucune photo pour ce produit</p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}>
+            {images.map((img, i) => (
+              <div key={i} style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid #f0ebe3" }}>
+                <img src={img} alt="" style={{ width: "100%", height: "120px", objectFit: "cover", display: "block" }} />
+                <button
+                  onClick={() => supprimerImage(img)}
+                  style={{
+                    position: "absolute", top: "6px", right: "6px",
+                    background: "#dc2626", color: "white", border: "none",
+                    borderRadius: "50%", width: "26px", height: "26px",
+                    cursor: "pointer", fontSize: "14px", fontWeight: "800",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                  }}
+                >✕</button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
+          Ajouter de nouvelles photos
+        </p>
+
+        <label style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: "10px", padding: "20px", borderRadius: "12px",
+          border: "2px dashed #e5ddd0", cursor: "pointer",
+          background: chargement ? "#fef9ee" : "white",
+          color: "#b45309", fontWeight: "700", fontSize: "14px",
+        }}>
+          {chargement ? "⏳ Upload en cours..." : "📷 Choisir des photos"}
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: "none" }}
+            onChange={(e) => ajouterImage(e.target.files)}
+            disabled={chargement}
+          />
+        </label>
+
+        <p style={{ margin: "10px 0 0", fontSize: "12px", color: "#a8977f", textAlign: "center" }}>
+          Format recommandé : 800×800 px, JPG ou WEBP, max 2MB
+        </p>
+
+        <button onClick={onFermer} style={{
+          width: "100%", marginTop: "16px", padding: "12px", borderRadius: "10px",
+          border: "1.5px solid #e5ddd0", background: "white",
+          color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+        }}>
+          Fermer
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard({ utilisateur, onRetour }) {
   const [commandes, setCommandes] = useState([]);
   const [produits, setProduits] = useState([]);
@@ -159,6 +290,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
   const [chargement, setChargement] = useState(true);
   const [onglet, setOnglet] = useState("commandes");
   const [ajouterProduit, setAjouterProduit] = useState(false);
+  const [gererPhotos, setGererPhotos] = useState(null);
 
   useEffect(() => { chargerDonnees(); }, []);
 
@@ -192,35 +324,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
       setCommandes((prev) => prev.map((c) => (c.id === id ? { ...c, statut } : c)));
     } catch (err) {
       console.error("Erreur:", err);
-    }
-  };
-
-  const uploaderImages = async (id, files) => {
-    try {
-      const urls = [];
-      for (const file of files) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('upload_preset', 'zfw84yvz');
-        formData.append('folder', 'coop-miel');
-        const res = await fetch(
-          'https://api.cloudinary.com/v1_1/dvqb5othw/image/upload',
-          { method: 'POST', body: formData }
-        );
-        const data = await res.json();
-        urls.push(data.secure_url);
-      }
-      const res2 = await fetch(`${API_URL}/api/produits/${id}/images`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ urls }),
-      });
-      const data2 = await res2.json();
-      setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data2.images } : p));
-      alert('Photos uploadées avec succès ! ✅');
-    } catch (err) {
-      console.error(err);
-      alert("Erreur lors de l'upload");
     }
   };
 
@@ -285,7 +388,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
       </header>
 
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
-
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "28px" }}>
           {[
             { label: "Total des ventes", value: totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
@@ -405,26 +507,25 @@ export default function Dashboard({ utilisateur, onRetour }) {
                             )}
                           </td>
                           <td style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                            <label style={{
-                              background: "#e0f2fe", color: "#075985", border: "none",
-                              borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                              fontSize: "12px", fontWeight: "700", display: "inline-block",
-                            }}>
-                              📷 Photos
-                              <input
-                                type="file"
-                                accept="image/*"
-                                multiple
-                                style={{ display: "none" }}
-                                onChange={(e) => uploaderImages(p.id, e.target.files)}
-                              />
-                            </label>
-                            <button onClick={() => supprimerProduit(p.id)} style={{
-                              background: "#fee2e2", color: "#dc2626", border: "none",
-                              borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                              fontSize: "12px", fontWeight: "700",
-                            }}>
-                              Supprimer
+                            <button
+                              onClick={() => setGererPhotos(p)}
+                              style={{
+                                background: "#e0f2fe", color: "#075985", border: "none",
+                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                                fontSize: "12px", fontWeight: "700",
+                              }}
+                            >
+                              📷 Photos {p.images && p.images.filter(Boolean).length > 0 ? `(${p.images.filter(Boolean).length})` : ""}
+                            </button>
+                            <button
+                              onClick={() => supprimerProduit(p.id)}
+                              style={{
+                                background: "#fee2e2", color: "#dc2626", border: "none",
+                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                                fontSize: "12px", fontWeight: "700",
+                              }}
+                            >
+                              🗑️ Supprimer
                             </button>
                           </td>
                         </tr>
@@ -437,6 +538,17 @@ export default function Dashboard({ utilisateur, onRetour }) {
           </>
         )}
       </div>
+
+      {gererPhotos && (
+        <GestionPhotos
+          produit={gererPhotos}
+          onFermer={() => setGererPhotos(null)}
+          onMiseAJour={(produitMisAJour) => {
+            setProduits(prev => prev.map(p => p.id === produitMisAJour.id ? produitMisAJour : p));
+            setGererPhotos(produitMisAJour);
+          }}
+        />
+      )}
 
       {ajouterProduit && (
         <FormulaireAjoutProduit
