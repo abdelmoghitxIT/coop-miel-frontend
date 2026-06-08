@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
+
 const STATUTS = [
   { id: "en_attente", label: "En attente", color: "#f59e0b", bg: "#fef3c7" },
   { id: "confirmee", label: "Confirmée", color: "#3b82f6", bg: "#eff6ff" },
@@ -37,7 +40,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
     setChargement(true);
     setErreur("");
     try {
-      const res = await fetch("process.env.REACT_APP_API_URL/api/produits", {
+      const res = await fetch(`${API_URL}/api/produits`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -63,8 +66,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
   const inputStyle = {
     width: "100%", padding: "11px 14px", borderRadius: "10px",
     border: "1.5px solid #e5ddd0", fontSize: "14px",
-    color: "#1c1008", fontFamily: "'DM Sans', sans-serif",
-    outline: "none",
+    color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
   };
 
   const labelStyle = {
@@ -93,7 +95,6 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
             <label style={labelStyle}>Nom du produit *</label>
             <input name="nom" value={form.nom} onChange={handleChange} placeholder="Ex: Miel de Sidr" style={inputStyle} />
           </div>
-
           <div>
             <label style={labelStyle}>Description</label>
             <textarea name="description" value={form.description} onChange={handleChange}
@@ -101,7 +102,6 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
               style={{ ...inputStyle, resize: "none" }}
             />
           </div>
-
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
               <label style={labelStyle}>Prix (DA) *</label>
@@ -112,7 +112,6 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
               <input name="stock_quantite" type="number" value={form.stock_quantite} onChange={handleChange} placeholder="Ex: 50" style={inputStyle} />
             </div>
           </div>
-
           <div>
             <label style={labelStyle}>Catégorie *</label>
             <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
@@ -131,16 +130,12 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
             </div>
           )}
 
-          <button
-            onClick={handleSubmit}
-            disabled={chargement}
-            style={{
-              width: "100%", padding: "13px", borderRadius: "10px", border: "none",
-              background: chargement ? "#d4b483" : "#b45309",
-              color: "white", fontWeight: "700", fontSize: "15px",
-              cursor: chargement ? "not-allowed" : "pointer",
-            }}
-          >
+          <button onClick={handleSubmit} disabled={chargement} style={{
+            width: "100%", padding: "13px", borderRadius: "10px", border: "none",
+            background: chargement ? "#d4b483" : "#b45309",
+            color: "white", fontWeight: "700", fontSize: "15px",
+            cursor: chargement ? "not-allowed" : "pointer",
+          }}>
             {chargement ? "Ajout en cours..." : "Ajouter le produit"}
           </button>
 
@@ -171,9 +166,9 @@ export default function Dashboard({ utilisateur, onRetour }) {
     setChargement(true);
     try {
       const [resCmd, resProd, resCat] = await Promise.all([
-        fetch("http://localhost:5000/api/commandes"),
-        fetch("http://localhost:5000/api/produits"),
-        fetch("http://localhost:5000/api/categories"),
+        fetch(`${API_URL}/api/commandes`),
+        fetch(`${API_URL}/api/produits`),
+        fetch(`${API_URL}/api/categories`),
       ]);
       const dataCmd = await resCmd.json();
       const dataProd = await resProd.json();
@@ -189,7 +184,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
 
   const changerStatut = async (id, statut) => {
     try {
-      await fetch(`http://localhost:5000/api/commandes/${id}/statut`, {
+      await fetch(`${API_URL}/api/commandes/${id}/statut`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ statut }),
@@ -201,40 +196,38 @@ export default function Dashboard({ utilisateur, onRetour }) {
   };
 
   const uploaderImages = async (id, files) => {
-  try {
-    const urls = [];
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'zfw84yvz');
-      formData.append('folder', 'coop-miel');
-
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/dvqb5othw/image/upload',
-        { method: 'POST', body: formData }
-      );
-      const data = await res.json();
-      urls.push(data.secure_url);
+    try {
+      const urls = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('upload_preset', 'zfw84yvz');
+        formData.append('folder', 'coop-miel');
+        const res = await fetch(
+          'https://api.cloudinary.com/v1_1/dvqb5othw/image/upload',
+          { method: 'POST', body: formData }
+        );
+        const data = await res.json();
+        urls.push(data.secure_url);
+      }
+      const res2 = await fetch(`${API_URL}/api/produits/${id}/images`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ urls }),
+      });
+      const data2 = await res2.json();
+      setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data2.images } : p));
+      alert('Photos uploadées avec succès ! ✅');
+    } catch (err) {
+      console.error(err);
+      alert("Erreur lors de l'upload");
     }
+  };
 
-    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-    const res2 = await fetch(`${API_URL}/api/produits/${id}/images`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ urls }),
-    });
-    const data2 = await res2.json();
-    setProduits(prev => prev.map(p => p.id === id ? { ...p, images: data2.images } : p));
-    alert('Photos uploadées avec succès ! ✅');
-  } catch (err) {
-    console.error(err);
-    alert('Erreur lors de l\'upload');
-  }
-};
   const supprimerProduit = async (id) => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
     try {
-      await fetch(`http://localhost:5000/api/produits/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/api/produits/${id}`, { method: "DELETE" });
       setProduits((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.error("Erreur:", err);
@@ -271,11 +264,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
         boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <img 
-  src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
-  alt="logo" 
-  style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} 
-/>
+          <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
           <div>
             <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
               Dashboard Admin
@@ -297,7 +286,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
 
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
 
-        {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "28px" }}>
           {[
             { label: "Total des ventes", value: totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
@@ -315,7 +303,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
           ))}
         </div>
 
-        {/* Onglets */}
         <div style={{ display: "flex", gap: "4px", background: "#f0ebe3", borderRadius: "10px", padding: "4px", marginBottom: "20px", width: "fit-content" }}>
           {[
             { id: "commandes", label: "📋 Commandes" },
@@ -380,14 +367,11 @@ export default function Dashboard({ utilisateur, onRetour }) {
             {onglet === "produits" && (
               <div>
                 <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "14px" }}>
-                  <button
-                    onClick={() => setAjouterProduit(true)}
-                    style={{
-                      background: "#b45309", color: "white", border: "none",
-                      borderRadius: "10px", padding: "10px 20px", cursor: "pointer",
-                      fontWeight: "700", fontSize: "14px",
-                    }}
-                  >
+                  <button onClick={() => setAjouterProduit(true)} style={{
+                    background: "#b45309", color: "white", border: "none",
+                    borderRadius: "10px", padding: "10px 20px", cursor: "pointer",
+                    fontWeight: "700", fontSize: "14px",
+                  }}>
                     + Ajouter un produit
                   </button>
                 </div>
@@ -420,30 +404,26 @@ export default function Dashboard({ utilisateur, onRetour }) {
                               <span style={{ background: "#dcfce7", color: "#16a34a", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "700" }}>En stock</span>
                             )}
                           </td>
-                          <td>
+                          <td style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                             <label style={{
-  background: "#e0f2fe", color: "#075985", border: "none",
-  borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-  fontSize: "12px", fontWeight: "700", marginRight: "6px",
-  display: "inline-block",
-}}>
-  📷 Photos
-  <input
-    type="file"
-    accept="image/*"
-    multiple
-    style={{ display: "none" }}
-    onChange={(e) => uploaderImages(p.id, e.target.files)}
-  />
-</label>
-                            <button
-                              onClick={() => supprimerProduit(p.id)}
-                              style={{
-                                background: "#fee2e2", color: "#dc2626", border: "none",
-                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                                fontSize: "12px", fontWeight: "700",
-                              }}
-                            >
+                              background: "#e0f2fe", color: "#075985", border: "none",
+                              borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                              fontSize: "12px", fontWeight: "700", display: "inline-block",
+                            }}>
+                              📷 Photos
+                              <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                style={{ display: "none" }}
+                                onChange={(e) => uploaderImages(p.id, e.target.files)}
+                              />
+                            </label>
+                            <button onClick={() => supprimerProduit(p.id)} style={{
+                              background: "#fee2e2", color: "#dc2626", border: "none",
+                              borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                              fontSize: "12px", fontWeight: "700",
+                            }}>
                               Supprimer
                             </button>
                           </td>
