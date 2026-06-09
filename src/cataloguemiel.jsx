@@ -182,7 +182,7 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
   );
 }
 
-export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier }) {
+export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes }){
   const { t, isAr, toggleLangue, langue } = useLangue();
   const [categorieActive, setCategorieActive] = useState("tous");
   const [recherche, setRecherche] = useState("");
@@ -302,14 +302,29 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
                   👑 {t.dashboard}
                 </button>
               )}
-              <button onClick={onDeconnexion} style={{
-                background: "none", border: "1.5px solid #e5ddd0",
-                borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                fontSize: "13px", color: "#6b6055",
-                fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-              }}>
-                {t.deconnexion}
-              </button>
+              <button
+  onClick={onMesCommandes}
+  style={{
+    background: "none", border: "1.5px solid #e5ddd0",
+    borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+    fontSize: "13px", color: "#6b6055",
+    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+  }}
+>
+  {isAr ? "طلباتي 📋" : "📋 Mes commandes"}
+</button>
+
+<button
+  onClick={onDeconnexion}
+  style={{
+    background: "none", border: "1.5px solid #e5ddd0",
+    borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+    fontSize: "13px", color: "#6b6055",
+    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+  }}
+>
+  {t.deconnexion}
+</button>
             </>
           ) : (
             <button onClick={onDemanderConnexion} style={{

@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import * as XLSX from 'xlsx';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -152,6 +155,139 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
   );
 }
 
+function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
+  const [form, setForm] = useState({
+    nom: produit.nom || "",
+    description: produit.description || "",
+    prix: produit.prix || "",
+    stock_quantite: produit.stock_quantite || "",
+    categorie_id: produit.categorie_id || "",
+  });
+  const [chargement, setChargement] = useState(false);
+  const [erreur, setErreur] = useState("");
+
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async () => {
+    if (!form.nom || !form.prix || !form.stock_quantite) {
+      setErreur("Veuillez remplir tous les champs obligatoires");
+      return;
+    }
+    setChargement(true);
+    setErreur("");
+    try {
+      const res = await fetch(`${API_URL}/api/produits/${produit.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nom: form.nom,
+          description: form.description,
+          prix: Number(form.prix),
+          stock_quantite: Number(form.stock_quantite),
+          categorie_id: Number(form.categorie_id),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setErreur(data.erreur || "Erreur lors de la modification");
+      } else {
+        onMiseAJour(data);
+        onFermer();
+      }
+    } catch (err) {
+      setErreur("Impossible de contacter le serveur");
+    }
+    setChargement(false);
+  };
+
+  const inputStyle = {
+    width: "100%", padding: "11px 14px", borderRadius: "10px",
+    border: "1.5px solid #e5ddd0", fontSize: "14px",
+    color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
+  };
+
+  const labelStyle = {
+    fontSize: "13px", fontWeight: "600", color: "#6b6055",
+    display: "block", marginBottom: "6px",
+  };
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+    }}>
+      <div style={{
+        background: "white", borderRadius: "20px", padding: "32px",
+        width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
+      }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
+            ✏️ Modifier — {produit.nom}
+          </h2>
+          <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+          <div>
+            <label style={labelStyle}>Nom du produit *</label>
+            <input name="nom" value={form.nom} onChange={handleChange} style={inputStyle} />
+          </div>
+
+          <div>
+            <label style={labelStyle}>Description</label>
+            <textarea name="description" value={form.description} onChange={handleChange}
+              rows={3} style={{ ...inputStyle, resize: "none" }} />
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={labelStyle}>Prix (DA) *</label>
+              <input name="prix" type="number" value={form.prix} onChange={handleChange} style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>Stock *</label>
+              <input name="stock_quantite" type="number" value={form.stock_quantite} onChange={handleChange} style={inputStyle} />
+            </div>
+          </div>
+
+          <div>
+            <label style={labelStyle}>Catégorie *</label>
+            <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
+              style={{ ...inputStyle, cursor: "pointer" }}>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>{c.nom}</option>
+              ))}
+            </select>
+          </div>
+
+          {erreur && (
+            <div style={{ background: "#fee2e2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#dc2626" }}>
+              ⚠️ {erreur}
+            </div>
+          )}
+
+          <button onClick={handleSubmit} disabled={chargement} style={{
+            width: "100%", padding: "13px", borderRadius: "10px", border: "none",
+            background: chargement ? "#d4b483" : "#b45309",
+            color: "white", fontWeight: "700", fontSize: "15px",
+            cursor: chargement ? "not-allowed" : "pointer",
+          }}>
+            {chargement ? "Modification en cours..." : "✓ Enregistrer les modifications"}
+          </button>
+
+          <button onClick={onFermer} style={{
+            width: "100%", padding: "11px", borderRadius: "10px",
+            border: "1.5px solid #e5ddd0", background: "white",
+            color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+          }}>
+            Annuler
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function GestionPhotos({ produit, onFermer, onMiseAJour }) {
   const [chargement, setChargement] = useState(false);
 
@@ -290,9 +426,200 @@ export default function Dashboard({ utilisateur, onRetour }) {
   const [chargement, setChargement] = useState(true);
   const [onglet, setOnglet] = useState("commandes");
   const [ajouterProduit, setAjouterProduit] = useState(false);
+  const [modifierProduit, setModifierProduit] = useState(null);
   const [gererPhotos, setGererPhotos] = useState(null);
 
   useEffect(() => { chargerDonnees(); }, []);
+
+  const exporterExcel = () => {
+    const data = commandes.map((c) => ({
+      'N° Commande': `#${c.id}`,
+      'Client': c.client_nom || '—',
+      'Téléphone': c.client_telephone || '—',
+      'Adresse': c.adresse_livraison || '—',
+      'Total (DA)': Number(c.total),
+      'Statut': c.statut,
+      'Date': new Date(c.created_at).toLocaleDateString('fr-DZ'),
+    }));
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+
+    // Style largeur colonnes
+    ws['!cols'] = [
+      { wch: 12 }, { wch: 20 }, { wch: 15 },
+      { wch: 30 }, { wch: 12 }, { wch: 15 }, { wch: 12 },
+    ];
+    XLSX.utils.book_append_sheet(wb, ws, 'Commandes');
+    XLSX.writeFile(wb, `commandes-nhal-tlemcen-${new Date().toLocaleDateString('fr-DZ').replace(/\//g, '-')}.xlsx`);
+  };
+
+  const exporterPDF = () => {
+    // Avertissement pour éviter que le navigateur bloque 50 téléchargements d'un coup
+    if (commandes.length > 10) {
+      if (!window.confirm(`Vous allez télécharger ${commandes.length} fichiers PDF séparément. Autorisez les téléchargements multiples sur votre navigateur. Continuer ?`)) {
+        return;
+      }
+    }
+
+    commandes.forEach((c) => {
+      const doc = new jsPDF();
+      const invoiceNum = `INV-${new Date(c.created_at).getFullYear()}-${String(c.id).padStart(5, '0')}`;
+
+      // ─── Fond en-tête ───
+      doc.setFillColor(180, 83, 9);
+      doc.rect(0, 0, 210, 45, 'F');
+
+      // Logo texte
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'bold');
+      doc.text('COOPERATIVE APICOLE CAWIT TLEMCEN', 14, 16);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.text('التعاونية الفلاحية لتربية النحل كاويت', 14, 24);
+      doc.setFontSize(9);
+      doc.text('Tlemcen, Algerie  |  Tel: +213 696 242 396', 14, 32);
+      doc.text('coop.nhal.tlemcen@gmail.com', 14, 39);
+
+      // Numéro facture à droite
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      doc.text('FACTURE', 196, 18, { align: 'right' });
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.text(invoiceNum, 196, 27, { align: 'right' });
+      doc.setFontSize(9);
+      doc.text(`Commande : #${c.id}`, 196, 34, { align: 'right' });
+      doc.text(`Date : ${new Date(c.created_at).toLocaleDateString('fr-DZ')}`, 196, 40, { align: 'right' });
+
+      // ─── Infos client ───
+      doc.setFillColor(253, 248, 240);
+      doc.rect(14, 52, 85, 38, 'F');
+      doc.setDrawColor(240, 235, 227);
+      doc.rect(14, 52, 85, 38);
+
+      doc.setTextColor(165, 124, 58);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('INFORMATIONS CLIENT', 19, 60);
+
+      doc.setTextColor(28, 16, 8);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text(c.client_nom || 'Client', 19, 68);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text(`Tel : ${c.client_telephone || '—'}`, 19, 75);
+      doc.text(`Adresse : ${c.adresse_livraison || '—'}`, 19, 82, { maxWidth: 76 });
+
+      // ─── Infos facture ───
+      doc.setFillColor(253, 248, 240);
+      doc.rect(111, 52, 85, 38, 'F');
+      doc.setDrawColor(240, 235, 227);
+      doc.rect(111, 52, 85, 38);
+
+      doc.setTextColor(165, 124, 58);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DETAILS FACTURE', 116, 60);
+
+      doc.setTextColor(28, 16, 8);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.text(`N° Facture : ${invoiceNum}`, 116, 68);
+      doc.text(`N° Commande : #${c.id}`, 116, 75);
+      doc.text(`Paiement : A la livraison`, 116, 82);
+      doc.text(`Statut : ${c.statut?.replace('_', ' ').toUpperCase()}`, 116, 89);
+
+      // ─── Tableau produits ───
+      const produits = c.produits && c.produits[0] ? c.produits.filter(Boolean) : [];
+
+      autoTable(doc, {
+        startY: 98,
+        head: [['#', 'Produit', 'Qte', 'Prix unitaire', 'Total']],
+        body: produits.length > 0
+          ? produits.map((p, i) => [
+              i + 1,
+              p.nom || '—',
+              p.quantite || 1,
+              `${Number(p.prix).toLocaleString('fr-DZ')} DA`,
+              `${(Number(p.prix) * (p.quantite || 1)).toLocaleString('fr-DZ')} DA`,
+            ])
+          : [['—', 'Produits non disponibles', '—', '—', `${Number(c.total).toLocaleString('fr-DZ')} DA`]],
+        headStyles: {
+          fillColor: [180, 83, 9],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold',
+          fontSize: 9,
+          halign: 'center',
+        },
+        bodyStyles: {
+          fontSize: 9,
+          textColor: [50, 50, 50],
+        },
+        columnStyles: {
+          0: { halign: 'center', cellWidth: 10 },
+          2: { halign: 'center', cellWidth: 15 },
+          3: { halign: 'right', cellWidth: 35 },
+          4: { halign: 'right', cellWidth: 35 },
+        },
+        alternateRowStyles: { fillColor: [253, 248, 240] },
+        styles: { cellPadding: 4 },
+      });
+
+      const finalY = doc.lastAutoTable.finalY + 8;
+
+      // ─── Calcul final ───
+      const total = Number(c.total);
+      const livraison = 0; // Tu pourras changer ça si la livraison n'est pas toujours gratuite
+      const sousTotal = total - livraison;
+
+      doc.setDrawColor(240, 235, 227);
+      doc.setFillColor(253, 248, 240);
+      doc.rect(120, finalY, 76, 36, 'FD');
+
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Sous-total :', 125, finalY + 9);
+      doc.text('Frais de livraison :', 125, finalY + 17);
+      doc.text('Reduction :', 125, finalY + 25);
+
+      doc.setTextColor(28, 16, 8);
+      doc.text(`${sousTotal.toLocaleString('fr-DZ')} DA`, 192, finalY + 9, { align: 'right' });
+      doc.text('Gratuit', 192, finalY + 17, { align: 'right' });
+      doc.text('0 DA', 192, finalY + 25, { align: 'right' });
+
+      // Total final
+      doc.setFillColor(180, 83, 9);
+      doc.rect(120, finalY + 30, 76, 12, 'F');
+      doc.setTextColor(255, 255, 255);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.text('TOTAL :', 125, finalY + 38);
+      doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 38, { align: 'right' });
+
+      // ─── Message de remerciement ───
+      doc.setTextColor(165, 124, 58);
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(10);
+      doc.text('Merci pour votre confiance !', 105, finalY + 58, { align: 'center' });
+      doc.setFontSize(8);
+      doc.setTextColor(150, 150, 150);
+      doc.text('شكرا لثقتكم — Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
+
+      // ─── Pied de page ───
+      doc.setDrawColor(180, 83, 9);
+      doc.setLineWidth(0.5);
+      doc.line(14, 280, 196, 280);
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Cooperative Apicole Kawit  |  Tlemcen, Algerie  |  +213 696 242 396', 105, 285, { align: 'center' });
+
+      // Sauvegarde individuelle pour CHAQUE commande
+      doc.save(`facture-${invoiceNum}.pdf`);
+    });
+  };
 
   const chargerDonnees = async () => {
     setChargement(true);
@@ -427,6 +754,32 @@ export default function Dashboard({ utilisateur, onRetour }) {
           <div style={{ textAlign: "center", padding: "60px", fontSize: "40px" }}>🍯</div>
         ) : (
           <>
+            {onglet === "commandes" && commandes.length > 0 && (
+              <div style={{ display: "flex", gap: "10px", marginBottom: "16px", justifyContent: "flex-end" }}>
+                <button
+                  onClick={exporterExcel}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "6px",
+                    background: "#16a34a", color: "white", border: "none",
+                    borderRadius: "10px", padding: "10px 18px", cursor: "pointer",
+                    fontWeight: "700", fontSize: "13px",
+                  }}
+                >
+                  📊 Exporter Excel
+                </button>
+                <button
+                  onClick={exporterPDF}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "6px",
+                    background: "#dc2626", color: "white", border: "none",
+                    borderRadius: "10px", padding: "10px 18px", cursor: "pointer",
+                    fontWeight: "700", fontSize: "13px",
+                  }}
+                >
+                  📄 Exporter PDF
+                </button>
+              </div>
+            )}
             {onglet === "commandes" && (
               <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
                 {commandes.length === 0 ? (
@@ -444,19 +797,142 @@ export default function Dashboard({ utilisateur, onRetour }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {commandes.map((c) => (
+                      {/* Ici on utilise l'index + 1 au lieu du c.id */}
+                      {commandes.map((c, index) => (
                         <tr key={c.id}>
-                          <td><strong>#{c.id}</strong></td>
+                          <td><strong>#{index + 1}</strong></td>
                           <td>{c.client_nom || "—"}</td>
                           <td>{c.client_telephone || "—"}</td>
                           <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
                           <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
                           <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
                           <td><BadgeStatut statut={c.statut} /></td>
-                          <td>
+                          <td style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                             <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
                               {STATUTS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
                             </select>
+                            <button
+                              onClick={() => {
+                                const doc = new jsPDF();
+                                // Facture pour une seule commande
+                                const commande = c;
+                                const invoiceNum = `INV-${new Date(commande.created_at).getFullYear()}-${String(commande.id).padStart(5, '0')}`;
+
+                                doc.setFillColor(180, 83, 9);
+                                doc.rect(0, 0, 210, 45, 'F');
+                                doc.setTextColor(255, 255, 255);
+                                doc.setFontSize(16);
+                                doc.setFont('helvetica', 'bold');
+                                doc.text('COOPERATIVE APICOLE', 14, 16);
+                                doc.setFontSize(10);
+                                doc.setFont('helvetica', 'normal');
+                                doc.text('Al-Taaouniya Al-Falahiya Li Tarbiyat Al-Nahl Kawit', 14, 24);
+                                doc.setFontSize(9);
+                                doc.text('Tlemcen, Algerie  |  Tel: +213 696 242 396', 14, 32);
+                                doc.text('coop.nhal.tlemcen@gmail.com', 14, 39);
+                                doc.setFontSize(20);
+                                doc.setFont('helvetica', 'bold');
+                                doc.text('FACTURE', 196, 18, { align: 'right' });
+                                doc.setFontSize(11);
+                                doc.setFont('helvetica', 'normal');
+                                doc.text(invoiceNum, 196, 27, { align: 'right' });
+                                doc.setFontSize(9);
+                                doc.text(`Commande : #${commande.id}`, 196, 34, { align: 'right' });
+                                doc.text(`Date : ${new Date(commande.created_at).toLocaleDateString('fr-DZ')}`, 196, 40, { align: 'right' });
+
+                                doc.setFillColor(253, 248, 240);
+                                doc.rect(14, 52, 85, 38, 'F');
+                                doc.setDrawColor(240, 235, 227);
+                                doc.rect(14, 52, 85, 38);
+                                doc.setTextColor(165, 124, 58);
+                                doc.setFontSize(8);
+                                doc.setFont('helvetica', 'bold');
+                                doc.text('INFORMATIONS CLIENT', 19, 60);
+                                doc.setTextColor(28, 16, 8);
+                                doc.setFont('helvetica', 'bold');
+                                doc.setFontSize(11);
+                                doc.text(commande.client_nom || 'Client', 19, 68);
+                                doc.setFont('helvetica', 'normal');
+                                doc.setFontSize(9);
+                                doc.text(`Tel : ${commande.client_telephone || '—'}`, 19, 75);
+                                doc.text(`Adresse : ${commande.adresse_livraison || '—'}`, 19, 82, { maxWidth: 76 });
+
+                                doc.setFillColor(253, 248, 240);
+                                doc.rect(111, 52, 85, 38, 'F');
+                                doc.setDrawColor(240, 235, 227);
+                                doc.rect(111, 52, 85, 38);
+                                doc.setTextColor(165, 124, 58);
+                                doc.setFontSize(8);
+                                doc.setFont('helvetica', 'bold');
+                                doc.text('DETAILS FACTURE', 116, 60);
+                                doc.setTextColor(28, 16, 8);
+                                doc.setFont('helvetica', 'normal');
+                                doc.setFontSize(9);
+                                doc.text(`N° Facture : ${invoiceNum}`, 116, 68);
+                                doc.text(`N° Commande : #${commande.id}`, 116, 75);
+                                doc.text('Paiement : A la livraison', 116, 82);
+                                doc.text(`Statut : ${commande.statut?.replace('_', ' ').toUpperCase()}`, 116, 89);
+
+                                const produits = commande.produits && commande.produits[0] ? commande.produits.filter(Boolean) : [];
+                                autoTable(doc, {
+                                  startY: 98,
+                                  head: [['#', 'Produit', 'Qte', 'Prix unitaire', 'Total']],
+                                  body: produits.length > 0
+                                    ? produits.map((p, i) => [i + 1, p.nom || '—', p.quantite || 1, `${Number(p.prix).toLocaleString('fr-DZ')} DA`, `${(Number(p.prix) * (p.quantite || 1)).toLocaleString('fr-DZ')} DA`])
+                                    : [['—', 'Produits non disponibles', '—', '—', `${Number(commande.total).toLocaleString('fr-DZ')} DA`]],
+                                  headStyles: { fillColor: [180, 83, 9], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9, halign: 'center' },
+                                  bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+                                  columnStyles: { 0: { halign: 'center', cellWidth: 10 }, 2: { halign: 'center', cellWidth: 15 }, 3: { halign: 'right', cellWidth: 35 }, 4: { halign: 'right', cellWidth: 35 } },
+                                  alternateRowStyles: { fillColor: [253, 248, 240] },
+                                  styles: { cellPadding: 4 },
+                                });
+
+                                const finalY = doc.lastAutoTable.finalY + 8;
+                                const total = Number(commande.total);
+                                doc.setFillColor(253, 248, 240);
+                                doc.setDrawColor(240, 235, 227);
+                                doc.rect(120, finalY, 76, 36, 'FD');
+                                doc.setFontSize(9);
+                                doc.setTextColor(100, 100, 100);
+                                doc.text('Sous-total :', 125, finalY + 9);
+                                doc.text('Frais de livraison :', 125, finalY + 17);
+                                doc.text('Reduction :', 125, finalY + 25);
+                                doc.setTextColor(28, 16, 8);
+                                doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 9, { align: 'right' });
+                                doc.text('Gratuit', 192, finalY + 17, { align: 'right' });
+                                doc.text('0 DA', 192, finalY + 25, { align: 'right' });
+                                doc.setFillColor(180, 83, 9);
+                                doc.rect(120, finalY + 30, 76, 12, 'F');
+                                doc.setTextColor(255, 255, 255);
+                                doc.setFont('helvetica', 'bold');
+                                doc.setFontSize(11);
+                                doc.text('TOTAL :', 125, finalY + 38);
+                                doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 38, { align: 'right' });
+                                doc.setTextColor(165, 124, 58);
+                                doc.setFont('helvetica', 'italic');
+                                doc.setFontSize(10);
+                                doc.text('Merci pour votre confiance !', 105, finalY + 58, { align: 'center' });
+                                doc.setFontSize(8);
+                                doc.setTextColor(150, 150, 150);
+                                doc.setFont('helvetica', 'normal');
+                                doc.text('شكرا لثقتكم — Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
+                                doc.setDrawColor(180, 83, 9);
+                                doc.setLineWidth(0.5);
+                                doc.line(14, 280, 196, 280);
+                                doc.setFontSize(7);
+                                doc.setTextColor(150, 150, 150);
+                                doc.text('Cooperative Apicole Kawit  |  Tlemcen, Algerie  |  +213 696 242 396', 105, 285, { align: 'center' });
+
+                                doc.save(`facture-${invoiceNum}.pdf`);
+                              }}
+                              style={{
+                                background: "#fef3c7", color: "#92400e", border: "none",
+                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                                fontSize: "12px", fontWeight: "700", marginLeft: "6px",
+                              }}
+                            >
+                              🧾 Facture
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -486,9 +962,9 @@ export default function Dashboard({ utilisateur, onRetour }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {produits.map((p) => (
+                      {produits.map((p, index) => (
                         <tr key={p.id}>
-                          <td><strong>#{p.id}</strong></td>
+                          <td><strong>#{index + 1}</strong></td> {/* Modification ici aussi pour les produits, optionnel */}
                           <td><strong>{p.nom}</strong></td>
                           <td style={{ color: "#6b6055" }}>{p.categorie_nom}</td>
                           <td><strong style={{ color: "#92400e" }}>{Number(p.prix).toLocaleString()} DA</strong></td>
@@ -507,6 +983,16 @@ export default function Dashboard({ utilisateur, onRetour }) {
                             )}
                           </td>
                           <td style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                           <button
+                              onClick={() => setModifierProduit(p)}
+                              style={{
+                                background: "#fef3c7", color: "#92400e", border: "none",
+                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
+                                fontSize: "12px", fontWeight: "700",
+                              }}
+                            >
+                              ✏️ Modifier
+                            </button>
                             <button
                               onClick={() => setGererPhotos(p)}
                               style={{
@@ -538,7 +1024,16 @@ export default function Dashboard({ utilisateur, onRetour }) {
           </>
         )}
       </div>
-
+      {modifierProduit && (
+        <ModifierProduit
+          produit={modifierProduit}
+          categories={categories}
+          onFermer={() => setModifierProduit(null)}
+          onMiseAJour={(produitMisAJour) => {
+            setProduits(prev => prev.map(p => p.id === produitMisAJour.id ? produitMisAJour : p));
+          }}
+        />
+      )}
       {gererPhotos && (
         <GestionPhotos
           produit={gererPhotos}

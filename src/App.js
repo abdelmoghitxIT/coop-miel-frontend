@@ -2,6 +2,7 @@ import { useState } from 'react';
 import CatalogueMiel from './cataloguemiel';
 import Login from './Login';
 import Dashboard from './Dashboard';
+import MesCommandes from './MesCommandes';
 import DetailProduit from './DetailProduit';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
   });
   const [afficherLogin, setAfficherLogin] = useState(false);
   const [afficherDashboard, setAfficherDashboard] = useState(false);
+  const [afficherCommandes, setAfficherCommandes] = useState(false);
   const [produitSelectionne, setProduitSelectionne] = useState(null);
   const [panier, setPanier] = useState([]);
 
@@ -41,6 +43,15 @@ function App() {
     return <Login onConnexion={handleConnexion} onAnnuler={() => setAfficherLogin(false)} />;
   }
 
+  if (afficherCommandes && utilisateur) {
+  return (
+    <MesCommandes
+      utilisateur={utilisateur}
+      onRetour={() => setAfficherCommandes(false)}
+      isAr={false}
+    />
+  );
+}
   if (afficherDashboard && utilisateur?.role === 'admin') {
     return <Dashboard utilisateur={utilisateur} onRetour={() => setAfficherDashboard(false)} onDeconnexion={handleDeconnexion} />;
   }
@@ -61,6 +72,7 @@ function App() {
       onDeconnexion={handleDeconnexion}
       onDemanderConnexion={() => setAfficherLogin(true)}
       onDashboard={() => setAfficherDashboard(true)}
+      onMesCommandes={() => setAfficherCommandes(true)}
       onVoirProduit={(id) => setProduitSelectionne(id)}
       panier={panier}
       setPanier={setPanier}
