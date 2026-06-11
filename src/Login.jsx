@@ -1,5 +1,8 @@
 import { useState } from "react";
 
+// Ajout de l'URL dynamique (Render en production, Localhost en développement)
+const API_URL = process.env.REACT_APP_API_URL || "https://app-coop-backend.onrender.com";
+
 export default function Login({ onConnexion, onAnnuler }) {
   const [mode, setMode] = useState("connexion"); // "connexion" ou "inscription"
   const [chargement, setChargement] = useState(false);
@@ -21,10 +24,11 @@ export default function Login({ onConnexion, onAnnuler }) {
     setChargement(true);
     setErreur("");
 
+    // Utilisation de API_URL au lieu de localhost:5000
     const url =
       mode === "connexion"
-        ? "http://localhost:5000/api/auth/connexion"
-        : "http://localhost:5000/api/auth/inscription";
+        ? `${API_URL}/api/auth/connexion`
+        : `${API_URL}/api/auth/inscription`;
 
     const body =
       mode === "connexion"
@@ -48,7 +52,9 @@ export default function Login({ onConnexion, onAnnuler }) {
         onConnexion(data.utilisateur);
       }
     } catch (err) {
-      setErreur("Impossible de contacter le serveur");
+      // Message plus clair pour t'aider à déboguer si le serveur ne répond pas
+      setErreur("Impossible de contacter le serveur (Vérifiez votre connexion).");
+      console.error("Erreur de connexion API:", err);
     }
 
     setChargement(false);
@@ -85,10 +91,10 @@ export default function Login({ onConnexion, onAnnuler }) {
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
           <img 
-  src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
-  alt="logo" 
-  style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }} 
-/>
+            src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
+            alt="logo" 
+            style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }} 
+          />
           <h1
             style={{
               margin: 0,
@@ -260,7 +266,7 @@ export default function Login({ onConnexion, onAnnuler }) {
           </button>
         </div>
 
-        {/* Note admin */}
+        {/* Note admin & Retour */}
         <p
           style={{
             textAlign: "center", margin: "20px 0 0",
@@ -270,23 +276,23 @@ export default function Login({ onConnexion, onAnnuler }) {
           }}
         >
           {onAnnuler && (
-  <button
-    onClick={onAnnuler}
-    style={{
-      background: "none",
-      border: "none",
-      cursor: "pointer",
-      fontSize: "14px",
-      color: "#a8977f",
-      textDecoration: "underline",
-      display: "block",
-      margin: "16px auto 0",
-      fontFamily: "'DM Sans', sans-serif",
-    }}
-  >
-    ← Retour au catalogue
-  </button>
-)}
+            <button
+              onClick={onAnnuler}
+              style={{
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                fontSize: "14px",
+                color: "#a8977f",
+                textDecoration: "underline",
+                display: "block",
+                margin: "0 auto 16px", // Ajustement des marges
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              ← Retour au catalogue
+            </button>
+          )}
           Vous êtes un membre de la coopérative ?<br />
           Contactez l'administrateur pour votre accès.
         </p>
