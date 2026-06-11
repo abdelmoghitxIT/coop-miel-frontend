@@ -71,12 +71,10 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
     border: "1.5px solid #e5ddd0", fontSize: "14px",
     color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
   };
-
   const labelStyle = {
     fontSize: "13px", fontWeight: "600", color: "#6b6055",
     display: "block", marginBottom: "6px",
   };
-
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
@@ -115,6 +113,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
               <input name="stock_quantite" type="number" value={form.stock_quantite} onChange={handleChange} placeholder="Ex: 50" style={inputStyle} />
             </div>
           </div>
+
           <div>
             <label style={labelStyle}>Catégorie *</label>
             <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
@@ -205,12 +204,10 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
     border: "1.5px solid #e5ddd0", fontSize: "14px",
     color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
   };
-
   const labelStyle = {
     fontSize: "13px", fontWeight: "600", color: "#6b6055",
     display: "block", marginBottom: "6px",
   };
-
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
@@ -335,7 +332,6 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
   };
 
   const images = (produit.images || []).filter(Boolean);
-
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
@@ -444,7 +440,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
 
-    // Style largeur colonnes
     ws['!cols'] = [
       { wch: 12 }, { wch: 20 }, { wch: 15 },
       { wch: 30 }, { wch: 12 }, { wch: 15 }, { wch: 12 },
@@ -454,7 +449,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
   };
 
   const exporterPDF = () => {
-    // Avertissement pour éviter que le navigateur bloque 50 téléchargements d'un coup
     if (commandes.length > 10) {
       if (!window.confirm(`Vous allez télécharger ${commandes.length} fichiers PDF séparément. Autorisez les téléchargements multiples sur votre navigateur. Continuer ?`)) {
         return;
@@ -465,6 +459,9 @@ export default function Dashboard({ utilisateur, onRetour }) {
       const doc = new jsPDF();
       const invoiceNum = `INV-${new Date(c.created_at).getFullYear()}-${String(c.id).padStart(5, '0')}`;
 
+      // Remplacement propre de toLocaleString pour éviter les caractères spéciaux invisibles qui cassent le PDF
+      const formatDA = (val) => `${Number(val).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DA`;
+
       // ─── Fond en-tête ───
       doc.setFillColor(180, 83, 9);
       doc.rect(0, 0, 210, 45, 'F');
@@ -474,9 +471,10 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.setFontSize(16);
       doc.setFont('helvetica', 'bold');
       doc.text('COOPERATIVE APICOLE CAWIT TLEMCEN', 14, 16);
+ 
       doc.setFontSize(10);
       doc.setFont('helvetica', 'normal');
-      doc.text('التعاونية الفلاحية لتربية النحل كاويت', 14, 24);
+      doc.text("COOPERATIVE AGRICOLE D'APICULTURE KAWIT", 14, 24);
       doc.setFontSize(9);
       doc.text('Tlemcen, Algerie  |  Tel: +213 696 242 396', 14, 32);
       doc.text('coop.nhal.tlemcen@gmail.com', 14, 39);
@@ -486,6 +484,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.setFont('helvetica', 'bold');
       doc.text('FACTURE', 196, 18, { align: 'right' });
       doc.setFontSize(11);
+    
       doc.setFont('helvetica', 'normal');
       doc.text(invoiceNum, 196, 27, { align: 'right' });
       doc.setFontSize(9);
@@ -532,20 +531,19 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.text(`Statut : ${c.statut?.replace('_', ' ').toUpperCase()}`, 116, 89);
 
       // ─── Tableau produits ───
-      const produits = c.produits && c.produits[0] ? c.produits.filter(Boolean) : [];
-
+      const produitsFiltres = c.produits && c.produits[0] ? c.produits.filter(Boolean) : [];
       autoTable(doc, {
         startY: 98,
         head: [['#', 'Produit', 'Qte', 'Prix unitaire', 'Total']],
-        body: produits.length > 0
-          ? produits.map((p, i) => [
+        body: produitsFiltres.length > 0
+          ? produitsFiltres.map((p, i) => [
               i + 1,
               p.nom || '—',
               p.quantite || 1,
-              `${Number(p.prix).toLocaleString('fr-DZ')} DA`,
-              `${(Number(p.prix) * (p.quantite || 1)).toLocaleString('fr-DZ')} DA`,
+              formatDA(p.prix),
+              formatDA(Number(p.prix) * (p.quantite || 1)),
             ])
-          : [['—', 'Produits non disponibles', '—', '—', `${Number(c.total).toLocaleString('fr-DZ')} DA`]],
+          : [['—', 'Produits non disponibles', '—', '—', formatDA(c.total)]],
         headStyles: {
           fillColor: [180, 83, 9],
           textColor: [255, 255, 255],
@@ -571,7 +569,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
 
       // ─── Calcul final ───
       const total = Number(c.total);
-      const livraison = 0; // Tu pourras changer ça si la livraison n'est pas toujours gratuite
+      const livraison = 0;
       const sousTotal = total - livraison;
 
       doc.setDrawColor(240, 235, 227);
@@ -585,7 +583,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.text('Reduction :', 125, finalY + 25);
 
       doc.setTextColor(28, 16, 8);
-      doc.text(`${sousTotal.toLocaleString('fr-DZ')} DA`, 192, finalY + 9, { align: 'right' });
+      doc.text(formatDA(sousTotal), 192, finalY + 9, { align: 'right' });
       doc.text('Gratuit', 192, finalY + 17, { align: 'right' });
       doc.text('0 DA', 192, finalY + 25, { align: 'right' });
 
@@ -596,16 +594,18 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.text('TOTAL :', 125, finalY + 38);
-      doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 38, { align: 'right' });
+      doc.text(formatDA(total), 192, finalY + 38, { align: 'right' });
 
       // ─── Message de remerciement ───
       doc.setTextColor(165, 124, 58);
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(10);
       doc.text('Merci pour votre confiance !', 105, finalY + 58, { align: 'center' });
+      
       doc.setFontSize(8);
       doc.setTextColor(150, 150, 150);
-      doc.text('شكرا لثقتكم — Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.text('Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
 
       // ─── Pied de page ───
       doc.setDrawColor(180, 83, 9);
@@ -613,10 +613,8 @@ export default function Dashboard({ utilisateur, onRetour }) {
       doc.line(14, 280, 196, 280);
       doc.setFontSize(7);
       doc.setTextColor(150, 150, 150);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Cooperative Apicole Kawit  |  Tlemcen, Algerie  |  +213 696 242 396', 105, 285, { align: 'center' });
+      doc.text('Cooperative Apicole Kawit | Tlemcen, Algerie | +213 696 242 396', 105, 285, { align: 'center' });
 
-      // Sauvegarde individuelle pour CHAQUE commande
       doc.save(`facture-${invoiceNum}.pdf`);
     });
   };
@@ -686,29 +684,19 @@ export default function Dashboard({ utilisateur, onRetour }) {
         select { border: 1.5px solid #e5ddd0; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: white; cursor: pointer; color: #1c1008; }
       `}</style>
 
-      <header style={{
-        background: "white", borderBottom: "1px solid #f0ebe3",
-        padding: "0 32px", height: "64px", display: "flex",
-        alignItems: "center", justifyContent: "space-between",
-        position: "sticky", top: 0, zIndex: 100,
-        boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
-      }}>
+      <header style={{ background: "white", borderBottom: "1px solid #f0ebe3", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 8px rgba(180,120,0,0.06)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
           <div>
             <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
               Dashboard Admin
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>التعاونية الفلاحية لتربية النحل كاويت</p>
+            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>Cooperative Apicole Cawit Tlemcen</p>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ fontSize: "13px", color: "#6b6055" }}>👑 {utilisateur?.nom}</span>
-          <button onClick={onRetour} style={{
-            background: "#b45309", color: "white", border: "none",
-            borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
-            fontSize: "13px", fontWeight: "700",
-          }}>
+          <button onClick={onRetour} style={{ background: "#b45309", color: "white", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "13px", fontWeight: "700" }}>
             ← Retour au catalogue
           </button>
         </div>
@@ -737,14 +725,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
             { id: "commandes", label: "📋 Commandes" },
             { id: "produits", label: "🍯 Produits & Stocks" },
           ].map((o) => (
-            <button key={o.id} onClick={() => setOnglet(o.id)} style={{
-              padding: "9px 20px", borderRadius: "8px", border: "none",
-              cursor: "pointer", fontWeight: "700", fontSize: "13px",
-              fontFamily: "'DM Sans', sans-serif",
-              background: onglet === o.id ? "white" : "transparent",
-              color: onglet === o.id ? "#b45309" : "#6b6055",
-              boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
-            }}>
+            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none" }}>
               {o.label}
             </button>
           ))}
@@ -754,268 +735,119 @@ export default function Dashboard({ utilisateur, onRetour }) {
           <div style={{ textAlign: "center", padding: "60px", fontSize: "40px" }}>🍯</div>
         ) : (
           <>
-            {onglet === "commandes" && commandes.length > 0 && (
-              <div style={{ display: "flex", gap: "10px", marginBottom: "16px", justifyContent: "flex-end" }}>
-                <button
-                  onClick={exporterExcel}
-                  style={{
-                    display: "flex", alignItems: "center", gap: "6px",
-                    background: "#16a34a", color: "white", border: "none",
-                    borderRadius: "10px", padding: "10px 18px", cursor: "pointer",
-                    fontWeight: "700", fontSize: "13px",
-                  }}
-                >
-                  📊 Exporter Excel
-                </button>
-                <button
-                  onClick={exporterPDF}
-                  style={{
-                    display: "flex", alignItems: "center", gap: "6px",
-                    background: "#dc2626", color: "white", border: "none",
-                    borderRadius: "10px", padding: "10px 18px", cursor: "pointer",
-                    fontWeight: "700", fontSize: "13px",
-                  }}
-                >
-                  📄 Exporter PDF
-                </button>
-              </div>
-            )}
             {onglet === "commandes" && (
-              <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
-                {commandes.length === 0 ? (
-                  <div style={{ textAlign: "center", padding: "60px", color: "#a8977f" }}>
-                    <div style={{ fontSize: "48px", marginBottom: "12px" }}>📋</div>
-                    <p style={{ fontSize: "16px", fontWeight: "600" }}>Aucune commande pour l'instant</p>
+              <>
+                {commandes.length > 0 && (
+                  <div style={{ display: "flex", gap: "10px", marginBottom: "16px", justifyContent: "flex-end" }}>
+                    <button onClick={exporterExcel} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#16a34a", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px" }}>
+                      📊 Exporter Excel
+                    </button>
+                    <button onClick={exporterPDF} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#dc2626", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px" }}>
+                      📄 Exporter PDF
+                    </button>
                   </div>
-                ) : (
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>#</th><th>Client</th><th>Téléphone</th>
-                        <th>Adresse</th><th>Total</th><th>Date</th>
-                        <th>Statut</th><th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {/* Ici on utilise l'index + 1 au lieu du c.id */}
-                      {commandes.map((c, index) => (
-                        <tr key={c.id}>
-                          <td><strong>#{index + 1}</strong></td>
-                          <td>{c.client_nom || "—"}</td>
-                          <td>{c.client_telephone || "—"}</td>
-                          <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
-                          <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
-                          <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
-                          <td><BadgeStatut statut={c.statut} /></td>
-                          <td style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                            <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
-                              {STATUTS.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
-                            </select>
-                            <button
-                              onClick={() => {
-                                const doc = new jsPDF();
-                                // Facture pour une seule commande
-                                const commande = c;
-                                const invoiceNum = `INV-${new Date(commande.created_at).getFullYear()}-${String(commande.id).padStart(5, '0')}`;
-
-                                doc.setFillColor(180, 83, 9);
-                                doc.rect(0, 0, 210, 45, 'F');
-                                doc.setTextColor(255, 255, 255);
-                                doc.setFontSize(16);
-                                doc.setFont('helvetica', 'bold');
-                                doc.text('COOPERATIVE APICOLE', 14, 16);
-                                doc.setFontSize(10);
-                                doc.setFont('helvetica', 'normal');
-                                doc.text('Al-Taaouniya Al-Falahiya Li Tarbiyat Al-Nahl Kawit', 14, 24);
-                                doc.setFontSize(9);
-                                doc.text('Tlemcen, Algerie  |  Tel: +213 696 242 396', 14, 32);
-                                doc.text('coop.nhal.tlemcen@gmail.com', 14, 39);
-                                doc.setFontSize(20);
-                                doc.setFont('helvetica', 'bold');
-                                doc.text('FACTURE', 196, 18, { align: 'right' });
-                                doc.setFontSize(11);
-                                doc.setFont('helvetica', 'normal');
-                                doc.text(invoiceNum, 196, 27, { align: 'right' });
-                                doc.setFontSize(9);
-                                doc.text(`Commande : #${commande.id}`, 196, 34, { align: 'right' });
-                                doc.text(`Date : ${new Date(commande.created_at).toLocaleDateString('fr-DZ')}`, 196, 40, { align: 'right' });
-
-                                doc.setFillColor(253, 248, 240);
-                                doc.rect(14, 52, 85, 38, 'F');
-                                doc.setDrawColor(240, 235, 227);
-                                doc.rect(14, 52, 85, 38);
-                                doc.setTextColor(165, 124, 58);
-                                doc.setFontSize(8);
-                                doc.setFont('helvetica', 'bold');
-                                doc.text('INFORMATIONS CLIENT', 19, 60);
-                                doc.setTextColor(28, 16, 8);
-                                doc.setFont('helvetica', 'bold');
-                                doc.setFontSize(11);
-                                doc.text(commande.client_nom || 'Client', 19, 68);
-                                doc.setFont('helvetica', 'normal');
-                                doc.setFontSize(9);
-                                doc.text(`Tel : ${commande.client_telephone || '—'}`, 19, 75);
-                                doc.text(`Adresse : ${commande.adresse_livraison || '—'}`, 19, 82, { maxWidth: 76 });
-
-                                doc.setFillColor(253, 248, 240);
-                                doc.rect(111, 52, 85, 38, 'F');
-                                doc.setDrawColor(240, 235, 227);
-                                doc.rect(111, 52, 85, 38);
-                                doc.setTextColor(165, 124, 58);
-                                doc.setFontSize(8);
-                                doc.setFont('helvetica', 'bold');
-                                doc.text('DETAILS FACTURE', 116, 60);
-                                doc.setTextColor(28, 16, 8);
-                                doc.setFont('helvetica', 'normal');
-                                doc.setFontSize(9);
-                                doc.text(`N° Facture : ${invoiceNum}`, 116, 68);
-                                doc.text(`N° Commande : #${commande.id}`, 116, 75);
-                                doc.text('Paiement : A la livraison', 116, 82);
-                                doc.text(`Statut : ${commande.statut?.replace('_', ' ').toUpperCase()}`, 116, 89);
-
-                                const produits = commande.produits && commande.produits[0] ? commande.produits.filter(Boolean) : [];
-                                autoTable(doc, {
-                                  startY: 98,
-                                  head: [['#', 'Produit', 'Qte', 'Prix unitaire', 'Total']],
-                                  body: produits.length > 0
-                                    ? produits.map((p, i) => [i + 1, p.nom || '—', p.quantite || 1, `${Number(p.prix).toLocaleString('fr-DZ')} DA`, `${(Number(p.prix) * (p.quantite || 1)).toLocaleString('fr-DZ')} DA`])
-                                    : [['—', 'Produits non disponibles', '—', '—', `${Number(commande.total).toLocaleString('fr-DZ')} DA`]],
-                                  headStyles: { fillColor: [180, 83, 9], textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9, halign: 'center' },
-                                  bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
-                                  columnStyles: { 0: { halign: 'center', cellWidth: 10 }, 2: { halign: 'center', cellWidth: 15 }, 3: { halign: 'right', cellWidth: 35 }, 4: { halign: 'right', cellWidth: 35 } },
-                                  alternateRowStyles: { fillColor: [253, 248, 240] },
-                                  styles: { cellPadding: 4 },
-                                });
-
-                                const finalY = doc.lastAutoTable.finalY + 8;
-                                const total = Number(commande.total);
-                                doc.setFillColor(253, 248, 240);
-                                doc.setDrawColor(240, 235, 227);
-                                doc.rect(120, finalY, 76, 36, 'FD');
-                                doc.setFontSize(9);
-                                doc.setTextColor(100, 100, 100);
-                                doc.text('Sous-total :', 125, finalY + 9);
-                                doc.text('Frais de livraison :', 125, finalY + 17);
-                                doc.text('Reduction :', 125, finalY + 25);
-                                doc.setTextColor(28, 16, 8);
-                                doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 9, { align: 'right' });
-                                doc.text('Gratuit', 192, finalY + 17, { align: 'right' });
-                                doc.text('0 DA', 192, finalY + 25, { align: 'right' });
-                                doc.setFillColor(180, 83, 9);
-                                doc.rect(120, finalY + 30, 76, 12, 'F');
-                                doc.setTextColor(255, 255, 255);
-                                doc.setFont('helvetica', 'bold');
-                                doc.setFontSize(11);
-                                doc.text('TOTAL :', 125, finalY + 38);
-                                doc.text(`${total.toLocaleString('fr-DZ')} DA`, 192, finalY + 38, { align: 'right' });
-                                doc.setTextColor(165, 124, 58);
-                                doc.setFont('helvetica', 'italic');
-                                doc.setFontSize(10);
-                                doc.text('Merci pour votre confiance !', 105, finalY + 58, { align: 'center' });
-                                doc.setFontSize(8);
-                                doc.setTextColor(150, 150, 150);
-                                doc.setFont('helvetica', 'normal');
-                                doc.text('شكرا لثقتكم — Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
-                                doc.setDrawColor(180, 83, 9);
-                                doc.setLineWidth(0.5);
-                                doc.line(14, 280, 196, 280);
-                                doc.setFontSize(7);
-                                doc.setTextColor(150, 150, 150);
-                                doc.text('Cooperative Apicole Kawit  |  Tlemcen, Algerie  |  +213 696 242 396', 105, 285, { align: 'center' });
-
-                                doc.save(`facture-${invoiceNum}.pdf`);
-                              }}
-                              style={{
-                                background: "#fef3c7", color: "#92400e", border: "none",
-                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                                fontSize: "12px", fontWeight: "700", marginLeft: "6px",
-                              }}
-                            >
-                              🧾 Facture
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
                 )}
-              </div>
+                <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
+                  {commandes.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "60px", color: "#a8977f" }}>
+                      <div style={{ fontSize: "48px", marginBottom: "12px" }}>📋</div>
+                      <p style={{ fontSize: "16px", fontWeight: "600" }}>Aucune commande pour l'instant</p>
+                    </div>
+                  ) : (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>#</th><th>Client</th><th>Téléphone</th>
+                          <th>Adresse</th><th>Total</th><th>Date</th>
+                          <th>Statut</th><th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {commandes.map((c, index) => (
+                          <tr key={c.id}>
+                            <td><strong>#{index + 1}</strong></td>
+                            <td>{c.client_nom || "—"}</td>
+                            <td>{c.client_telephone || "—"}</td>
+                            <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
+                            <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
+                            <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
+                            <td><BadgeStatut statut={c.statut} /></td>
+                            <td>
+                              <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
+                                {STATUTS.map((s) => (
+                                  <option key={s.id} value={s.id}>{s.label}</option>
+                                ))}
+                              </select>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </>
             )}
 
             {onglet === "produits" && (
-              <div>
-                <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "14px" }}>
-                  <button onClick={() => setAjouterProduit(true)} style={{
-                    background: "#b45309", color: "white", border: "none",
-                    borderRadius: "10px", padding: "10px 20px", cursor: "pointer",
-                    fontWeight: "700", fontSize: "14px",
-                  }}>
+              <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden", padding: "24px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#1c1008" }}>Liste des produits</h3>
+                  <button onClick={() => setAjouterProduit(true)} style={{ background: "#b45309", color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "700", cursor: "pointer", fontSize: "13px" }}>
                     + Ajouter un produit
                   </button>
                 </div>
-                <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
+                <div style={{ overflowX: "auto" }}>
                   <table>
                     <thead>
                       <tr>
-                        <th>#</th><th>Produit</th><th>Catégorie</th>
-                        <th>Prix</th><th>Stock</th><th>État</th><th>Action</th>
+                        <th>Produit</th>
+                        <th>Catégorie</th>
+                        <th>Prix</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {produits.map((p, index) => (
-                        <tr key={p.id}>
-                          <td><strong>#{index + 1}</strong></td> {/* Modification ici aussi pour les produits, optionnel */}
-                          <td><strong>{p.nom}</strong></td>
-                          <td style={{ color: "#6b6055" }}>{p.categorie_nom}</td>
-                          <td><strong style={{ color: "#92400e" }}>{Number(p.prix).toLocaleString()} DA</strong></td>
-                          <td>
-                            <span style={{ fontWeight: "700", color: p.stock_quantite < 10 ? "#dc2626" : "#16a34a" }}>
-                              {p.stock_quantite} unités
-                            </span>
-                          </td>
-                          <td>
-                            {p.stock_quantite === 0 ? (
-                              <span style={{ background: "#fee2e2", color: "#dc2626", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "700" }}>Rupture</span>
-                            ) : p.stock_quantite < 10 ? (
-                              <span style={{ background: "#fef3c7", color: "#f59e0b", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "700" }}>⚠️ Stock faible</span>
-                            ) : (
-                              <span style={{ background: "#dcfce7", color: "#16a34a", padding: "3px 10px", borderRadius: "20px", fontSize: "12px", fontWeight: "700" }}>En stock</span>
-                            )}
-                          </td>
-                          <td style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-                           <button
-                              onClick={() => setModifierProduit(p)}
-                              style={{
-                                background: "#fef3c7", color: "#92400e", border: "none",
-                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                                fontSize: "12px", fontWeight: "700",
-                              }}
-                            >
-                              ✏️ Modifier
-                            </button>
-                            <button
-                              onClick={() => setGererPhotos(p)}
-                              style={{
-                                background: "#e0f2fe", color: "#075985", border: "none",
-                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                                fontSize: "12px", fontWeight: "700",
-                              }}
-                            >
-                              📷 Photos {p.images && p.images.filter(Boolean).length > 0 ? `(${p.images.filter(Boolean).length})` : ""}
-                            </button>
-                            <button
-                              onClick={() => supprimerProduit(p.id)}
-                              style={{
-                                background: "#fee2e2", color: "#dc2626", border: "none",
-                                borderRadius: "6px", padding: "5px 10px", cursor: "pointer",
-                                fontSize: "12px", fontWeight: "700",
-                              }}
-                            >
-                              🗑️ Supprimer
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {produits.map((p) => {
+                        const cat = categories.find((c) => c.id === p.categorie_id);
+                        return (
+                          <tr key={p.id}>
+                            <td>
+                              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                {p.images && p.images[0] ? (
+                                  <img src={p.images[0]} alt="" style={{ width: "40px", height: "40px", borderRadius: "6px", objectFit: "cover" }} />
+                                ) : (
+                                  <div style={{ width: "40px", height: "40px", borderRadius: "6px", background: "#fdf8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📷</div>
+                                )}
+                                <div>
+                                  <div style={{ fontWeight: "700" }}>{p.nom}</div>
+                                  <div style={{ fontSize: "12px", color: "#6b6055", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description || "Aucune description"}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td>{cat ? cat.nom : "—"}</td>
+                            <td><strong>{Number(p.prix).toLocaleString()} DA</strong></td>
+                            <td>
+                              <span style={{ fontWeight: "700", color: p.stock_quantite < 10 ? "#dc2626" : "#16a34a" }}>
+                                {p.stock_quantite} unités
+                              </span>
+                            </td>
+                            <td>
+                              <div style={{ display: "flex", gap: "6px" }}>
+                                <button onClick={() => setGererPhotos(p)} style={{ background: "#f3f4f6", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
+                                  📷 Photos
+                                </button>
+                                <button onClick={() => setModifierProduit(p)} style={{ background: "#eff6ff", color: "#2563eb", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
+                                  ✏️ Modifier
+                                </button>
+                                <button onClick={() => supprimerProduit(p.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "700" }}>
+                                  🗑️ Supprimer
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1024,6 +856,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
           </>
         )}
       </div>
+
       {modifierProduit && (
         <ModifierProduit
           produit={modifierProduit}
@@ -1044,7 +877,6 @@ export default function Dashboard({ utilisateur, onRetour }) {
           }}
         />
       )}
-
       {ajouterProduit && (
         <FormulaireAjoutProduit
           categories={categories}

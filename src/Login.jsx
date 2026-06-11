@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-// Ajout de l'URL dynamique (Render en production, Localhost en développement)
-const API_URL = process.env.REACT_APP_API_URL || "https://app-coop-backend.onrender.com";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export default function Login({ onConnexion, onAnnuler }) {
-  const [mode, setMode] = useState("connexion"); // "connexion" ou "inscription"
+  const [mode, setMode] = useState("connexion");
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
 
@@ -24,7 +23,6 @@ export default function Login({ onConnexion, onAnnuler }) {
     setChargement(true);
     setErreur("");
 
-    // Utilisation de API_URL au lieu de localhost:5000
     const url =
       mode === "connexion"
         ? `${API_URL}/api/auth/connexion`
@@ -52,58 +50,47 @@ export default function Login({ onConnexion, onAnnuler }) {
         onConnexion(data.utilisateur);
       }
     } catch (err) {
-      // Message plus clair pour t'aider à déboguer si le serveur ne répond pas
-      setErreur("Impossible de contacter le serveur (Vérifiez votre connexion).");
-      console.error("Erreur de connexion API:", err);
+      setErreur("Impossible de contacter le serveur");
     }
 
     setChargement(false);
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#fdf8f0",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: "20px",
-      }}
-    >
+    <div style={{
+      minHeight: "100vh",
+      background: "#fdf8f0",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px",
+    }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
         .login-input:focus { border-color: #b45309 !important; outline: none; }
       `}</style>
 
-      <div
-        style={{
-          background: "white",
-          borderRadius: "20px",
-          padding: "40px",
-          width: "100%",
-          maxWidth: "420px",
-          boxShadow: "0 8px 40px rgba(180,120,0,0.12)",
-          border: "1px solid #f0ebe3",
-        }}
-      >
+      <div style={{
+        background: "white",
+        borderRadius: "20px",
+        padding: "40px",
+        width: "100%",
+        maxWidth: "420px",
+        boxShadow: "0 8px 40px rgba(180,120,0,0.12)",
+        border: "1px solid #f0ebe3",
+      }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
-          <img 
-            src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo" 
-            alt="logo" 
-            style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }} 
+          <img
+            src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo"
+            alt="logo"
+            style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }}
           />
-          <h1
-            style={{
-              margin: 0,
-              fontSize: "24px",
-              fontWeight: "800",
-              color: "#1c1008",
-              fontFamily: "'Playfair Display', serif",
-            }}
-          >
+          <h1 style={{
+            margin: 0, fontSize: "22px", fontWeight: "800",
+            color: "#1c1008", fontFamily: "'Playfair Display', serif",
+          }}>
             التعاونية الفلاحية لتربية النحل كاويت
           </h1>
           <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#a57c3a" }}>
@@ -111,29 +98,20 @@ export default function Login({ onConnexion, onAnnuler }) {
           </p>
         </div>
 
-        {/* Tabs connexion / inscription */}
-        <div
-          style={{
-            display: "flex",
-            background: "#fdf8f0",
-            borderRadius: "10px",
-            padding: "4px",
-            marginBottom: "24px",
-          }}
-        >
+        {/* Tabs */}
+        <div style={{
+          display: "flex", background: "#fdf8f0",
+          borderRadius: "10px", padding: "4px", marginBottom: "24px",
+        }}>
           {["connexion", "inscription"].map((m) => (
             <button
               key={m}
               onClick={() => { setMode(m); setErreur(""); }}
               style={{
-                flex: 1,
-                padding: "9px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
+                flex: 1, padding: "9px", borderRadius: "8px",
+                border: "none", cursor: "pointer",
                 fontFamily: "'DM Sans', sans-serif",
-                fontWeight: "700",
-                fontSize: "13px",
+                fontWeight: "700", fontSize: "13px",
                 transition: "all 0.2s",
                 background: mode === m ? "white" : "transparent",
                 color: mode === m ? "#b45309" : "#a8977f",
@@ -229,21 +207,17 @@ export default function Login({ onConnexion, onAnnuler }) {
             </div>
           )}
 
-          {/* Message d'erreur */}
           {erreur && (
-            <div
-              style={{
-                background: "#fee2e2", border: "1px solid #fecaca",
-                borderRadius: "8px", padding: "10px 14px",
-                fontSize: "13px", color: "#dc2626",
-                fontFamily: "'DM Sans', sans-serif",
-              }}
-            >
+            <div style={{
+              background: "#fee2e2", border: "1px solid #fecaca",
+              borderRadius: "8px", padding: "10px 14px",
+              fontSize: "13px", color: "#dc2626",
+              fontFamily: "'DM Sans', sans-serif",
+            }}>
               ⚠️ {erreur}
             </div>
           )}
 
-          {/* Bouton */}
           <button
             onClick={handleSubmit}
             disabled={chargement}
@@ -266,27 +240,20 @@ export default function Login({ onConnexion, onAnnuler }) {
           </button>
         </div>
 
-        {/* Note admin & Retour */}
-        <p
-          style={{
-            textAlign: "center", margin: "20px 0 0",
-            fontSize: "12px", color: "#a8977f",
-            fontFamily: "'DM Sans', sans-serif",
-            lineHeight: "1.6",
-          }}
-        >
+        <div style={{
+          textAlign: "center", margin: "20px 0 0",
+          fontSize: "12px", color: "#a8977f",
+          fontFamily: "'DM Sans', sans-serif",
+          lineHeight: "1.6",
+        }}>
           {onAnnuler && (
             <button
               onClick={onAnnuler}
               style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "14px",
-                color: "#a8977f",
-                textDecoration: "underline",
-                display: "block",
-                margin: "0 auto 16px", // Ajustement des marges
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: "14px", color: "#a8977f",
+                textDecoration: "underline", display: "block",
+                margin: "0 auto 12px",
                 fontFamily: "'DM Sans', sans-serif",
               }}
             >
@@ -295,7 +262,7 @@ export default function Login({ onConnexion, onAnnuler }) {
           )}
           Vous êtes un membre de la coopérative ?<br />
           Contactez l'administrateur pour votre accès.
-        </p>
+        </div>
       </div>
     </div>
   );
