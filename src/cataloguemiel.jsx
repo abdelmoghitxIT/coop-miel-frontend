@@ -270,8 +270,20 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-<button onClick={onAllerAPropos} style={{ margin: '0 10px' }}>
-  À propos de nous
+<button 
+  onClick={onAllerAPropos} 
+  style={{
+    background: "none", 
+    border: "none",
+    cursor: "pointer",
+    fontSize: "14px", 
+    color: "#b45309", 
+    fontWeight: "700",
+    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+    marginRight: "10px"
+  }}
+>
+  ℹ️ {isAr ? "معلومات عنا" : "À propos"}
 </button>
           {/* Bouton FR/AR */}
           <div style={{ display: "flex", gap: "3px", background: "#f0ebe3", borderRadius: "8px", padding: "3px" }}>

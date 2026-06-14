@@ -54,7 +54,7 @@ const [afficherAPropos, setAfficherAPropos] = useState(false);
 
   const ajouterAuPanier = (produit) => {
     setPanier((prev) => {
-      const existant = prev.find((p) => p.id === producto.id);
+      const existant = prev.find((p) => p.id === product.id);
       if (existant) {
         return prev.map((p) => p.id === produit.id ? { ...p, qte: p.qte + 1 } : p);
       }
