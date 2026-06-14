@@ -182,7 +182,7 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
   );
 }
 
-export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes }){
+export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes,onAllerAPropos }){
   const { t, isAr, toggleLangue, langue } = useLangue();
   const [categorieActive, setCategorieActive] = useState("tous");
   const [recherche, setRecherche] = useState("");
@@ -270,7 +270,9 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-
+<button onClick={onAllerAPropos} style={{ margin: '0 10px' }}>
+  À propos de nous
+</button>
           {/* Bouton FR/AR */}
           <div style={{ display: "flex", gap: "3px", background: "#f0ebe3", borderRadius: "8px", padding: "3px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
