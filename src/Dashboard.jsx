@@ -6,6 +6,11 @@ import autoTable from 'jspdf-autotable';
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 
+const entetesAuth = () => {
+  const token = localStorage.getItem('token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
 const STATUTS = [
   { id: "en_attente", label: "En attente", color: "#f59e0b", bg: "#fef3c7" },
   { id: "confirmee", label: "Confirmée", color: "#3b82f6", bg: "#eff6ff" },
@@ -45,7 +50,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
     try {
       const res = await fetch(`${API_URL}/api/produits`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...entetesAuth() },
         body: JSON.stringify({
           nom: form.nom,
           description: form.description,
@@ -177,7 +182,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
     try {
       const res = await fetch(`${API_URL}/api/produits/${produit.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...entetesAuth() },
         body: JSON.stringify({
           nom: form.nom,
           description: form.description,
@@ -292,7 +297,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
     try {
       const res = await fetch(`${API_URL}/api/produits/${produit.id}/images`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...entetesAuth() },
         body: JSON.stringify({ imageUrl }),
       });
       const data = await res.json();
@@ -320,7 +325,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
       }
       const res2 = await fetch(`${API_URL}/api/produits/${produit.id}/images`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...entetesAuth() },
         body: JSON.stringify({ urls }),
       });
       const data2 = await res2.json();
@@ -623,7 +628,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
     setChargement(true);
     try {
       const [resCmd, resProd, resCat] = await Promise.all([
-        fetch(`${API_URL}/api/commandes`),
+        fetch(`${API_URL}/api/commandes`, { headers: { ...entetesAuth() } }),
         fetch(`${API_URL}/api/produits`),
         fetch(`${API_URL}/api/categories`),
       ]);
@@ -639,11 +644,18 @@ export default function Dashboard({ utilisateur, onRetour }) {
     setChargement(false);
   };
 
+  const stats = {
+    totalVentes: commandes.filter((c) => c.statut !== "annulee").reduce((sum, c) => sum + Number(c.total), 0),
+    enAttente: commandes.filter((c) => c.statut === "en_attente").length,
+    livrees: commandes.filter((c) => c.statut === "livree").length,
+    stockFaible: produits.filter((p) => p.stock_quantite < 10).length,
+  };
+
   const changerStatut = async (id, statut) => {
     try {
       await fetch(`${API_URL}/api/commandes/${id}/statut`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...entetesAuth() },
         body: JSON.stringify({ statut }),
       });
       setCommandes((prev) => prev.map((c) => (c.id === id ? { ...c, statut } : c)));
@@ -655,7 +667,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
   const supprimerProduit = async (id) => {
     if (!window.confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
     try {
-      await fetch(`${API_URL}/api/produits/${id}`, { method: "DELETE" });
+      await fetch(`${API_URL}/api/produits/${id}`, { method: "DELETE", headers: { ...entetesAuth() } });
       setProduits((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       console.error("Erreur:", err);
@@ -667,10 +679,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
     setAjouterProduit(false);
   };
 
-  const totalVentes = commandes.filter((c) => c.statut !== "annulee").reduce((sum, c) => sum + Number(c.total), 0);
-  const commandesEnAttente = commandes.filter((c) => c.statut === "en_attente").length;
-  const commandesLivrees = commandes.filter((c) => c.statut === "livree").length;
-  const produitsStockFaible = produits.filter((p) => p.stock_quantite < 10).length;
+
 
   return (
     <div style={{ minHeight: "100vh", background: "#fdf8f0", fontFamily: "'DM Sans', sans-serif" }}>
@@ -705,10 +714,10 @@ export default function Dashboard({ utilisateur, onRetour }) {
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "28px" }}>
           {[
-            { label: "Total des ventes", value: totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
-            { label: "En attente", value: commandesEnAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
-            { label: "Livrées", value: commandesLivrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
-            { label: "Stock faible", value: produitsStockFaible + " produits", icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
+            { label: "Total des ventes", value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
+            { label: "En attente", value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
+            { label: "Livrées", value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
+            { label: "Stock faible", value: stats.stockFaible + " produits", icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
           ].map((stat, i) => (
             <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
