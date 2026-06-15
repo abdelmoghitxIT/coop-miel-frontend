@@ -429,8 +429,18 @@ export default function Dashboard({ utilisateur, onRetour }) {
   const [ajouterProduit, setAjouterProduit] = useState(false);
   const [modifierProduit, setModifierProduit] = useState(null);
   const [gererPhotos, setGererPhotos] = useState(null);
+  const [rechercheCommande, setRechercheCommande] = useState("");
 
   useEffect(() => { chargerDonnees(); }, []);
+
+  const commandesFiltrees = commandes.filter((c) => {
+    if (!rechercheCommande) return true;
+    const q = rechercheCommande.toLowerCase();
+    return String(c.id).includes(q)
+      || (c.client_nom || '').toLowerCase().includes(q)
+      || (c.client_telephone || '').includes(q)
+      || (c.adresse_livraison || '').toLowerCase().includes(q);
+  });
 
   const exporterExcel = () => {
     const data = commandes.map((c) => ({
@@ -693,38 +703,42 @@ export default function Dashboard({ utilisateur, onRetour }) {
         select { border: 1.5px solid #e5ddd0; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: white; cursor: pointer; color: #1c1008; }
       `}</style>
 
-      <header style={{ background: "white", borderBottom: "1px solid #f0ebe3", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 1px 8px rgba(180,120,0,0.06)" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
+      <header style={{ background: "linear-gradient(135deg, #78350f, #b45309)", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 12px rgba(120,53,15,0.2)" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <img src={LOGO_URL} alt="logo" style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.3)" }} />
           <div>
-            <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
+            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "white", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
               Dashboard Admin
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>Cooperative Apicole Cawit Tlemcen</p>
+            <p style={{ margin: 0, fontSize: "10px", color: "rgba(255,255,255,0.7)" }}>Cooperative Apicole Cawit Tlemcen</p>
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <span style={{ fontSize: "13px", color: "#6b6055" }}>👑 {utilisateur?.nom}</span>
-          <button onClick={onRetour} style={{ background: "#b45309", color: "white", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "13px", fontWeight: "700" }}>
-            ← Retour au catalogue
+          <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)" }}>👑 {utilisateur?.nom}</span>
+          <button onClick={onRetour} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
+            onMouseEnter={(e) => { e.target.style.background = "rgba(255,255,255,0.25)"; }}
+            onMouseLeave={(e) => { e.target.style.background = "rgba(255,255,255,0.15)"; }}>
+            ← Retour
           </button>
         </div>
       </header>
 
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "28px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "28px" }}>
           {[
             { label: "Total des ventes", value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
             { label: "En attente", value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
             { label: "Livrées", value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
             { label: "Stock faible", value: stats.stockFaible + " produits", icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
           ].map((stat, i) => (
-            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", boxShadow: "0 1px 4px rgba(0,0,0,0.04)" }}>
+            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "transform 0.2s, box-shadow 0.2s" }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(180,120,0,0.1)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
                 <span style={{ fontSize: "11px", fontWeight: "700", color: "#a8977f", textTransform: "uppercase", letterSpacing: "0.06em" }}>{stat.label}</span>
                 <span style={{ fontSize: "20px", background: stat.bg, padding: "6px", borderRadius: "8px" }}>{stat.icon}</span>
               </div>
-              <p style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: stat.color }}>{stat.value}</p>
+              <p style={{ margin: 0, fontSize: "24px", fontWeight: "800", color: stat.color }}>{stat.value}</p>
             </div>
           ))}
         </div>
@@ -734,7 +748,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
             { id: "commandes", label: "📋 Commandes" },
             { id: "produits", label: "🍯 Produits & Stocks" },
           ].map((o) => (
-            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none" }}>
+            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.2s" }}>
               {o.label}
             </button>
           ))}
@@ -747,13 +761,30 @@ export default function Dashboard({ utilisateur, onRetour }) {
             {onglet === "commandes" && (
               <>
                 {commandes.length > 0 && (
-                  <div style={{ display: "flex", gap: "10px", marginBottom: "16px", justifyContent: "flex-end" }}>
-                    <button onClick={exporterExcel} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#16a34a", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px" }}>
-                      📊 Exporter Excel
-                    </button>
-                    <button onClick={exporterPDF} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#dc2626", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px" }}>
-                      📄 Exporter PDF
-                    </button>
+                  <div style={{ display: "flex", gap: "10px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
+                    <input
+                      type="text"
+                      placeholder="🔍 Rechercher par nom, téléphone, adresse..."
+                      value={rechercheCommande}
+                      onChange={(e) => setRechercheCommande(e.target.value)}
+                      style={{
+                        flex: 1, minWidth: "200px", padding: "10px 14px", borderRadius: "10px",
+                        border: "1.5px solid #e5ddd0", fontSize: "13px", outline: "none",
+                        fontFamily: "'DM Sans', sans-serif", background: "white",
+                      }}
+                    />
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button onClick={exporterExcel} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#16a34a", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => { e.target.style.background = "#15803d"; }}
+                        onMouseLeave={(e) => { e.target.style.background = "#16a34a"; }}>
+                        📊 Excel
+                      </button>
+                      <button onClick={exporterPDF} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#dc2626", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => { e.target.style.background = "#b91c1c"; }}
+                        onMouseLeave={(e) => { e.target.style.background = "#dc2626"; }}>
+                        📄 PDF
+                      </button>
+                    </div>
                   </div>
                 )}
                 <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
@@ -762,36 +793,42 @@ export default function Dashboard({ utilisateur, onRetour }) {
                       <div style={{ fontSize: "48px", marginBottom: "12px" }}>📋</div>
                       <p style={{ fontSize: "16px", fontWeight: "600" }}>Aucune commande pour l'instant</p>
                     </div>
+                  ) : commandesFiltrees.length === 0 ? (
+                    <div style={{ textAlign: "center", padding: "40px", color: "#a8977f" }}>
+                      <p style={{ fontSize: "15px", fontWeight: "600" }}>Aucune commande ne correspond à votre recherche</p>
+                    </div>
                   ) : (
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>#</th><th>Client</th><th>Téléphone</th>
-                          <th>Adresse</th><th>Total</th><th>Date</th>
-                          <th>Statut</th><th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {commandes.map((c, index) => (
-                          <tr key={c.id}>
-                            <td><strong>#{index + 1}</strong></td>
-                            <td>{c.client_nom || "—"}</td>
-                            <td>{c.client_telephone || "—"}</td>
-                            <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
-                            <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
-                            <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
-                            <td><BadgeStatut statut={c.statut} /></td>
-                            <td>
-                              <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
-                                {STATUTS.map((s) => (
-                                  <option key={s.id} value={s.id}>{s.label}</option>
-                                ))}
-                              </select>
-                            </td>
+                    <div style={{ overflowX: "auto" }}>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>#</th><th>Client</th><th>Téléphone</th>
+                            <th>Adresse</th><th>Total</th><th>Date</th>
+                            <th>Statut</th><th>Action</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+                        <tbody>
+                          {commandesFiltrees.map((c, index) => (
+                            <tr key={c.id}>
+                              <td><strong>#{index + 1}</strong></td>
+                              <td>{c.client_nom || "—"}</td>
+                              <td>{c.client_telephone || "—"}</td>
+                              <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
+                              <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
+                              <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
+                              <td><BadgeStatut statut={c.statut} /></td>
+                              <td>
+                                <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
+                                  {STATUTS.map((s) => (
+                                    <option key={s.id} value={s.id}>{s.label}</option>
+                                  ))}
+                                </select>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   )}
                 </div>
               </>
