@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
-export default function ResetPassword({ token, onRetourConnexion }) {
+export default function ResetPassword() {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const token = searchParams.get('token');
   const [nouveauMdp, setNouveauMdp] = useState("");
   const [confirmationMdp, setConfirmationMdp] = useState("");
   const [message, setMessage] = useState("");
@@ -34,7 +38,7 @@ export default function ResetPassword({ token, onRetourConnexion }) {
 
       if (res.ok) {
         setMessage("✅ Votre mot de passe a été réinitialisé ! Redirection...");
-        setTimeout(() => onRetourConnexion(), 3000);
+        setTimeout(() => navigate('/login'), 3000);
       } else {
         setErreur(data.erreur || "Une erreur est survenue.");
       }

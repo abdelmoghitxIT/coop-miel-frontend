@@ -1,25 +1,25 @@
+import { useNavigate } from 'react-router-dom';
 import { useLangue } from './LangueContext';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 
-// ─── MODIFIE CES INFORMATIONS ───────────────────────────────────────────────
 const INFO = {
   nom_fr: "Coopérative Apicole Kawit",
   nom_ar: "التعاونية الفلاحية لتربية النحل كاويت",
-  fondee: "____",           // Année de fondation
-  membres: "____",          // Nombre de membres
-  ruches: "____",           // Nombre de ruches
+  fondee: "____",
+  membres: "____",
+  ruches: "____",
   wilaya: "Tlemcen",
-  commune: "____",          // Commune
-  adresse: "____",          // Adresse complète
+  commune: "____",
+  adresse: "____",
   telephone: "+213 696 242 396",
-  email: "____@gmail.com",  // Email de contact
-  description_fr: "____",   // Description en français
-  description_ar: "____",   // Description en arabe
+  email: "____@gmail.com",
+  description_fr: "____",
+  description_ar: "____",
 };
-// ────────────────────────────────────────────────────────────────────────────
 
-export default function APropos({ onRetour }) {
+export default function APropos() {
+  const navigate = useNavigate();
   const { isAr } = useLangue();
 
   return (
@@ -53,7 +53,7 @@ export default function APropos({ onRetour }) {
             </p>
           </div>
         </div>
-        <button onClick={onRetour} style={{
+        <button onClick={() => navigate('/')} style={{
           background: "#b45309", color: "white", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",

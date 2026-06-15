@@ -1,8 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
-export default function Login({ onConnexion, onAnnuler }) {
+export default function Login() {
+  const { handleConnexion } = useAuth();
+  const navigate = useNavigate();
   const [mode, setMode] = useState("connexion");
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
@@ -47,7 +51,8 @@ export default function Login({ onConnexion, onAnnuler }) {
       } else {
         localStorage.setItem("token", data.token);
         localStorage.setItem("utilisateur", JSON.stringify(data.utilisateur));
-        onConnexion(data.utilisateur);
+        handleConnexion(data.utilisateur);
+        navigate('/');
       }
     } catch (err) {
       setErreur("Impossible de contacter le serveur");
@@ -246,20 +251,18 @@ export default function Login({ onConnexion, onAnnuler }) {
           fontFamily: "'DM Sans', sans-serif",
           lineHeight: "1.6",
         }}>
-          {onAnnuler && (
-            <button
-              onClick={onAnnuler}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: "14px", color: "#a8977f",
-                textDecoration: "underline", display: "block",
-                margin: "0 auto 12px",
-                fontFamily: "'DM Sans', sans-serif",
-              }}
-            >
-              ← Retour au catalogue
-            </button>
-          )}
+          <button
+            onClick={() => navigate('/')}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: "14px", color: "#a8977f",
+              textDecoration: "underline", display: "block",
+              margin: "0 auto 12px",
+              fontFamily: "'DM Sans', sans-serif",
+            }}
+          >
+            Retour à l'accueil
+          </button>
           Vous êtes un membre de la coopérative ?<br />
           Contactez l'administrateur pour votre accès.
         </div>

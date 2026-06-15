@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import { useLangue } from './LangueContext';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -11,7 +14,10 @@ const STATUTS = {
   annulee: { label: "Annulée", labelAr: "ملغاة", color: "#dc2626", bg: "#fee2e2", icon: "❌" },
 };
 
-export default function MesCommandes({ utilisateur, onRetour, isAr }) {
+export default function MesCommandes() {
+  const { utilisateur } = useAuth();
+  const { isAr } = useLangue();
+  const navigate = useNavigate();
   const [commandes, setCommandes] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [commandeOuverte, setCommandeOuverte] = useState(null);
@@ -54,7 +60,7 @@ export default function MesCommandes({ utilisateur, onRetour, isAr }) {
             </p>
           </div>
         </div>
-        <button onClick={onRetour} style={{
+        <button onClick={() => navigate('/')} style={{
           background: "#b45309", color: "white", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",
@@ -86,7 +92,7 @@ export default function MesCommandes({ utilisateur, onRetour, isAr }) {
             <p style={{ fontSize: "14px", color: "#a8977f", margin: 0 }}>
               {isAr ? "تصفح منتجاتنا وضع طلبك الأول !" : "Parcourez nos produits et passez votre première commande !"}
             </p>
-            <button onClick={onRetour} style={{
+        <button onClick={() => navigate('/')} style={{
               marginTop: "20px", background: "#b45309", color: "white",
               border: "none", borderRadius: "10px", padding: "12px 24px",
               cursor: "pointer", fontWeight: "700", fontSize: "14px",

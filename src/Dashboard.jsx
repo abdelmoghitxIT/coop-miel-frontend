@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -420,7 +422,9 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
   );
 }
 
-export default function Dashboard({ utilisateur, onRetour }) {
+export default function Dashboard() {
+  const { utilisateur } = useAuth();
+  const navigate = useNavigate();
   const [commandes, setCommandes] = useState([]);
   const [produits, setProduits] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -715,7 +719,7 @@ export default function Dashboard({ utilisateur, onRetour }) {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)" }}>👑 {utilisateur?.nom}</span>
-          <button onClick={onRetour} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
+          <button onClick={() => navigate('/')} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
             onMouseEnter={(e) => { e.target.style.background = "rgba(255,255,255,0.25)"; }}
             onMouseLeave={(e) => { e.target.style.background = "rgba(255,255,255,0.15)"; }}>
             ← Retour

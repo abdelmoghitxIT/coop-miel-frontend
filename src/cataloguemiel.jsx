@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import FormulaireCommande from './FormulaireCommande';
 import { useLangue } from './LangueContext';
+import { useAuth } from './AuthContext';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 
@@ -12,8 +14,9 @@ const CATEGORIES = (t) => [
   { id: "coffrets", label: t.coffrets },
 ];
 
-function CarteProduit({ produit, onAjouterPanier, onVoirProduit, t, isAr }) {
+function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
   const [ajoute, setAjoute] = useState(false);
+  const navigate = useNavigate();
 
   const handleAjouter = (e) => {
     e.stopPropagation();
@@ -26,7 +29,7 @@ function CarteProduit({ produit, onAjouterPanier, onVoirProduit, t, isAr }) {
 
   return (
     <div
-      onClick={() => onVoirProduit && onVoirProduit(produit.id)}
+      onClick={() => navigate(`/produit/${produit.id}`)}
       style={{
         background: "white",
         borderRadius: "16px",
@@ -114,7 +117,7 @@ function CarteProduit({ produit, onAjouterPanier, onVoirProduit, t, isAr }) {
   );
 }
 
-function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander, t, isAr }) {
+function Panier({ items, onFermer, onCommander, t, isAr }) {
   const total = items.reduce((sum, item) => sum + Number(item.prix) * item.qte, 0);
   return (
     <div style={{
@@ -181,8 +184,10 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
   );
 }
 
-export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes, onAllerAPropos }){
+export default function CatalogueMiel(){
   const { t, isAr, toggleLangue, langue } = useLangue();
+  const { utilisateur, panier, setPanier, handleDeconnexion } = useAuth();
+  const navigate = useNavigate();
   const [categorieActive, setCategorieActive] = useState("tous");
   const [recherche, setRecherche] = useState("");
   const [panierOuvert, setPanierOuvert] = useState(false);
@@ -271,7 +276,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
 
         {/* Liste des boutons flexible */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          <button onClick={onAllerAPropos} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
+          <button onClick={() => navigate('/a-propos')} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
             À propos de nous
           </button>
           
@@ -297,7 +302,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
                 {t.bonjour}, {utilisateur.nom} 👋
               </span>
               {utilisateur?.role === 'admin' && (
-                <button onClick={onDashboard} style={{
+                <button onClick={() => navigate('/dashboard')} style={{
                   background: "#78350f", color: "white", border: "none",
                   borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
                   fontSize: "13px", fontWeight: "700",
@@ -307,7 +312,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
                 </button>
               )}
               <button
-                onClick={onMesCommandes}
+                onClick={() => navigate('/mes-commandes')}
                 style={{
                   background: "none", border: "1.5px solid #e5ddd0",
                   borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
@@ -319,7 +324,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
               </button>
 
               <button
-                onClick={onDeconnexion}
+                onClick={handleDeconnexion}
                 style={{
                   background: "none", border: "1.5px solid #e5ddd0",
                   borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
@@ -331,7 +336,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
               </button>
             </>
           ) : (
-            <button onClick={onDemanderConnexion} style={{
+            <button onClick={() => navigate('/login')} style={{
               background: "none", border: "1.5px solid #b45309",
               borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
               fontSize: "13px", color: "#b45309", fontWeight: "600",
@@ -440,7 +445,6 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
               key={produit.id}
               produit={produit}
               onAjouterPanier={ajouterAuPanier}
-              onVoirProduit={onVoirProduit}
               t={t}
               isAr={isAr}
             />
@@ -452,15 +456,13 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
       {panierOuvert && (
         <>
           <div onClick={() => setPanierOuvert(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 999 }} />
-          <Panier
-            items={panier}
-            onFermer={() => setPanierOuvert(false)}
-            utilisateur={utilisateur}
-            onDemanderConnexion={() => { setPanierOuvert(false); onDemanderConnexion(); }}
-            onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
-            t={t}
-            isAr={isAr}
-          />
+            <Panier
+              items={panier}
+              onFermer={() => setPanierOuvert(false)}
+              onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
+              t={t}
+              isAr={isAr}
+            />
         </>
       )}
 

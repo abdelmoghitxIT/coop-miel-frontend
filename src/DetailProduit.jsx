@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
 import { useLangue } from './LangueContext';
+import { useAuth } from './AuthContext';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 
-export default function DetailProduit({ produitId, onRetour, onAjouterPanier }) {
+export default function DetailProduit() {
+  const { id: produitId } = useParams();
+  const navigate = useNavigate();
   const { t, isAr, toggleLangue, langue } = useLangue();
+  const { setPanier } = useAuth();
   const [produit, setProduit] = useState(null);
   const [chargement, setChargement] = useState(true);
   const [photoActive, setPhotoActive] = useState(0);
@@ -27,9 +32,18 @@ export default function DetailProduit({ produitId, onRetour, onAjouterPanier }) 
   }, [produitId, API_URL]);
 
   const handleAjouter = () => {
-    for (let i = 0; i < quantite; i++) {
-      onAjouterPanier(produit);
-    }
+    setPanier((prev) => {
+      const nouveau = [...prev];
+      for (let i = 0; i < quantite; i++) {
+        const existant = nouveau.find((p) => p.id === produit.id);
+        if (existant) {
+          existant.qte += 1;
+        } else {
+          nouveau.push({ ...produit, qte: 1 });
+        }
+      }
+      return nouveau;
+    });
     setAjoute(true);
     setTimeout(() => setAjoute(false), 1500);
   };
@@ -50,7 +64,7 @@ export default function DetailProduit({ produitId, onRetour, onAjouterPanier }) 
           <p style={{ fontSize: "16px", color: "#6b6055", marginTop: "12px" }}>
             {isAr ? "المنتج غير موجود" : "Produit non trouvé"}
           </p>
-          <button onClick={onRetour} style={{ marginTop: "16px", background: "#b45309", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
+          <button onClick={() => navigate('/')} style={{ marginTop: "16px", background: "#b45309", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
             {t.retourCatalogue}
           </button>
         </div>
@@ -128,7 +142,7 @@ export default function DetailProduit({ produitId, onRetour, onAjouterPanier }) 
           </div>
 
           <button
-            onClick={onRetour}
+            onClick={() => navigate(-1)}
             style={{
               background: "none", border: "none", cursor: "pointer",
               fontSize: "14px", color: "#b45309", fontWeight: "700",

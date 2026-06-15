@@ -1,12 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 import App from './App';
 import { LangueProvider } from './LangueContext';
+import { AuthProvider } from './AuthContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <LangueProvider>
-    <App />
-  </LangueProvider>
+  <BrowserRouter>
+    <LangueProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </LangueProvider>
+  </BrowserRouter>
 );
