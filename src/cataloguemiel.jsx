@@ -116,7 +116,6 @@ function CarteProduit({ produit, onAjouterPanier, onVoirProduit, t, isAr }) {
 
 function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander, t, isAr }) {
   const total = items.reduce((sum, item) => sum + Number(item.prix) * item.qte, 0);
-
   return (
     <div style={{
       position: "fixed", top: 0, right: 0, bottom: 0, width: "360px",
@@ -182,7 +181,7 @@ function Panier({ items, onFermer, utilisateur, onDemanderConnexion, onCommander
   );
 }
 
-export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes,onAllerAPropos }){
+export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderConnexion, onDashboard, onVoirProduit, panier, setPanier, onMesCommandes, onAllerAPropos }){
   const { t, isAr, toggleLangue, langue } = useLangue();
   const [categorieActive, setCategorieActive] = useState("tous");
   const [recherche, setRecherche] = useState("");
@@ -190,7 +189,6 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
   const [produits, setProduits] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [commandeEnCours, setCommandeEnCours] = useState(false);
-  
   const [commandeConfirmee, setCommandeConfirmee] = useState(null);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -239,8 +237,9 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
       direction: isAr ? "rtl" : "ltr",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700;800&family=DM+Sans:wght=400;500;600;700;800&family=Amiri:wght=400;700&display=swap');
         * { box-sizing: border-box; }
+        html, body { overflow-x: hidden; max-width: 100vw; margin: 0; padding: 0; }
       `}</style>
 
       {chargement && (
@@ -249,11 +248,12 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
         </div>
       )}
 
-      {/* Navbar */}
+      {/* Navbar Responsive */}
       <header style={{
         background: "white", borderBottom: "1px solid #f0ebe3",
-        padding: "0 40px", height: "68px", display: "flex",
+        padding: "10px 20px", minHeight: "68px", display: "flex",
         alignItems: "center", justifyContent: "space-between",
+        flexWrap: "wrap", gap: "15px",
         position: "sticky", top: 0, zIndex: 100,
         boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
       }}>
@@ -269,22 +269,12 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-<button 
-  onClick={onAllerAPropos} 
-  style={{
-    background: "none", 
-    border: "none",
-    cursor: "pointer",
-    fontSize: "14px", 
-    color: "#b45309", 
-    fontWeight: "700",
-    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-    marginRight: "10px"
-  }}
->
-  ℹ️ {isAr ? "معلومات عنا" : "À propos"}
-</button>
+        {/* Liste des boutons flexible */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <button onClick={onAllerAPropos} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
+            À propos de nous
+          </button>
+          
           {/* Bouton FR/AR */}
           <div style={{ display: "flex", gap: "3px", background: "#f0ebe3", borderRadius: "8px", padding: "3px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
@@ -317,28 +307,28 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
                 </button>
               )}
               <button
-  onClick={onMesCommandes}
-  style={{
-    background: "none", border: "1.5px solid #e5ddd0",
-    borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-    fontSize: "13px", color: "#6b6055",
-    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-  }}
->
-  {isAr ? "طلباتي 📋" : "📋 Mes commandes"}
-</button>
+                onClick={onMesCommandes}
+                style={{
+                  background: "none", border: "1.5px solid #e5ddd0",
+                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+                  fontSize: "13px", color: "#6b6055",
+                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                }}
+              >
+                {isAr ? "طلباتي 📋" : "📋 Mes commandes"}
+              </button>
 
-<button
-  onClick={onDeconnexion}
-  style={{
-    background: "none", border: "1.5px solid #e5ddd0",
-    borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-    fontSize: "13px", color: "#6b6055",
-    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-  }}
->
-  {t.deconnexion}
-</button>
+              <button
+                onClick={onDeconnexion}
+                style={{
+                  background: "none", border: "1.5px solid #e5ddd0",
+                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+                  fontSize: "13px", color: "#6b6055",
+                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                }}
+              >
+                {t.deconnexion}
+              </button>
             </>
           ) : (
             <button onClick={onDemanderConnexion} style={{
@@ -483,13 +473,11 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
           onSuccess={(commande, infoClient) => {
             setCommandeEnCours(false);
             const telClient = infoClient.telephone?.replace(/\s/g, '').replace(/^0/, '213');
-            
-            const ADMIN_WHATSAPP = "213696242396"; // Ton numéro WhatsApp Admin
+            const ADMIN_WHATSAPP = "213696242396"; 
             
             const msgAdmin = `🍯 *Nouvelle commande #${commande.id}*\n👤 Client : ${infoClient.nom}\n📞 Téléphone : ${infoClient.telephone}\n📍 Adresse : ${infoClient.adresse}\n💰 Total : ${infoClient.total} DA\n🛒 Produits :\n${infoClient.produits}\n⏳ En attente de confirmation`;
-            
             const msgClient = `🍯 *التعاونية الفلاحية لتربية النحل كاويت*\nمرحباً ${infoClient.nom} !\n✅ تم تأكيد طلبك بنجاح\n💰 المجموع : ${infoClient.total} DA\n🚚 سيتم التواصل معك قريباً للتوصيل\nشكراً لثقتكم 🌟`;
-
+            
             setCommandeConfirmee({
               ...commande,
               msgAdmin: ADMIN_WHATSAPP ? msgAdmin : null,
@@ -523,7 +511,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
               {t.commandeDesc}
             </p>
 
-            {/* Bouton WhatsApp Client (Visible uniquement pour les clients / visiteurs) */}
+            {/* Bouton WhatsApp Client */}
             {utilisateur?.role !== 'admin' && commandeConfirmee?.msgAdmin && (
               <a 
                 href={`https://wa.me/${commandeConfirmee.adminTel}?text=${encodeURIComponent(commandeConfirmee.msgAdmin)}`}
@@ -541,7 +529,7 @@ export default function CatalogueMiel({ utilisateur, onDeconnexion, onDemanderCo
               </a>
             )}
 
-            {/* Bouton WhatsApp Admin (Visible uniquement pour l'administrateur) */}
+            {/* Bouton WhatsApp Admin */}
             {utilisateur?.role === 'admin' && commandeConfirmee?.msgClient && commandeConfirmee?.telClient && (
               <a 
                 href={`https://wa.me/${commandeConfirmee.telClient}?text=${encodeURIComponent(commandeConfirmee.msgClient)}`}
