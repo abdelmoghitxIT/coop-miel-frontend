@@ -4,8 +4,8 @@ import Login from './Login';
 import Dashboard from './Dashboard';
 import MesCommandes from './MesCommandes';
 import DetailProduit from './DetailProduit';
-import VerifierEmail from "./components/VerifierEmail"; 
-import ResetPassword from "./components/ResetPassword";
+import VerifierEmail from './VerifierEmail';
+import ResetPassword from './ResetPassword';
 import APropos from './APropos'; 
 
 function App() {
@@ -54,7 +54,7 @@ const [afficherAPropos, setAfficherAPropos] = useState(false);
 
   const ajouterAuPanier = (produit) => {
     setPanier((prev) => {
-      const existant = prev.find((p) => p.id === product.id);
+      const existant = prev.find((p) => p.id === produit.id);
       if (existant) {
         return prev.map((p) => p.id === produit.id ? { ...p, qte: p.qte + 1 } : p);
       }
