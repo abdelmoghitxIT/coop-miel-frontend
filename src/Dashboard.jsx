@@ -17,6 +17,7 @@ const entetesAuth = () => {
 function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
   const [form, setForm] = useState({
     nom: "", description: "", prix: "", stock_quantite: "", categorie_id: "",
+    origine: "", recolte: "",
   });
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
@@ -63,6 +64,8 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
           prix: Number(form.prix),
           stock_quantite: Number(form.stock_quantite),
           categorie_id: Number(categorieId),
+          origine: form.origine || null,
+          recolte: form.recolte || null,
         }),
       });
       const data = await res.json();
@@ -125,6 +128,17 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
             </div>
           </div>
 
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={labelStyle}>{t.origine}</label>
+              <input name="origine" value={form.origine} onChange={handleChange} placeholder={isAr ? "تلمسان، الجزائر" : "Tlemcen, Algérie"} style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>{t.recolte}</label>
+              <input name="recolte" value={form.recolte} onChange={handleChange} placeholder="2025" style={inputStyle} />
+            </div>
+          </div>
+
           <div>
             <label style={labelStyle}>{isAr ? "التصنيف *" : "Catégorie *"}</label>
             <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
@@ -181,13 +195,29 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
     prix: produit.prix || "",
     stock_quantite: produit.stock_quantite || "",
     categorie_id: produit.categorie_id || "",
+    origine: produit.origine || "",
+    recolte: produit.recolte || "",
   });
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
   const [nouvelleCategorie, setNouvelleCategorie] = useState("");
+  const [caracteristiques, setCaracteristiques] = useState([]);
+  const [caracLoading, setCaracLoading] = useState(true);
+  const [editCarac, setEditCarac] = useState(null);
+  const [nouvelleCle, setNouvelleCle] = useState("");
+  const [nouvelleValeur, setNouvelleValeur] = useState("");
+  const [afficherAjout, setAfficherAjout] = useState(false);
+
   const categoriesUniques = categories.filter((c, i, arr) =>
     arr.findIndex(x => x.nom.toLowerCase() === c.nom.toLowerCase()) === i
   );
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/produits/${produit.id}/caracteristiques`)
+      .then((r) => r.json())
+      .then((data) => { setCaracteristiques(data); setCaracLoading(false); })
+      .catch(() => setCaracLoading(false));
+  }, [produit.id]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -227,6 +257,8 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
           prix: Number(form.prix),
           stock_quantite: Number(form.stock_quantite),
           categorie_id: Number(categorieId),
+          origine: form.origine || null,
+          recolte: form.recolte || null,
         }),
       });
       const data = await res.json();
@@ -307,6 +339,134 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                 placeholder={isAr ? "أدخل اسم التصنيف الجديد" : "Saisissez le nom de la nouvelle catégorie"}
                 style={{ ...inputStyle, marginTop: "8px" }}
               />
+            )}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+            <div>
+              <label style={labelStyle}>{t.origine}</label>
+              <input name="origine" value={form.origine} onChange={handleChange} placeholder={isAr ? "تلمسان، الجزائر" : "Tlemcen, Algérie"} style={inputStyle} />
+            </div>
+            <div>
+              <label style={labelStyle}>{t.recolte}</label>
+              <input name="recolte" value={form.recolte} onChange={handleChange} placeholder="2025" style={inputStyle} />
+            </div>
+          </div>
+
+          <div style={{ borderTop: "1px solid #f0ebe3", paddingTop: "14px" }}>
+            <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              {t.caracteristiques}
+            </p>
+            {caracLoading ? (
+              <p style={{ fontSize: "13px", color: "#a8977f" }}>⏳</p>
+            ) : (
+              <>
+                {caracteristiques.map((carac) => (
+                  <div key={carac.id}>
+                    {editCarac?.id === carac.id ? (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "6px 0" }}>
+                        <div style={{ display: "flex", gap: "6px" }}>
+                          <input value={editCarac.cle} onChange={(e) => setEditCarac({ ...editCarac, cle: e.target.value })}
+                            placeholder={t.cleCaracteristique}
+                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                          <input value={editCarac.valeur} onChange={(e) => setEditCarac({ ...editCarac, valeur: e.target.value })}
+                            placeholder={t.valeurCaracteristique}
+                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                        </div>
+                        <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
+                          <button onClick={async () => {
+                            if (!editCarac.cle.trim() || !editCarac.valeur.trim()) return;
+                            try {
+                              const r = await fetch(`${API_URL}/api/produits/caracteristiques/${carac.id}`, {
+                                method: 'PUT', headers: { 'Content-Type': 'application/json', ...entetesAuth() },
+                                body: JSON.stringify({ cle: editCarac.cle.trim(), valeur: editCarac.valeur.trim() }),
+                              });
+                              if (!r.ok) throw new Error();
+                              const d = await r.json();
+                              setCaracteristiques((prev) => prev.map((c) => c.id === carac.id ? d : c));
+                              setEditCarac(null);
+                            } catch { alert("Erreur"); }
+                          }} style={{
+                            background: "#16a34a", color: "white", border: "none", borderRadius: "6px",
+                            padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                          }}>{t.enregistrer}</button>
+                          <button onClick={() => setEditCarac(null)} style={{
+                            background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                            padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                          }}>{t.annuler}</button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid #f8f4ef" }}>
+                        <span style={{ fontSize: "13px", color: "#a8977f", fontWeight: "600" }}>{carac.cle}</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>{carac.valeur}</span>
+                          <button onClick={() => setEditCarac({ id: carac.id, cle: carac.cle, valeur: carac.valeur })} style={{
+                            background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#b45309", padding: "2px",
+                          }}>✏️</button>
+                          <button onClick={async () => {
+                            try {
+                              const r = await fetch(`${API_URL}/api/produits/caracteristiques/${carac.id}`, { method: 'DELETE', headers: { ...entetesAuth() } });
+                              if (!r.ok) throw new Error();
+                              setCaracteristiques((prev) => prev.filter((c) => c.id !== carac.id));
+                            } catch { alert("Erreur"); }
+                          }} style={{
+                            background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#dc2626", padding: "2px",
+                          }}>🗑️</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+                {caracteristiques.length === 0 && !afficherAjout && (
+                  <p style={{ fontSize: "13px", color: "#a8977f", textAlign: "center", margin: "8px 0" }}>
+                    {t.aucuneCaracteristique}
+                  </p>
+                )}
+                {afficherAjout && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "6px 0" }}>
+                    <div style={{ display: "flex", gap: "6px" }}>
+                      <input value={nouvelleCle} onChange={(e) => setNouvelleCle(e.target.value)}
+                        placeholder={t.cleCaracteristique}
+                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                      <input value={nouvelleValeur} onChange={(e) => setNouvelleValeur(e.target.value)}
+                        placeholder={t.valeurCaracteristique}
+                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                    </div>
+                    <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
+                      <button onClick={async () => {
+                        if (!nouvelleCle.trim() || !nouvelleValeur.trim()) return;
+                        try {
+                          const r = await fetch(`${API_URL}/api/produits/${produit.id}/caracteristiques`, {
+                            method: 'POST', headers: { 'Content-Type': 'application/json', ...entetesAuth() },
+                            body: JSON.stringify({ cle: nouvelleCle.trim(), valeur: nouvelleValeur.trim() }),
+                          });
+                          if (!r.ok) throw new Error();
+                          const d = await r.json();
+                          setCaracteristiques((prev) => [...prev, d]);
+                          setNouvelleCle(""); setNouvelleValeur(""); setAfficherAjout(false);
+                        } catch { alert("Erreur"); }
+                      }} style={{
+                        background: "#16a34a", color: "white", border: "none", borderRadius: "6px",
+                        padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                      }}>{t.enregistrer}</button>
+                      <button onClick={() => { setAfficherAjout(false); setNouvelleCle(""); setNouvelleValeur(""); }} style={{
+                        background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                        padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                      }}>{t.annuler}</button>
+                    </div>
+                  </div>
+                )}
+                {!afficherAjout && (
+                  <button onClick={() => setAfficherAjout(true)} style={{
+                    width: "100%", marginTop: "8px", padding: "8px", borderRadius: "8px",
+                    border: "1.5px dashed #b45309", background: "transparent",
+                    color: "#b45309", fontWeight: "700", fontSize: "13px", cursor: "pointer", fontFamily: "inherit",
+                  }}>
+                    {t.ajouterCaracteristique}
+                  </button>
+                )}
+              </>
             )}
           </div>
 
