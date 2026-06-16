@@ -53,7 +53,7 @@ export default function APropos() {
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/catalogue')} style={{
+        <button onClick={() => navigate('/')} style={{
           background: "#b45309", color: "white", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",

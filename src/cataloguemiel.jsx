@@ -276,9 +276,6 @@ export default function CatalogueMiel(){
 
         {/* Liste des boutons flexible */}
         <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          <button onClick={() => navigate('/')} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
-            Accueil
-          </button>
           <button onClick={() => navigate('/a-propos')} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
             À propos de nous
           </button>

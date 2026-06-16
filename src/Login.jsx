@@ -52,7 +52,7 @@ export default function Login() {
         localStorage.setItem("token", data.token);
         localStorage.setItem("utilisateur", JSON.stringify(data.utilisateur));
         handleConnexion(data.utilisateur);
-        navigate('/catalogue');
+        navigate('/');
       }
     } catch (err) {
       setErreur("Impossible de contacter le serveur");
