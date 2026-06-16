@@ -151,7 +151,7 @@ const translations = {
     caracteristiques: "Caractéristiques",
     quantite: "Quantité",
     paiementReception: "Paiement à la réception — 100% sécurisé",
-    livraisonDetail: "Livraison à Tlemcen et wilayas proches",
+    livraisonDetail: "Livraison 58 wilayas",
 
     // Dashboard
     dashboardAdmin: "Dashboard Admin",
@@ -353,7 +353,7 @@ const translations = {
     caracteristiques: "المواصفات",
     quantite: "الكمية",
     paiementReception: "الدفع عند الاستلام — آمن 100%",
-    livraisonDetail: "التوصيل متاح في تلمسان والولايات المجاورة",
+    livraisonDetail: "التوصيل إلى 58 ولاية",
 
     // Dashboard
     dashboardAdmin: "لوحة التحكم",
