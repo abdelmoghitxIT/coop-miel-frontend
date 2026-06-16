@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useLangue } from './LangueContext';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export default function MotDePasseOublie() {
+  const { t } = useLangue();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [envoye, setEnvoye] = useState(false);
@@ -45,31 +47,31 @@ export default function MotDePasseOublie() {
         textAlign: "center",
       }}>
         <div style={{ fontSize: "48px", marginBottom: "12px" }}>🔑</div>
-        <h2 style={{ color: "#78350f", margin: "0 0 8px" }}>Mot de passe oublié</h2>
+        <h2 style={{ color: "#78350f", margin: "0 0 8px" }}>{t.motDePasseOublie}</h2>
         <p style={{ color: "#6b6055", fontSize: "14px", margin: "0 0 24px" }}>
-          Saisissez votre email, nous vous enverrons un lien de réinitialisation.
+          {t.saisirEmail}
         </p>
 
         {envoye ? (
           <div>
             <p style={{ color: "#16a34a", fontWeight: "bold", fontSize: "16px" }}>
-              ✅ Email envoyé !
+              {t.emailEnvoye}
             </p>
             <p style={{ color: "#6b6055", fontSize: "14px" }}>
-              Si un compte existe avec cette adresse, vous recevrez un email sous peu.
+              {t.siCompteExiste}
             </p>
             <button onClick={() => navigate('/login')} style={{
               background: "#b45309", color: "white", border: "none",
               padding: "12px 24px", borderRadius: "8px", cursor: "pointer",
               fontWeight: "bold", fontSize: "15px", marginTop: "16px",
             }}>
-              Retour à la connexion
+              {t.retourConnexion}
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             <input
-              type="email" required placeholder="Votre adresse email"
+              type="email" required placeholder={t.votreEmail}
               value={email} onChange={(e) => { setEmail(e.target.value); setErreur(""); }}
               style={{
                 width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #f0ebe3",
@@ -82,13 +84,13 @@ export default function MotDePasseOublie() {
               background: "#b45309", color: "white", fontWeight: "700", fontSize: "15px",
               cursor: "pointer",
             }}>
-              {chargement ? "Envoi en cours..." : "Envoyer le lien"}
+              {chargement ? t.envoi : t.envoyerLien}
             </button>
             <button type="button" onClick={() => navigate('/login')} style={{
               background: "none", border: "none", cursor: "pointer", fontSize: "13px", color: "#a8977f",
               textDecoration: "underline", marginTop: "8px",
             }}>
-              Retour à la connexion
+              {t.retourConnexion}
             </button>
           </form>
         )}

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useLangue } from './LangueContext';
 
 export default function VerifierEmail() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
+  const { t, isAr } = useLangue();
   const [statut, setStatut] = useState("chargement");
   const [message, setMessage] = useState("");
 
@@ -12,7 +14,7 @@ export default function VerifierEmail() {
     const validerEmail = async () => {
       if (!token) {
         setStatut("erreur");
-        setMessage("Le jeton de vérification (token) est manquant.");
+        setMessage(isAr ? "رمز التحقق مفقود." : "Le jeton de vérification (token) est manquant.");
         return;
       }
 
@@ -27,16 +29,16 @@ export default function VerifierEmail() {
           setTimeout(() => navigate('/login'), 4000);
         } else {
           setStatut("erreur");
-          setMessage(data.erreur || "Une erreur est survenue.");
+          setMessage(data.erreur || (isAr ? "حدث خطأ ما." : "Une erreur est survenue."));
         }
       } catch (err) {
         setStatut("erreur");
-        setMessage("Impossible de joindre le serveur.");
+        setMessage(t.erreurServeur);
       }
     };
 
     validerEmail();
-  }, [token, navigate]);
+  }, [token, navigate, isAr, t]);
 
   return (
     <div style={{
@@ -47,24 +49,24 @@ export default function VerifierEmail() {
         background: "white", padding: "40px", borderRadius: "12px", 
         boxShadow: "0 4px 20px rgba(0,0,0,0.05)", textAlign: "center", maxWidth: "450px"
       }}>
-        <h2 style={{ color: "#78350f", margin: "0 0 16px" }}>🍯 Coop Nhal Tlemcen</h2>
+        <h2 style={{ color: "#78350f", margin: "0 0 16px" }}>{t.verificationEmail}</h2>
         
         {statut === "chargement" && (
-          <p style={{ color: "#6b6055" }}>🔄 Vérification de votre adresse email en cours...</p>
+          <p style={{ color: "#6b6055" }}>{t.verificationEnCours}</p>
         )}
 
         {statut === "succes" && (
           <div>
             <p style={{ fontSize: "48px", margin: "0" }}>✅</p>
             <p style={{ color: "#16a34a", fontWeight: "bold", fontSize: "18px" }}>{message}</p>
-            <p style={{ color: "#a8977f", fontSize: "14px" }}>Vous allez être redirigé vers la page de connexion...</p>
+            <p style={{ color: "#a8977f", fontSize: "14px" }}>{t.redirectionConnexion}</p>
           </div>
         )}
 
         {statut === "erreur" && (
           <div>
             <p style={{ fontSize: "48px", margin: "0" }}>❌</p>
-            <p style={{ color: "#dc2626", fontWeight: "bold", fontSize: "18px" }}>Lien invalide ou expiré</p>
+            <p style={{ color: "#dc2626", fontWeight: "bold", fontSize: "18px" }}>{t.lienInvalide}</p>
             <p style={{ color: "#6b6055", fontSize: "14px" }}>{message}</p>
             <button 
               onClick={() => navigate('/login')}
@@ -73,7 +75,7 @@ export default function VerifierEmail() {
                 padding: "10px 20px", borderRadius: "8px", cursor: "pointer", marginTop: "15px", fontWeight: "bold"
               }}
             >
-              Retour à la connexion
+              {t.retourConnexion}
             </button>
           </div>
         )}

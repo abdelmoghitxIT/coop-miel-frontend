@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useLangue } from './LangueContext';
 
 export default function ResetPassword() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
+  const { t, isAr } = useLangue();
   const [nouveauMdp, setNouveauMdp] = useState("");
   const [confirmationMdp, setConfirmationMdp] = useState("");
   const [message, setMessage] = useState("");
@@ -17,7 +19,7 @@ export default function ResetPassword() {
     setMessage("");
 
     if (nouveauMdp !== confirmationMdp) {
-      setErreur("Les mots de passe ne correspondent pas.");
+      setErreur(isAr ? "كلمتا المرور غير متطابقتين" : "Les mots de passe ne correspondent pas.");
       return;
     }
 
@@ -37,7 +39,7 @@ export default function ResetPassword() {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage("✅ Votre mot de passe a été réinitialisé ! Redirection...");
+        setMessage(t.motDePasseReinitialise);
         setTimeout(() => navigate('/login'), 3000);
       } else {
         setErreur(data.erreur || "Une erreur est survenue.");
@@ -58,15 +60,15 @@ export default function ResetPassword() {
         background: "white", padding: "40px", borderRadius: "12px", 
         boxShadow: "0 4px 20px rgba(0,0,0,0.05)", width: "100%", maxWidth: "400px"
       }}>
-        <h2 style={{ color: "#78350f", margin: "0 0 8px", textAlign: "center" }}>🔑 Nouveau mot de passe</h2>
+        <h2 style={{ color: "#78350f", margin: "0 0 8px", textAlign: "center" }}>{t.nouveauMotDePasse}</h2>
         <p style={{ color: "#6b6055", textAlign: "center", fontSize: "14px", marginBottom: "24px" }}>
-          Choisissez un mot de passe sécurisé (minimum 8 caractères, 1 majuscule, 1 chiffre).
+          {t.choisirMotDePasse}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
             <label style={{ display: "block", color: "#1c1008", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
-              Nouveau mot de passe
+              {t.nouveauMotDePasse}
             </label>
             <input 
               type="password" 
@@ -79,7 +81,7 @@ export default function ResetPassword() {
 
           <div>
             <label style={{ display: "block", color: "#1c1008", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
-              Confirmer le mot de passe
+              {t.confirmerMotDePasse}
             </label>
             <input 
               type="password" 
@@ -102,7 +104,7 @@ export default function ResetPassword() {
               fontWeight: "bold", fontSize: "16px", marginTop: "8px"
             }}
           >
-            {chargement ? "Modification en cours..." : "Enregistrer le mot de passe"}
+            {chargement ? t.modificationEnCours : t.enregistrerMotDePasse}
           </button>
         </form>
       </div>

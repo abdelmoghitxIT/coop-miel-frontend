@@ -64,7 +64,7 @@ export default function DetailProduit() {
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: "48px" }}>❌</div>
           <p style={{ fontSize: "16px", color: "#6b6055", marginTop: "12px" }}>
-            {isAr ? "المنتج غير موجود" : "Produit non trouvé"}
+            {t.produitNonTrouve}
           </p>
           <button onClick={() => navigate('/')} style={{ marginTop: "16px", background: "#b45309", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
             {t.retourCatalogue}
@@ -86,10 +86,10 @@ export default function DetailProduit() {
   const stockFaible = produit.stock_quantite < 10;
 
   const specs = [
-    { label: isAr ? "المنشأ" : "Origine", value: produit.origine || "Tlemcen, Algérie" },
-    { label: isAr ? "موسم الحصاد" : "Récolte", value: produit.recolte || "2025" },
-    { label: isAr ? "الفئة" : "Catégorie", value: produit.categorie_nom },
-    { label: isAr ? "التخزين" : "Conservation", value: isAr ? "بعيداً عن الضوء والرطوبة" : "À l'abri de la lumière et de l'humidité" },
+    { label: t.origine, value: produit.origine || "Tlemcen, Algérie" },
+    { label: t.recolte, value: produit.recolte || "2025" },
+    { label: t.categorie, value: produit.categorie_nom },
+    { label: t.conservation, value: t.conservationDesc },
   ];
 
   return (
@@ -216,7 +216,7 @@ export default function DetailProduit() {
                 >
                   <span style={{ fontSize: "20px" }}>▶️</span>
                   <span style={{ fontSize: "9px", color: "white", fontWeight: "700" }}>
-                    {isAr ? "فيديو" : "VIDÉO"}
+                    {t.video}
                   </span>
                 </div>
               )}
@@ -246,7 +246,7 @@ export default function DetailProduit() {
                 {Number(produit.prix).toLocaleString("fr-DZ")} DA
               </span>
               <span style={{ fontSize: "14px", color: "#a8977f" }}>
-                / {isAr ? "وحدة" : "unité"}
+                / {t.unite}
               </span>
             </div>
 
@@ -265,17 +265,17 @@ export default function DetailProduit() {
             {/* Description */}
             <div style={{ background: "white", borderRadius: "12px", padding: "16px", border: "1px solid #f0ebe3" }}>
               <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                {isAr ? "الوصف" : "Description"}
+                {t.description}
               </p>
               <p style={{ margin: 0, fontSize: "14px", color: "#6b6055", lineHeight: "1.7" }}>
-                {produit.description || (isAr ? "منتج طبيعي عالي الجودة من جبال تلمسان" : "Produit naturel de qualité supérieure, récolté avec soin dans les montagnes de Tlemcen.")}
+                {produit.description || t.descriptionDefaut}
               </p>
             </div>
 
             {/* Caractéristiques */}
             <div style={{ background: "white", borderRadius: "12px", padding: "16px", border: "1px solid #f0ebe3" }}>
               <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                {isAr ? "المواصفات" : "Caractéristiques"}
+                {t.caracteristiques}
               </p>
               {specs.map((spec, i) => (
                 <div key={i} style={{
@@ -293,7 +293,7 @@ export default function DetailProduit() {
             {produit.stock_quantite > 0 && (
               <div style={{ display: "flex", alignItems: "center", gap: "12px", flexDirection: isAr ? "row-reverse" : "row" }}>
                 <span style={{ fontSize: "14px", fontWeight: "600", color: "#6b6055" }}>
-                  {isAr ? "الكمية :" : "Quantité :"}
+                  {t.quantite} :
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <button
@@ -351,10 +351,10 @@ export default function DetailProduit() {
               <span style={{ fontSize: "20px" }}>🚚</span>
               <div>
                 <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#166534" }}>
-                  {isAr ? "التوصيل متاح في تلمسان والولايات المجاورة" : "Livraison à Tlemcen et wilayas proches"}
+                  {t.livraisonDetail}
                 </p>
                 <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#16a34a" }}>
-                  {isAr ? "الدفع عند الاستلام — آمن 100%" : "Paiement à la réception — 100% sécurisé"}
+                  {t.paiementReception}
                 </p>
               </div>
             </div>

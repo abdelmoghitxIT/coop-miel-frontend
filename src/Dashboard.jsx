@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useLangue } from './LangueContext';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -13,27 +14,7 @@ const entetesAuth = () => {
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
-const STATUTS = [
-  { id: "en_attente", label: "En attente", color: "#f59e0b", bg: "#fef3c7" },
-  { id: "confirmee", label: "Confirmée", color: "#3b82f6", bg: "#eff6ff" },
-  { id: "en_livraison", label: "En livraison", color: "#8b5cf6", bg: "#f5f3ff" },
-  { id: "livree", label: "Livrée", color: "#16a34a", bg: "#dcfce7" },
-  { id: "annulee", label: "Annulée", color: "#dc2626", bg: "#fee2e2" },
-];
-
-function BadgeStatut({ statut }) {
-  const s = STATUTS.find((x) => x.id === statut) || STATUTS[0];
-  return (
-    <span style={{
-      padding: "3px 10px", borderRadius: "20px", fontSize: "12px",
-      fontWeight: "700", background: s.bg, color: s.color,
-    }}>
-      {s.label}
-    </span>
-  );
-}
-
-function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
+function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
   const [form, setForm] = useState({
     nom: "", description: "", prix: "", stock_quantite: "", categorie_id: "",
   });
@@ -44,7 +25,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
 
   const handleSubmit = async () => {
     if (!form.nom || !form.prix || !form.stock_quantite || !form.categorie_id) {
-      setErreur("Veuillez remplir tous les champs obligatoires");
+      setErreur(t.champsObligatoires);
       return;
     }
     setChargement(true);
@@ -63,12 +44,12 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErreur(data.erreur || "Erreur lors de l'ajout");
+        setErreur(data.erreur || t.erreurAjout);
       } else {
         onAjouter(data);
       }
     } catch (err) {
-      setErreur("Impossible de contacter le serveur");
+      setErreur(t.erreurServeur);
     }
     setChargement(false);
   };
@@ -93,18 +74,18 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
-            Ajouter un produit
+            {t.ajouterProduit}
           </h2>
           <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
-            <label style={labelStyle}>Nom du produit *</label>
+            <label style={labelStyle}>{t.nomProduit} *</label>
             <input name="nom" value={form.nom} onChange={handleChange} placeholder="Ex: Miel de Sidr" style={inputStyle} />
           </div>
           <div>
-            <label style={labelStyle}>Description</label>
+            <label style={labelStyle}>{t.descriptionProduit}</label>
             <textarea name="description" value={form.description} onChange={handleChange}
               placeholder="Description du produit..." rows={3}
               style={{ ...inputStyle, resize: "none" }}
@@ -112,21 +93,21 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
-              <label style={labelStyle}>Prix (DA) *</label>
+              <label style={labelStyle}>{t.prix} *</label>
               <input name="prix" type="number" value={form.prix} onChange={handleChange} placeholder="Ex: 1500" style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>Stock *</label>
+              <label style={labelStyle}>{t.stock} *</label>
               <input name="stock_quantite" type="number" value={form.stock_quantite} onChange={handleChange} placeholder="Ex: 50" style={inputStyle} />
             </div>
           </div>
 
           <div>
-            <label style={labelStyle}>Catégorie *</label>
+            <label style={labelStyle}>{isAr ? "التصنيف *" : "Catégorie *"}</label>
             <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
               style={{ ...inputStyle, cursor: "pointer" }}
             >
-              <option value="">-- Choisir une catégorie --</option>
+              <option value="">{t.choisirCategorie}</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.nom}</option>
               ))}
@@ -145,7 +126,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
             color: "white", fontWeight: "700", fontSize: "15px",
             cursor: chargement ? "not-allowed" : "pointer",
           }}>
-            {chargement ? "Ajout en cours..." : "Ajouter le produit"}
+            {chargement ? t.ajoutEnCours : (isAr ? "إضافة المنتج" : "Ajouter le produit")}
           </button>
 
           <button onClick={onAnnuler} style={{
@@ -153,7 +134,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
             border: "1.5px solid #e5ddd0", background: "white",
             color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
-            Annuler
+            {t.annuler}
           </button>
         </div>
       </div>
@@ -161,7 +142,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler }) {
   );
 }
 
-function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
+function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }) {
   const [form, setForm] = useState({
     nom: produit.nom || "",
     description: produit.description || "",
@@ -176,7 +157,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
 
   const handleSubmit = async () => {
     if (!form.nom || !form.prix || !form.stock_quantite) {
-      setErreur("Veuillez remplir tous les champs obligatoires");
+      setErreur(t.champsObligatoires);
       return;
     }
     setChargement(true);
@@ -195,13 +176,13 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setErreur(data.erreur || "Erreur lors de la modification");
+        setErreur(data.erreur || t.erreurModification);
       } else {
         onMiseAJour(data);
         onFermer();
       }
     } catch (err) {
-      setErreur("Impossible de contacter le serveur");
+      setErreur(t.erreurServeur);
     }
     setChargement(false);
   };
@@ -226,36 +207,36 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
-            ✏️ Modifier — {produit.nom}
+            ✏️ {isAr ? `تعديل — ${produit.nom}` : `${t.modifierTitre} — ${produit.nom}`}
           </h2>
           <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
-            <label style={labelStyle}>Nom du produit *</label>
+            <label style={labelStyle}>{t.nomProduit} *</label>
             <input name="nom" value={form.nom} onChange={handleChange} style={inputStyle} />
           </div>
 
           <div>
-            <label style={labelStyle}>Description</label>
+            <label style={labelStyle}>{t.descriptionProduit}</label>
             <textarea name="description" value={form.description} onChange={handleChange}
               rows={3} style={{ ...inputStyle, resize: "none" }} />
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
             <div>
-              <label style={labelStyle}>Prix (DA) *</label>
+              <label style={labelStyle}>{t.prix} *</label>
               <input name="prix" type="number" value={form.prix} onChange={handleChange} style={inputStyle} />
             </div>
             <div>
-              <label style={labelStyle}>Stock *</label>
+              <label style={labelStyle}>{t.stock} *</label>
               <input name="stock_quantite" type="number" value={form.stock_quantite} onChange={handleChange} style={inputStyle} />
             </div>
           </div>
 
           <div>
-            <label style={labelStyle}>Catégorie *</label>
+            <label style={labelStyle}>{isAr ? "التصنيف *" : "Catégorie *"}</label>
             <select name="categorie_id" value={form.categorie_id} onChange={handleChange}
               style={{ ...inputStyle, cursor: "pointer" }}>
               {categories.map((c) => (
@@ -276,7 +257,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
             color: "white", fontWeight: "700", fontSize: "15px",
             cursor: chargement ? "not-allowed" : "pointer",
           }}>
-            {chargement ? "Modification en cours..." : "✓ Enregistrer les modifications"}
+            {chargement ? (isAr ? "جارٍ التعديل..." : "Modification en cours...") : t.enregistrerModifications}
           </button>
 
           <button onClick={onFermer} style={{
@@ -284,7 +265,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
             border: "1.5px solid #e5ddd0", background: "white",
             color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
-            Annuler
+            {t.annuler}
           </button>
         </div>
       </div>
@@ -292,7 +273,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour }) {
   );
 }
 
-function GestionPhotos({ produit, onFermer, onMiseAJour }) {
+function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
   const [chargement, setChargement] = useState(false);
 
   const supprimerImage = async (imageUrl) => {
@@ -305,7 +286,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
       const data = await res.json();
       onMiseAJour(data);
     } catch (err) {
-      alert("Erreur lors de la suppression");
+      alert(t.erreurSuppression);
     }
   };
 
@@ -333,7 +314,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
       const data2 = await res2.json();
       onMiseAJour(data2);
     } catch (err) {
-      alert("Erreur lors de l'upload");
+      alert(t.erreurUpload);
     }
     setChargement(false);
   };
@@ -350,19 +331,19 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#1c1008" }}>
-            📷 Photos — {produit.nom}
+            📷 {isAr ? `الصور — ${produit.nom}` : `${t.photosProduit} — ${produit.nom}`}
           </h2>
           <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
         </div>
 
         <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
-          Photos actuelles ({images.length})
+          {`${t.photosActuelles} (${images.length})`}
         </p>
 
         {images.length === 0 ? (
           <div style={{ textAlign: "center", padding: "24px", background: "#fdf8f0", borderRadius: "12px", marginBottom: "20px", color: "#a8977f" }}>
             <div style={{ fontSize: "32px", marginBottom: "8px" }}>📷</div>
-            <p style={{ margin: 0, fontSize: "13px" }}>Aucune photo pour ce produit</p>
+            <p style={{ margin: 0, fontSize: "13px" }}>{t.aucunePhoto}</p>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}>
@@ -385,7 +366,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
         )}
 
         <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
-          Ajouter de nouvelles photos
+          {t.ajouterPhotos}
         </p>
 
         <label style={{
@@ -395,7 +376,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
           background: chargement ? "#fef9ee" : "white",
           color: "#b45309", fontWeight: "700", fontSize: "14px",
         }}>
-          {chargement ? "⏳ Upload en cours..." : "📷 Choisir des photos"}
+          {chargement ? t.uploadEnCours : t.choisirPhotos}
           <input
             type="file"
             accept="image/*"
@@ -407,7 +388,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
         </label>
 
         <p style={{ margin: "10px 0 0", fontSize: "12px", color: "#a8977f", textAlign: "center" }}>
-          Format recommandé : 800×800 px, JPG ou WEBP, max 2MB
+          {t.formatPhotos}
         </p>
 
         <button onClick={onFermer} style={{
@@ -415,7 +396,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
           border: "1.5px solid #e5ddd0", background: "white",
           color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
         }}>
-          Fermer
+          {t.fermer}
         </button>
       </div>
     </div>
@@ -425,6 +406,28 @@ function GestionPhotos({ produit, onFermer, onMiseAJour }) {
 export default function Dashboard() {
   const { utilisateur } = useAuth();
   const navigate = useNavigate();
+  const { t, isAr } = useLangue();
+
+  const STATUTS = [
+    { id: "en_attente", label: isAr ? "في الانتظار" : "En attente", color: "#f59e0b", bg: "#fef3c7" },
+    { id: "confirmee", label: isAr ? "مؤكدة" : "Confirmée", color: "#3b82f6", bg: "#eff6ff" },
+    { id: "en_livraison", label: isAr ? "قيد التوصيل" : "En livraison", color: "#8b5cf6", bg: "#f5f3ff" },
+    { id: "livree", label: isAr ? "تم التسليم" : "Livrée", color: "#16a34a", bg: "#dcfce7" },
+    { id: "annulee", label: isAr ? "ملغية" : "Annulée", color: "#dc2626", bg: "#fee2e2" },
+  ];
+
+  function BadgeStatut({ statut }) {
+    const s = STATUTS.find((x) => x.id === statut) || STATUTS[0];
+    return (
+      <span style={{
+        padding: "3px 10px", borderRadius: "20px", fontSize: "12px",
+        fontWeight: "700", background: s.bg, color: s.color,
+      }}>
+        {s.label}
+      </span>
+    );
+  }
+
   const [commandes, setCommandes] = useState([]);
   const [produits, setProduits] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -469,7 +472,7 @@ export default function Dashboard() {
 
   const exporterPDF = () => {
     if (commandes.length > 10) {
-      if (!window.confirm(`Vous allez télécharger ${commandes.length} fichiers PDF séparément. Autorisez les téléchargements multiples sur votre navigateur. Continuer ?`)) {
+      if (!window.confirm(isAr ? `سيتم تحميل ${commandes.length} ملف PDF بشكل منفصل. اسمح بالتحميلات المتعددة في المتصفح. هل تريد المتابعة؟` : `Vous allez télécharger ${commandes.length} fichiers PDF séparément. Autorisez les téléchargements multiples sur votre navigateur. Continuer ?`)) {
         return;
       }
     }
@@ -679,7 +682,7 @@ export default function Dashboard() {
   };
 
   const supprimerProduit = async (id) => {
-    if (!window.confirm("Voulez-vous vraiment supprimer ce produit ?")) return;
+    if (!window.confirm(t.confirmerSuppression)) return;
     try {
       await fetch(`${API_URL}/api/produits/${id}`, { method: "DELETE", headers: { ...entetesAuth() } });
       setProduits((prev) => prev.filter((p) => p.id !== id));
@@ -712,7 +715,7 @@ export default function Dashboard() {
           <img src={LOGO_URL} alt="logo" style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.3)" }} />
           <div>
             <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "white", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
-              Dashboard Admin
+              {t.dashboardAdmin}
             </h1>
             <p style={{ margin: 0, fontSize: "10px", color: "rgba(255,255,255,0.7)" }}>Cooperative Apicole Cawit Tlemcen</p>
           </div>
@@ -722,7 +725,7 @@ export default function Dashboard() {
           <button onClick={() => navigate('/')} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
             onMouseEnter={(e) => { e.target.style.background = "rgba(255,255,255,0.25)"; }}
             onMouseLeave={(e) => { e.target.style.background = "rgba(255,255,255,0.15)"; }}>
-            ← Retour
+            {t.retour}
           </button>
         </div>
       </header>
@@ -730,10 +733,10 @@ export default function Dashboard() {
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "28px" }}>
           {[
-            { label: "Total des ventes", value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
-            { label: "En attente", value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
-            { label: "Livrées", value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
-            { label: "Stock faible", value: stats.stockFaible + " produits", icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
+            { label: t.totalVentes, value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
+            { label: t.enAttente, value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
+            { label: t.livrees, value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
+            { label: t.stockFaible, value: stats.stockFaible + (isAr ? " منتجات" : " produits"), icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
           ].map((stat, i) => (
             <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "transform 0.2s, box-shadow 0.2s" }}
               onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(180,120,0,0.1)"; }}
@@ -749,8 +752,8 @@ export default function Dashboard() {
 
         <div style={{ display: "flex", gap: "4px", background: "#f0ebe3", borderRadius: "10px", padding: "4px", marginBottom: "20px", width: "fit-content" }}>
           {[
-            { id: "commandes", label: "📋 Commandes" },
-            { id: "produits", label: "🍯 Produits & Stocks" },
+            { id: "commandes", label: t.tabCommandes },
+            { id: "produits", label: t.tabProduits },
           ].map((o) => (
             <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.2s" }}>
               {o.label}
@@ -768,7 +771,7 @@ export default function Dashboard() {
                   <div style={{ display: "flex", gap: "10px", marginBottom: "16px", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between" }}>
                     <input
                       type="text"
-                      placeholder="🔍 Rechercher par nom, téléphone, adresse..."
+                      placeholder={t.rechercherCommande}
                       value={rechercheCommande}
                       onChange={(e) => setRechercheCommande(e.target.value)}
                       style={{
@@ -781,12 +784,12 @@ export default function Dashboard() {
                       <button onClick={exporterExcel} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#16a34a", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
                         onMouseEnter={(e) => { e.target.style.background = "#15803d"; }}
                         onMouseLeave={(e) => { e.target.style.background = "#16a34a"; }}>
-                        📊 Excel
+                        {t.exporterExcel}
                       </button>
                       <button onClick={exporterPDF} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#dc2626", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
                         onMouseEnter={(e) => { e.target.style.background = "#b91c1c"; }}
                         onMouseLeave={(e) => { e.target.style.background = "#dc2626"; }}>
-                        📄 PDF
+                        {t.exporterPDF}
                       </button>
                     </div>
                   </div>
@@ -795,20 +798,20 @@ export default function Dashboard() {
                   {commandes.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "60px", color: "#a8977f" }}>
                       <div style={{ fontSize: "48px", marginBottom: "12px" }}>📋</div>
-                      <p style={{ fontSize: "16px", fontWeight: "600" }}>Aucune commande pour l'instant</p>
+                      <p style={{ fontSize: "16px", fontWeight: "600" }}>{t.commandeEmpty}</p>
                     </div>
                   ) : commandesFiltrees.length === 0 ? (
                     <div style={{ textAlign: "center", padding: "40px", color: "#a8977f" }}>
-                      <p style={{ fontSize: "15px", fontWeight: "600" }}>Aucune commande ne correspond à votre recherche</p>
+                      <p style={{ fontSize: "15px", fontWeight: "600" }}>{t.aucuneCorrespondance}</p>
                     </div>
                   ) : (
                     <div style={{ overflowX: "auto" }}>
                       <table>
                         <thead>
                           <tr>
-                            <th>#</th><th>Client</th><th>Téléphone</th>
-                            <th>Adresse</th><th>Total</th><th>Date</th>
-                            <th>Statut</th><th>Action</th>
+                            <th>#</th><th>{isAr ? "العميل" : "Client"}</th><th>{isAr ? "الهاتف" : "Téléphone"}</th>
+                            <th>{isAr ? "العنوان" : "Adresse"}</th><th>{isAr ? "المجموع" : "Total"}</th><th>{isAr ? "التاريخ" : "Date"}</th>
+                            <th>{isAr ? "الحالة" : "Statut"}</th><th>{isAr ? "الإجراء" : "Action"}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -841,9 +844,9 @@ export default function Dashboard() {
             {onglet === "produits" && (
               <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden", padding: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                  <h3 style={{ margin: 0, fontSize: "16px", color: "#1c1008" }}>Liste des produits</h3>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#1c1008" }}>{t.listeProduits}</h3>
                   <button onClick={() => setAjouterProduit(true)} style={{ background: "#b45309", color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "700", cursor: "pointer", fontSize: "13px" }}>
-                    + Ajouter un produit
+                    {t.ajouterProduitBtn}
                   </button>
                 </div>
                 <div style={{ overflowX: "auto" }}>
@@ -871,7 +874,7 @@ export default function Dashboard() {
                                 )}
                                 <div>
                                   <div style={{ fontWeight: "700" }}>{p.nom}</div>
-                                  <div style={{ fontSize: "12px", color: "#6b6055", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description || "Aucune description"}</div>
+                                  <div style={{ fontSize: "12px", color: "#6b6055", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description || t.aucuneDescription}</div>
                                 </div>
                               </div>
                             </td>
@@ -879,19 +882,19 @@ export default function Dashboard() {
                             <td><strong>{Number(p.prix).toLocaleString()} DA</strong></td>
                             <td>
                               <span style={{ fontWeight: "700", color: p.stock_quantite < 10 ? "#dc2626" : "#16a34a" }}>
-                                {p.stock_quantite} unités
+                                {p.stock_quantite} {t.unites}
                               </span>
                             </td>
                             <td>
                               <div style={{ display: "flex", gap: "6px" }}>
                                 <button onClick={() => setGererPhotos(p)} style={{ background: "#f3f4f6", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
-                                  📷 Photos
+                                  {t.photos}
                                 </button>
                                 <button onClick={() => setModifierProduit(p)} style={{ background: "#eff6ff", color: "#2563eb", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
-                                  ✏️ Modifier
+                                  {t.modifierProduit}
                                 </button>
                                 <button onClick={() => supprimerProduit(p.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "700" }}>
-                                  🗑️ Supprimer
+                                  {t.supprimer}
                                 </button>
                               </div>
                             </td>
@@ -915,6 +918,8 @@ export default function Dashboard() {
           onMiseAJour={(produitMisAJour) => {
             setProduits(prev => prev.map(p => p.id === produitMisAJour.id ? produitMisAJour : p));
           }}
+          t={t}
+          isAr={isAr}
         />
       )}
       {gererPhotos && (
@@ -925,6 +930,8 @@ export default function Dashboard() {
             setProduits(prev => prev.map(p => p.id === produitMisAJour.id ? produitMisAJour : p));
             setGererPhotos(produitMisAJour);
           }}
+          t={t}
+          isAr={isAr}
         />
       )}
       {ajouterProduit && (
@@ -932,6 +939,8 @@ export default function Dashboard() {
           categories={categories}
           onAjouter={handleAjouterProduit}
           onAnnuler={() => setAjouterProduit(false)}
+          t={t}
+          isAr={isAr}
         />
       )}
     </div>

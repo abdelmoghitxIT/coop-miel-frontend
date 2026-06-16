@@ -291,7 +291,7 @@ export default function CatalogueMiel(){
               background: "none", border: "none", cursor: "pointer",
               fontSize: "13px", color: "#6b6055", fontWeight: "500", padding: "6px 10px",
             }}>
-              {isAr ? "من نحن" : "À propos"}
+              {t.aPropos}
             </button>
           </div>
         </div>
@@ -361,7 +361,7 @@ export default function CatalogueMiel(){
                     onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
                     onMouseLeave={(e) => e.target.style.background = "none"}
                   >
-                    👤 {isAr ? "حسابي" : "Mon profil"}
+                    👤 {t.monProfil}
                   </button>
                   <button onClick={() => { setMenuUtilisateur(false); navigate('/mes-commandes'); }} style={{
                     display: "block", width: "100%", padding: "10px 16px", border: "none",
@@ -371,7 +371,7 @@ export default function CatalogueMiel(){
                     onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
                     onMouseLeave={(e) => e.target.style.background = "none"}
                   >
-                    📋 {isAr ? "طلباتي" : "Mes commandes"}
+                    📋 {t.mesCommandes}
                   </button>
                   {utilisateur?.role === 'admin' && (
                     <button onClick={() => { setMenuUtilisateur(false); navigate('/dashboard'); }} style={{
@@ -604,7 +604,7 @@ export default function CatalogueMiel(){
                   textDecoration: "none",
                 }}
               >
-                📲 Envoyer à l'admin via WhatsApp
+                {t.envoyerAdminWA}
               </a>
             )}
 
@@ -622,7 +622,7 @@ export default function CatalogueMiel(){
                   textDecoration: "none",
                 }}
               >
-                📲 Envoyer confirmation au client
+                {t.envoyerClientWA}
               </a>
             )}
 

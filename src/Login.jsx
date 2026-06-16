@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useLangue } from './LangueContext';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 export default function Login() {
   const { handleConnexion } = useAuth();
+  const { t } = useLangue();
   const navigate = useNavigate();
   const [mode, setMode] = useState("connexion");
   const [chargement, setChargement] = useState(false);
@@ -123,7 +125,7 @@ export default function Login() {
                 boxShadow: mode === m ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
               }}
             >
-              {m === "connexion" ? "Se connecter" : "S'inscrire"}
+              {m === "connexion" ? t.seConnecterBtn : t.sInscrire}
             </button>
           ))}
         </div>
@@ -133,7 +135,7 @@ export default function Login() {
           {mode === "inscription" && (
             <div>
               <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
-                Nom complet
+                {t.nomComplet}
               </label>
               <input
                 className="login-input"
@@ -153,7 +155,7 @@ export default function Login() {
 
           <div>
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
-              Adresse email
+              {t.email}
             </label>
             <input
               className="login-input"
@@ -173,7 +175,7 @@ export default function Login() {
 
           <div>
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
-              Mot de passe
+              {t.motDePasse}
             </label>
             <input
               className="login-input"
@@ -199,14 +201,14 @@ export default function Login() {
               fontFamily: "'DM Sans', sans-serif",
               alignSelf: "flex-end",
             }}>
-              Mot de passe oublié ?
+              {t.motDePasseOublie}
             </button>
           )}
 
           {mode === "inscription" && (
             <div>
               <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
-                Téléphone (optionnel)
+                {t.telephone}
               </label>
               <input
                 className="login-input"
@@ -250,10 +252,10 @@ export default function Login() {
             }}
           >
             {chargement
-              ? "Chargement..."
+              ? t.chargement
               : mode === "connexion"
-              ? "Se connecter"
-              : "Créer mon compte"}
+              ? t.seConnecterBtn
+              : t.creerCompte}
           </button>
         </div>
 
@@ -273,10 +275,10 @@ export default function Login() {
               fontFamily: "'DM Sans', sans-serif",
             }}
           >
-            Retour à l'accueil
+            {t.retourAccueil}
           </button>
-          Vous êtes un membre de la coopérative ?<br />
-          Contactez l'administrateur pour votre accès.
+          {t.membreCooperative}<br />
+          {t.contactAdmin}
         </div>
       </div>
     </div>
