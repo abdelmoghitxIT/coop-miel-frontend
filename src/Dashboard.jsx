@@ -20,6 +20,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
   });
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
+  const [nouvelleCategorie, setNouvelleCategorie] = useState("");
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -28,9 +29,28 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
       setErreur(t.champsObligatoires);
       return;
     }
+    if (form.categorie_id === "autre" && !nouvelleCategorie.trim()) {
+      setErreur(isAr ? "يرجى إدخال اسم التصنيف الجديد" : "Veuillez saisir le nom de la nouvelle catégorie");
+      return;
+    }
     setChargement(true);
     setErreur("");
     try {
+      let categorieId = form.categorie_id;
+      if (form.categorie_id === "autre") {
+        const catRes = await fetch(`${API_URL}/api/categories`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", ...entetesAuth() },
+          body: JSON.stringify({ nom: nouvelleCategorie.trim() }),
+        });
+        const catData = await catRes.json();
+        if (!catRes.ok) {
+          setErreur(catData.erreur || t.erreurAjout);
+          setChargement(false);
+          return;
+        }
+        categorieId = catData.id;
+      }
       const res = await fetch(`${API_URL}/api/produits`, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...entetesAuth() },
@@ -39,7 +59,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
           description: form.description,
           prix: Number(form.prix),
           stock_quantite: Number(form.stock_quantite),
-          categorie_id: Number(form.categorie_id),
+          categorie_id: Number(categorieId),
         }),
       });
       const data = await res.json();
@@ -111,7 +131,16 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.nom}</option>
               ))}
+              <option value="autre">{isAr ? "آخر" : "Autre"}</option>
             </select>
+            {form.categorie_id === "autre" && (
+              <input
+                value={nouvelleCategorie}
+                onChange={(e) => setNouvelleCategorie(e.target.value)}
+                placeholder={isAr ? "أدخل اسم التصنيف الجديد" : "Saisissez le nom de la nouvelle catégorie"}
+                style={{ ...inputStyle, marginTop: "8px" }}
+              />
+            )}
           </div>
 
           {erreur && (
