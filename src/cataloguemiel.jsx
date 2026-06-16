@@ -422,7 +422,12 @@ export default function CatalogueMiel(){
             fontWeight: "700", fontSize: "14px", position: "relative",
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
           }}>
-            🛒 <span className="r-hide">{t.panier}</span>
+            <span style={{
+              width: "26px", height: "26px", borderRadius: "50%",
+              background: "rgba(255,255,255,0.25)", display: "flex",
+              alignItems: "center", justifyContent: "center",
+              fontSize: "15px", lineHeight: 1, flexShrink: 0,
+            }}>🛒</span> <span className="r-hide">{t.panier}</span>
             {totalPanier > 0 && (
               <span style={{
                 position: "absolute", top: "-8px", right: "-8px",
