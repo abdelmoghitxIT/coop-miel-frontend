@@ -21,6 +21,8 @@ const CATEGORIES_SPECIFIQUES = ["miels", "pollen", "cire & propolis", "coffrets"
 function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
   const [ajoute, setAjoute] = useState(false);
   const navigate = useNavigate();
+  const imgRef = useRef(null);
+  const borderRef = useRef(null);
 
   const handleAjouter = (e) => {
     e.stopPropagation();
@@ -41,17 +43,24 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        transition: "transform 0.2s, box-shadow 0.2s",
+        transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
         boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         cursor: "pointer",
+        position: "relative",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px)";
-        e.currentTarget.style.boxShadow = "0 12px 32px rgba(180,120,0,0.12)";
+        e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
+        e.currentTarget.style.boxShadow = "0 12px 32px rgba(180,120,0,0.16)";
+        e.currentTarget.style.borderColor = "#e5ddd0";
+        if (imgRef.current) imgRef.current.style.transform = "scale(1.08)";
+        if (borderRef.current) borderRef.current.style.transform = "scaleX(1)";
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.transform = "translateY(0) scale(1)";
         e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
+        e.currentTarget.style.borderColor = "#f0ebe3";
+        if (imgRef.current) imgRef.current.style.transform = "scale(1)";
+        if (borderRef.current) borderRef.current.style.transform = "scaleX(0)";
       }}
     >
       <div style={{
@@ -62,12 +71,15 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         justifyContent: "center",
         fontSize: "52px",
         overflow: "hidden",
+        position: "relative",
       }}>
+        <div ref={borderRef} style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "#b45309", transform: "scaleX(0)", transition: "transform 0.3s", transformOrigin: isAr ? "right" : "left" }} />
         {produit.images && produit.images[0] ? (
           <img
+            ref={imgRef}
             src={produit.images[0]}
             alt={produit.nom}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s" }}
           />
         ) : (
           <>
@@ -89,16 +101,22 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         </p>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexDirection: isAr ? "row-reverse" : "row" }}>
-          <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>
-            {Number(produit.prix).toLocaleString("fr-DZ")} DA
-          </span>
+          <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
+            <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>
+              {Number(produit.prix).toLocaleString("fr-DZ")}
+            </span>
+            <span style={{ fontSize: "11px", fontWeight: "700", color: "#b45309", background: "#fef9ee", padding: "1px 6px", borderRadius: "4px" }}>
+              DA
+            </span>
+          </div>
           <span style={{
             fontSize: "11px",
             color: stockFaible ? "#dc2626" : "#16a34a",
             background: stockFaible ? "#fee2e2" : "#dcfce7",
-            padding: "2px 8px", borderRadius: "20px", fontWeight: "600",
+            padding: "3px 10px", borderRadius: "20px", fontWeight: "700",
+            boxShadow: stockFaible ? "0 0 0 1px #fecaca" : "0 0 0 1px #bbf7d0",
           }}>
-            {stockFaible ? t.reste + " " + produit.stock_quantite : t.enStock}
+            {stockFaible ? `⚠️ ${t.reste} ${produit.stock_quantite}` : `✓ ${t.enStock}`}
           </span>
         </div>
 
@@ -114,7 +132,7 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
           }}
         >
-          {ajoute ? t.ajoute : produit.stock_quantite === 0 ? t.rupture : t.ajouterPanier}
+          {ajoute ? `✓ ${t.ajoute}` : produit.stock_quantite === 0 ? t.rupture : `🛒 ${t.ajouterPanier}`}
         </button>
       </div>
     </div>
@@ -278,9 +296,24 @@ export default function CatalogueMiel(){
         }
       `}</style>
 
+
       {chargement && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(253,248,240,0.9)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, fontSize: "48px" }}>
-          🍯
+        <div style={{ padding: "0 40px 60px", maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px", paddingTop: "200px" }}>
+          {[1,2,3,4,5,6].map((i) => (
+            <div key={i} style={{ background: "white", borderRadius: "16px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
+              <div className="skeleton" style={{ height: "160px" }} />
+              <div style={{ padding: "18px", display: "flex", flexDirection: "column", gap: "10px" }}>
+                <div className="skeleton" style={{ height: "20px", width: "70%" }} />
+                <div className="skeleton" style={{ height: "14px", width: "100%" }} />
+                <div className="skeleton" style={{ height: "14px", width: "80%" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
+                  <div className="skeleton" style={{ height: "24px", width: "80px" }} />
+                  <div className="skeleton" style={{ height: "20px", width: "60px", borderRadius: "20px" }} />
+                </div>
+                <div className="skeleton" style={{ height: "40px", width: "100%", borderRadius: "10px", marginTop: "6px" }} />
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -536,7 +569,7 @@ export default function CatalogueMiel(){
         display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px",
       }}>
         {produitsFiltres.length === 0 ? (
-          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "80px 20px", color: "#a8977f" }}>
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "80px 20px", color: "#a8977f", animation: "fadeInUp 0.4s ease" }}>
             <div style={{ fontSize: "52px", marginBottom: "16px" }}>🔍</div>
             <p style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>{t.aucunProduit}</p>
           </div>
@@ -594,7 +627,8 @@ export default function CatalogueMiel(){
       {/* Panier */}
       {panierOuvert && (
         <>
-          <div onClick={() => setPanierOuvert(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 999 }} />
+          <div onClick={() => setPanierOuvert(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 999, animation: "fadeIn 0.3s ease" }} />
+            <div style={{ animation: "slideInRight 0.3s ease-out" }}>
             <Panier
               items={panier}
               onFermer={() => setPanierOuvert(false)}
@@ -602,6 +636,7 @@ export default function CatalogueMiel(){
               t={t}
               isAr={isAr}
             />
+        </div>
         </>
       )}
 

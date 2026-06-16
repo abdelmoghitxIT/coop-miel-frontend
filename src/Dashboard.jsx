@@ -95,10 +95,12 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+      animation: "fadeIn 0.2s ease",
     }}>
       <div style={{
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
+        animation: "slideInUp 0.3s ease",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
@@ -291,10 +293,12 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+      animation: "fadeIn 0.2s ease",
     }}>
       <div style={{
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
+        animation: "slideInUp 0.3s ease",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
@@ -559,10 +563,12 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+      animation: "fadeIn 0.2s ease",
     }}>
       <div style={{
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto",
+        animation: "slideInUp 0.3s ease",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#1c1008" }}>
@@ -978,10 +984,16 @@ export default function Dashboard() {
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; }
         table { border-collapse: collapse; width: 100%; }
-        th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: #a57c3a; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #f0ebe3; }
+        th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: #a57c3a; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #f0ebe3; background: white; position: sticky; top: 0; z-index: 1; }
         td { padding: 14px 16px; font-size: 14px; color: #1c1008; border-bottom: 1px solid #f8f4ef; }
-        tr:hover td { background: #fef9ee; }
+        tbody tr:nth-child(even) td { background: #fdfaf5; }
+        tbody tr:hover td { background: #fef9ee; }
         select { border: 1.5px solid #e5ddd0; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: white; cursor: pointer; color: #1c1008; }
+        @media (max-width: 768px) {
+          table { font-size: 12px; }
+          th, td { padding: 8px 10px; }
+          td { max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        }
       `}</style>
 
       <header style={{ background: "linear-gradient(135deg, #78350f, #b45309)", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 12px rgba(120,53,15,0.2)" }}>

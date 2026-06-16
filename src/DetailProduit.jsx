@@ -96,8 +96,28 @@ export default function DetailProduit() {
 
   if (chargement) {
     return (
-      <div style={{ minHeight: "100vh", background: "#fdf8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "48px" }}>
-        🍯
+      <div style={{ minHeight: "100vh", background: "#fdf8f0", fontFamily: "'DM Sans', sans-serif" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 40px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
+            <div>
+              <div className="skeleton" style={{ height: "380px", borderRadius: "16px" }} />
+              <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+                {[1,2,3,4].map((i) => (
+                  <div key={i} className="skeleton" style={{ width: "72px", height: "72px", borderRadius: "10px" }} />
+                ))}
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div className="skeleton" style={{ height: "16px", width: "120px" }} />
+              <div className="skeleton" style={{ height: "32px", width: "80%" }} />
+              <div className="skeleton" style={{ height: "36px", width: "150px" }} />
+              <div className="skeleton" style={{ height: "24px", width: "100px" }} />
+              <div className="skeleton" style={{ height: "80px", width: "100%", borderRadius: "12px" }} />
+              <div className="skeleton" style={{ height: "120px", width: "100%", borderRadius: "12px" }} />
+              <div className="skeleton" style={{ height: "48px", width: "100%", borderRadius: "12px" }} />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -474,11 +494,15 @@ export default function DetailProduit() {
                 </p>
               )}
               <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
-                {avis.map((a) => (
+                {avis.map((a, idx) => (
                   <div key={a.id} style={{
                     background: "white", borderRadius: "12px", padding: "16px",
-                    border: "1px solid #f0ebe3",
-                  }}>
+                    border: "1px solid #f0ebe3", animation: "fadeInUp 0.3s ease",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                  }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(180,120,0,0.08)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                  >
                     <div style={{
                       display: "flex", justifyContent: "space-between", alignItems: "center",
                       marginBottom: "6px", flexDirection: isAr ? "row-reverse" : "row",
