@@ -254,9 +254,12 @@ export default function CatalogueMiel(){
       direction: isAr ? "rtl" : "ltr",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700;800&family=DM+Sans:wght=400;500;600;700;800&family=Amiri:wght=400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
         * { box-sizing: border-box; }
         html, body { overflow-x: hidden; max-width: 100vw; margin: 0; padding: 0; }
+        @media (max-width: 700px) {
+          .r-hide { display: none !important; }
+        }
       `}</style>
 
       {chargement && (
@@ -268,25 +271,25 @@ export default function CatalogueMiel(){
       {/* Navigation */}
       <header style={{
         background: "white", borderBottom: "1px solid #f0ebe3",
-        padding: "0 32px", height: "68px",
+        padding: "0 clamp(8px, 3vw, 32px)", height: "68px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
         boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "clamp(8px, 3vw, 40px)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }} onClick={() => navigate('/')}>
-            <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
+            <img src={LOGO_URL} alt="logo" style={{ width: "clamp(32px, 5vw, 40px)", height: "clamp(32px, 5vw, 40px)", borderRadius: "50%", objectFit: "cover" }} />
             <div>
-              <p style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
+              <p style={{ margin: 0, fontSize: "clamp(12px, 2vw, 15px)", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
                 {t.siteName}
               </p>
-              <p style={{ margin: 0, fontSize: "10px", color: "#a57c3a", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <p style={{ margin: 0, fontSize: "clamp(8px, 1.3vw, 10px)", color: "#a57c3a", letterSpacing: "0.06em", textTransform: "uppercase" }}>
                 {t.siteSubtitle}
               </p>
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+          <div className="r-hide" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <button onClick={() => navigate('/a-propos')} style={{
               background: "none", border: "none", cursor: "pointer",
               fontSize: "13px", color: "#6b6055", fontWeight: "500", padding: "6px 10px",
@@ -296,18 +299,18 @@ export default function CatalogueMiel(){
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "clamp(6px, 1.5vw, 12px)" }}>
           {/* FR/AR */}
           <div style={{ display: "flex", gap: "2px", background: "#f0ebe3", borderRadius: "6px", padding: "2px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
-              padding: "4px 8px", borderRadius: "4px", border: "none", cursor: "pointer",
-              fontSize: "11px", fontWeight: "700",
+              padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
+              fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
               background: langue === 'fr' ? "#b45309" : "transparent",
               color: langue === 'fr' ? "white" : "#6b6055",
             }}>FR</button>
             <button onClick={() => langue === 'fr' && toggleLangue()} style={{
-              padding: "4px 8px", borderRadius: "4px", border: "none", cursor: "pointer",
-              fontSize: "11px", fontWeight: "700",
+              padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
+              fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
               background: langue === 'ar' ? "#b45309" : "transparent",
               color: langue === 'ar' ? "white" : "#6b6055",
             }}>AR</button>
@@ -321,7 +324,7 @@ export default function CatalogueMiel(){
                 style={{
                   display: "flex", alignItems: "center", gap: "6px",
                   background: "none", border: "1.5px solid #e5ddd0",
-                  borderRadius: "8px", padding: "8px 12px", cursor: "pointer",
+                  borderRadius: "8px", padding: "clamp(6px, 1.2vw, 8px) clamp(8px, 1.5vw, 12px)", cursor: "pointer",
                   fontSize: "13px", color: "#1c1008", fontWeight: "600",
                 }}
               >
@@ -333,8 +336,8 @@ export default function CatalogueMiel(){
                 }}>
                   {utilisateur.nom.charAt(0).toUpperCase()}
                 </span>
-                <span>{utilisateur.nom.split(' ')[0]}</span>
-                <span style={{ fontSize: "10px", color: "#a8977f" }}>{menuUtilisateur ? "▲" : "▼"}</span>
+                <span className="r-hide">{utilisateur.nom.split(' ')[0]}</span>
+                <span className="r-hide" style={{ fontSize: "10px", color: "#a8977f" }}>{menuUtilisateur ? "▲" : "▼"}</span>
               </button>
 
               {menuUtilisateur && (
@@ -403,8 +406,8 @@ export default function CatalogueMiel(){
           ) : (
             <button onClick={() => navigate('/login')} style={{
               background: "none", border: "1.5px solid #b45309",
-              borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
-              fontSize: "13px", color: "#b45309", fontWeight: "600",
+              borderRadius: "8px", padding: "clamp(6px, 1.2vw, 8px) clamp(10px, 2vw, 16px)", cursor: "pointer",
+              fontSize: "clamp(11px, 1.5vw, 13px)", color: "#b45309", fontWeight: "600",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}>
               {t.seConnecter}
@@ -415,11 +418,11 @@ export default function CatalogueMiel(){
           <button onClick={() => setPanierOuvert(true)} style={{
             display: "flex", alignItems: "center", gap: "8px",
             background: "#b45309", color: "white", border: "none",
-            borderRadius: "10px", padding: "10px 18px", cursor: "pointer",
+            borderRadius: "10px", padding: "clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 18px)", cursor: "pointer",
             fontWeight: "700", fontSize: "14px", position: "relative",
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
           }}>
-            🛒 {t.panier}
+            🛒 <span className="r-hide">{t.panier}</span>
             {totalPanier > 0 && (
               <span style={{
                 position: "absolute", top: "-8px", right: "-8px",

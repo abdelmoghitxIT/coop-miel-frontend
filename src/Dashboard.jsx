@@ -535,175 +535,161 @@ export default function Dashboard() {
     XLSX.writeFile(wb, `commandes-nhal-tlemcen-${new Date().toLocaleDateString('fr-DZ').replace(/\//g, '-')}.xlsx`);
   };
 
+  const genererFacture = (c) => {
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 15;
+    const invoiceNum = `INV-${new Date(c.created_at).getFullYear()}-${String(c.id).padStart(5, '0')}`;
+    const formatDA = (val) => `${Number(val).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DA`;
+
+    doc.setFillColor(180, 83, 9);
+    doc.rect(0, 0, pageWidth, 55, 'F');
+
+    const logoSize = 18;
+    const logoX = margin;
+    const logoY = 8;
+    try {
+      doc.addImage(LOGO_URL, 'WEBP', logoX, logoY, logoSize, logoSize, undefined, 'FAST');
+    } catch (_e) {
+      doc.setFillColor(255, 255, 255);
+      doc.circle(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 'F');
+      doc.setTextColor(180, 83, 9);
+      doc.setFontSize(14);
+      doc.text('K', logoX + logoSize / 2, logoY + logoSize / 2 + 5, { align: 'center' });
+    }
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.text('COOPERATIVE APICOLE KAWIT', margin + logoSize + 8, logoY + 7);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text('Tlemcen, Algérie  |  +213 696 242 396', margin + logoSize + 8, logoY + 16);
+    doc.text('coop.nhal.tlemcen@gmail.com', margin + logoSize + 8, logoY + 24);
+
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.text('FACTURE', pageWidth - margin, logoY + 8, { align: 'right' });
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text(invoiceNum, pageWidth - margin, logoY + 18, { align: 'right' });
+    doc.text(`Commande N° ${c.id}`, pageWidth - margin, logoY + 26, { align: 'right' });
+    doc.text(`Date : ${new Date(c.created_at).toLocaleDateString('fr-DZ')}`, pageWidth - margin, logoY + 34, { align: 'right' });
+
+    const infoY = 62;
+    const boxW = (pageWidth - 2 * margin) / 2 - 5;
+    doc.setFillColor(253, 248, 240);
+    doc.setDrawColor(230, 220, 210);
+    doc.roundedRect(margin, infoY, boxW, 32, 3, 3, 'FD');
+    doc.setTextColor(165, 124, 58);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('INFORMATIONS CLIENT', margin + 8, infoY + 8);
+    doc.setTextColor(28, 16, 8);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(c.client_nom || 'Client', margin + 8, infoY + 18);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text(`Tél : ${c.client_telephone || '—'}`, margin + 8, infoY + 26);
+    doc.text(`Adr : ${c.adresse_livraison || '—'}`, margin + 8, infoY + 33, { maxWidth: boxW - 16 });
+
+    const detailsX = margin + boxW + 10;
+    doc.setFillColor(253, 248, 240);
+    doc.setDrawColor(230, 220, 210);
+    doc.roundedRect(detailsX, infoY, boxW, 32, 3, 3, 'FD');
+    doc.setTextColor(165, 124, 58);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DETAILS FACTURE', detailsX + 8, infoY + 8);
+    doc.setTextColor(28, 16, 8);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text(`N° Facture : ${invoiceNum}`, detailsX + 8, infoY + 18);
+    doc.text(`N° Commande : #${c.id}`, detailsX + 8, infoY + 25);
+    doc.text(`Statut : ${(c.statut || '').replace(/_/g, ' ').toUpperCase()}`, detailsX + 8, infoY + 32);
+
+    const produitsFiltres = c.produits && c.produits[0] ? c.produits.filter(Boolean) : [];
+    autoTable(doc, {
+      startY: infoY + 38,
+      head: [['#', 'Produit', 'Qté', 'Prix unitaire', 'Total']],
+      body: produitsFiltres.length > 0
+        ? produitsFiltres.map((p, i) => [
+            i + 1,
+            p.nom || '—',
+            p.quantite || 1,
+            formatDA(p.prix),
+            formatDA(Number(p.prix) * (p.quantite || 1)),
+          ])
+        : [['—', 'Produits non disponibles', '—', '—', formatDA(c.total)]],
+      headStyles: {
+        fillColor: [180, 83, 9],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+        fontSize: 9,
+        halign: 'center',
+      },
+      bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+      columnStyles: {
+        0: { halign: 'center', cellWidth: 10 },
+        2: { halign: 'center', cellWidth: 15 },
+        3: { halign: 'right', cellWidth: 35 },
+        4: { halign: 'right', cellWidth: 35 },
+      },
+      alternateRowStyles: { fillColor: [253, 248, 240] },
+      styles: { cellPadding: 4 },
+    });
+
+    const finalY = doc.lastAutoTable.finalY + 8;
+    const total = Number(c.total);
+
+    doc.setDrawColor(230, 220, 210);
+    doc.setFillColor(253, 248, 240);
+    doc.roundedRect(pageWidth - margin - 80, finalY, 80, 38, 3, 3, 'FD');
+
+    const totX = pageWidth - margin - 72;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text('Sous-total', totX, finalY + 9);
+    doc.text('Livraison', totX, finalY + 17);
+    doc.text('Total', totX, finalY + 27);
+
+    doc.setTextColor(28, 16, 8);
+    doc.setFont('helvetica', 'bold');
+    doc.text(formatDA(total), pageWidth - margin - 8, finalY + 9, { align: 'right' });
+    doc.text('Gratuite', pageWidth - margin - 8, finalY + 17, { align: 'right' });
+
+    doc.setFillColor(180, 83, 9);
+    doc.roundedRect(pageWidth - margin - 80, finalY + 22, 80, 13, 3, 3, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text(formatDA(total), pageWidth - margin - 8, finalY + 32, { align: 'right' });
+
+    doc.setTextColor(165, 124, 58);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(10);
+    doc.text('Merci pour votre confiance !', pageWidth / 2, finalY + 58, { align: 'center' });
+
+    doc.setDrawColor(180, 83, 9);
+    doc.setLineWidth(0.5);
+    doc.line(margin, 280, pageWidth - margin, 280);
+    doc.setFontSize(7);
+    doc.setTextColor(150, 150, 150);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Cooperative Apicole Kawit — Tlemcen, Algerie — +213 696 242 396', pageWidth / 2, 285, { align: 'center' });
+
+    doc.save(`facture-${invoiceNum}.pdf`);
+  };
+
   const exporterPDF = () => {
     if (commandes.length > 10) {
       if (!window.confirm(isAr ? `سيتم تحميل ${commandes.length} ملف PDF بشكل منفصل. اسمح بالتحميلات المتعددة في المتصفح. هل تريد المتابعة؟` : `Vous allez télécharger ${commandes.length} fichiers PDF séparément. Autorisez les téléchargements multiples sur votre navigateur. Continuer ?`)) {
         return;
       }
     }
-
-    commandes.forEach((c) => {
-      const doc = new jsPDF();
-      const invoiceNum = `INV-${new Date(c.created_at).getFullYear()}-${String(c.id).padStart(5, '0')}`;
-
-      // Remplacement propre de toLocaleString pour éviter les caractères spéciaux invisibles qui cassent le PDF
-      const formatDA = (val) => `${Number(val).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DA`;
-
-      // ─── Fond en-tête ───
-      doc.setFillColor(180, 83, 9);
-      doc.rect(0, 0, 210, 45, 'F');
-
-      // Logo texte
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(16);
-      doc.setFont('helvetica', 'bold');
-      doc.text('COOPERATIVE APICOLE CAWIT TLEMCEN', 14, 16);
- 
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
-      doc.text("COOPERATIVE AGRICOLE D'APICULTURE KAWIT", 14, 24);
-      doc.setFontSize(9);
-      doc.text('Tlemcen, Algerie  |  Tel: +213 696 242 396', 14, 32);
-      doc.text('coop.nhal.tlemcen@gmail.com', 14, 39);
-
-      // Numéro facture à droite
-      doc.setFontSize(20);
-      doc.setFont('helvetica', 'bold');
-      doc.text('FACTURE', 196, 18, { align: 'right' });
-      doc.setFontSize(11);
-    
-      doc.setFont('helvetica', 'normal');
-      doc.text(invoiceNum, 196, 27, { align: 'right' });
-      doc.setFontSize(9);
-      doc.text(`Commande : #${c.id}`, 196, 34, { align: 'right' });
-      doc.text(`Date : ${new Date(c.created_at).toLocaleDateString('fr-DZ')}`, 196, 40, { align: 'right' });
-
-      // ─── Infos client ───
-      doc.setFillColor(253, 248, 240);
-      doc.rect(14, 52, 85, 38, 'F');
-      doc.setDrawColor(240, 235, 227);
-      doc.rect(14, 52, 85, 38);
-
-      doc.setTextColor(165, 124, 58);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'bold');
-      doc.text('INFORMATIONS CLIENT', 19, 60);
-
-      doc.setTextColor(28, 16, 8);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.text(c.client_nom || 'Client', 19, 68);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.text(`Tel : ${c.client_telephone || '—'}`, 19, 75);
-      doc.text(`Adresse : ${c.adresse_livraison || '—'}`, 19, 82, { maxWidth: 76 });
-
-      // ─── Infos facture ───
-      doc.setFillColor(253, 248, 240);
-      doc.rect(111, 52, 85, 38, 'F');
-      doc.setDrawColor(240, 235, 227);
-      doc.rect(111, 52, 85, 38);
-
-      doc.setTextColor(165, 124, 58);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'bold');
-      doc.text('DETAILS FACTURE', 116, 60);
-
-      doc.setTextColor(28, 16, 8);
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.text(`N° Facture : ${invoiceNum}`, 116, 68);
-      doc.text(`N° Commande : #${c.id}`, 116, 75);
-      doc.text(`Paiement : A la livraison`, 116, 82);
-      doc.text(`Statut : ${c.statut?.replace('_', ' ').toUpperCase()}`, 116, 89);
-
-      // ─── Tableau produits ───
-      const produitsFiltres = c.produits && c.produits[0] ? c.produits.filter(Boolean) : [];
-      autoTable(doc, {
-        startY: 98,
-        head: [['#', 'Produit', 'Qte', 'Prix unitaire', 'Total']],
-        body: produitsFiltres.length > 0
-          ? produitsFiltres.map((p, i) => [
-              i + 1,
-              p.nom || '—',
-              p.quantite || 1,
-              formatDA(p.prix),
-              formatDA(Number(p.prix) * (p.quantite || 1)),
-            ])
-          : [['—', 'Produits non disponibles', '—', '—', formatDA(c.total)]],
-        headStyles: {
-          fillColor: [180, 83, 9],
-          textColor: [255, 255, 255],
-          fontStyle: 'bold',
-          fontSize: 9,
-          halign: 'center',
-        },
-        bodyStyles: {
-          fontSize: 9,
-          textColor: [50, 50, 50],
-        },
-        columnStyles: {
-          0: { halign: 'center', cellWidth: 10 },
-          2: { halign: 'center', cellWidth: 15 },
-          3: { halign: 'right', cellWidth: 35 },
-          4: { halign: 'right', cellWidth: 35 },
-        },
-        alternateRowStyles: { fillColor: [253, 248, 240] },
-        styles: { cellPadding: 4 },
-      });
-
-      const finalY = doc.lastAutoTable.finalY + 8;
-
-      // ─── Calcul final ───
-      const total = Number(c.total);
-      const livraison = 0;
-      const sousTotal = total - livraison;
-
-      doc.setDrawColor(240, 235, 227);
-      doc.setFillColor(253, 248, 240);
-      doc.rect(120, finalY, 76, 36, 'FD');
-
-      doc.setFontSize(9);
-      doc.setTextColor(100, 100, 100);
-      doc.text('Sous-total :', 125, finalY + 9);
-      doc.text('Frais de livraison :', 125, finalY + 17);
-      doc.text('Reduction :', 125, finalY + 25);
-
-      doc.setTextColor(28, 16, 8);
-      doc.text(formatDA(sousTotal), 192, finalY + 9, { align: 'right' });
-      doc.text('Gratuit', 192, finalY + 17, { align: 'right' });
-      doc.text('0 DA', 192, finalY + 25, { align: 'right' });
-
-      // Total final
-      doc.setFillColor(180, 83, 9);
-      doc.rect(120, finalY + 30, 76, 12, 'F');
-      doc.setTextColor(255, 255, 255);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(11);
-      doc.text('TOTAL :', 125, finalY + 38);
-      doc.text(formatDA(total), 192, finalY + 38, { align: 'right' });
-
-      // ─── Message de remerciement ───
-      doc.setTextColor(165, 124, 58);
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(10);
-      doc.text('Merci pour votre confiance !', 105, finalY + 58, { align: 'center' });
-      
-      doc.setFontSize(8);
-      doc.setTextColor(150, 150, 150);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Cooperative Apicole Kawit — Tlemcen, Algerie', 105, finalY + 65, { align: 'center' });
-
-      // ─── Pied de page ───
-      doc.setDrawColor(180, 83, 9);
-      doc.setLineWidth(0.5);
-      doc.line(14, 280, 196, 280);
-      doc.setFontSize(7);
-      doc.setTextColor(150, 150, 150);
-      doc.text('Cooperative Apicole Kawit | Tlemcen, Algerie | +213 696 242 396', 105, 285, { align: 'center' });
-
-      doc.save(`facture-${invoiceNum}.pdf`);
-    });
+    commandes.forEach((c) => genererFacture(c));
   };
 
   const chargerDonnees = async () => {
@@ -890,11 +876,20 @@ export default function Dashboard() {
                               <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
                               <td><BadgeStatut statut={c.statut} /></td>
                               <td>
-                                <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)}>
-                                  {STATUTS.map((s) => (
-                                    <option key={s.id} value={s.id}>{s.label}</option>
-                                  ))}
-                                </select>
+                                <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                                  <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)} style={{ flex: 1 }}>
+                                    {STATUTS.map((s) => (
+                                      <option key={s.id} value={s.id}>{s.label}</option>
+                                    ))}
+                                  </select>
+                                  <button onClick={() => genererFacture(c)} title={isAr ? "تحميل الفاتورة" : "Télécharger la facture"} style={{
+                                    background: "#dc2626", color: "white", border: "none",
+                                    borderRadius: "6px", padding: "5px 7px", cursor: "pointer",
+                                    fontSize: "13px", lineHeight: "1", whiteSpace: "nowrap",
+                                  }}>
+                                    📄
+                                  </button>
+                                </div>
                               </td>
                             </tr>
                           ))}
