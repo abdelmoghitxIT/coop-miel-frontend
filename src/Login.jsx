@@ -191,6 +191,18 @@ export default function Login() {
             />
           </div>
 
+          {mode === "connexion" && (
+            <button type="button" onClick={() => navigate('/mot-de-passe-oublie')} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: "13px", color: "#b45309", fontWeight: "600",
+              textAlign: "right", padding: "4px 0 0",
+              fontFamily: "'DM Sans', sans-serif",
+              alignSelf: "flex-end",
+            }}>
+              Mot de passe oublié ?
+            </button>
+          )}
+
           {mode === "inscription" && (
             <div>
               <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>

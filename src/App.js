@@ -8,6 +8,8 @@ import DetailProduit from './DetailProduit';
 import VerifierEmail from './VerifierEmail';
 import ResetPassword from './ResetPassword';
 import APropos from './APropos';
+import MotDePasseOublie from './MotDePasseOublie';
+import MonProfil from './MonProfil';
 
 function App() {
   const { utilisateur } = useAuth();
@@ -16,6 +18,10 @@ function App() {
     <Routes>
       <Route path="/" element={<CatalogueMiel />} />
       <Route path="/login" element={<Login />} />
+      <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
+      <Route path="/mon-profil" element={
+        utilisateur ? <MonProfil /> : <Login />
+      } />
       <Route path="/dashboard" element={
         utilisateur?.role === 'admin' ? <Dashboard /> : <Login />
       } />

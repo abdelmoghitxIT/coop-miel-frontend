@@ -1,0 +1,209 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
+import { useLangue } from './LangueContext';
+
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
+const WILAYAS = [
+  "Adrar","Chlef","Laghouat","Oum El Bouaghi","Batna","Béjaïa","Biskra","Béchar","Blida","Bouira",
+  "Tamanrasset","Tébessa","Tlemcen","Tiaret","Tizi Ouzou","Alger","Djelfa","Jijel","Sétif","Saïda",
+  "Skikda","Sidi Bel Abbès","Annaba","Guelma","Constantine","Médéa","Mostaganem","Msila","Mascara",
+  "Ouargla","Oran","El Bayadh","Illizi","Bordj Bou Arreridj","Boumerdès","El Tarf","Tindouf",
+  "Tissemsilt","El Oued","Khenchela","Souk Ahras","Tipaza","Mila","Aïn Defla","Naâma",
+  "Aïn Témouchent","Ghardaïa","Relizane","Timimoun","Bordj Badji Mokhtar","Ouled Djellal",
+  "Béni Abbès","In Salah","In Guezzam","Touggourt","Djanet","El M'Ghair","El Meniaa",
+];
+
+export default function MonProfil() {
+  const { handleConnexion } = useAuth();
+  const { isAr } = useLangue();
+  const navigate = useNavigate();
+
+  const [nom, setNom] = useState("");
+  const [wilaya, setWilaya] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailVerifie, setEmailVerifie] = useState(false);
+  const [chargement, setChargement] = useState(true);
+  const [sauvegarde, setSauvegarde] = useState(false);
+  const [message, setMessage] = useState("");
+  const [erreur, setErreur] = useState("");
+
+  useEffect(() => {
+    const charger = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) { navigate('/login'); return; }
+      try {
+        const res = await fetch(`${API_URL}/api/auth/moi`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setNom(data.nom || "");
+          setWilaya(data.wilaya || "");
+          setEmail(data.email || "");
+          setEmailVerifie(data.email_verifie || false);
+        } else {
+          setErreur(data.erreur || "Erreur de chargement");
+        }
+      } catch {
+        setErreur("Impossible de contacter le serveur.");
+      } finally {
+        setChargement(false);
+      }
+    };
+    charger();
+  }, [navigate]);
+
+  const handleSauvegarder = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setErreur("");
+    setSauvegarde(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/auth/moi`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ nom, wilaya }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage("Profil mis à jour !");
+        handleConnexion(data);
+      } else {
+        setErreur(data.erreur || "Erreur de sauvegarde");
+      }
+    } catch {
+      setErreur("Impossible de contacter le serveur.");
+    } finally {
+      setSauvegarde(false);
+    }
+  };
+
+  const handleRenvoiVerification = async () => {
+    setMessage("");
+    setErreur("");
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/auth/renvoyer-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage("Email de vérification renvoyé !");
+      } else {
+        setErreur(data.erreur || "Erreur lors du renvoi");
+      }
+    } catch {
+      setErreur("Impossible de contacter le serveur.");
+    }
+  };
+
+  if (chargement) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#fdf8f0" }}>
+        <div style={{ fontSize: "48px" }}>🍯</div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{
+      minHeight: "100vh", background: "#fdf8f0", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+      direction: isAr ? "rtl" : "ltr",
+    }}>
+      <header style={{
+        background: "linear-gradient(135deg, #78350f, #b45309)", padding: "16px 32px",
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <img src={LOGO_URL} alt="" style={{ height: "36px", width: "36px", borderRadius: "50%", objectFit: "cover" }} />
+          <div>
+            <p style={{ margin: 0, fontWeight: "700", color: "white", fontSize: "14px" }}>
+              {isAr ? "التعاونية الفلاحية" : "Mon Profil"}
+            </p>
+            <p style={{ margin: 0, fontSize: "10px", color: "rgba(255,255,255,0.7)" }}>
+              Coopérative Apicole Kawit Tlemcen
+            </p>
+          </div>
+        </div>
+        <button onClick={() => navigate('/')} style={{
+          background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)",
+          borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700",
+        }}>
+          Retour au catalogue
+        </button>
+      </header>
+
+      <div style={{ maxWidth: "600px", margin: "40px auto", padding: "0 20px" }}>
+        <form onSubmit={handleSauvegarder} style={{
+          background: "white", borderRadius: "16px", padding: "32px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+        }}>
+          <h2 style={{ color: "#1c1008", fontSize: "20px", margin: "0 0 24px" }}>
+            {isAr ? "معلومات الحساب" : "Informations du compte"}
+          </h2>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+              {isAr ? "الاسم الكامل" : "Nom complet"}
+            </label>
+            <input value={nom} onChange={(e) => setNom(e.target.value)} style={{
+              width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
+              fontSize: "14px", color: "#1c1008", background: "white", boxSizing: "border-box",
+            }} />
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+              {isAr ? "الولاية" : "Wilaya"}
+            </label>
+            <select value={wilaya} onChange={(e) => setWilaya(e.target.value)} style={{
+              width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
+              fontSize: "14px", color: "#1c1008", background: "white", boxSizing: "border-box",
+            }}>
+              <option value="">{isAr ? "اختر ولاية" : "Sélectionnez votre wilaya"}</option>
+              {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+            </select>
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+              Email
+            </label>
+            <div style={{
+              display: "flex", alignItems: "center", gap: "10px",
+              padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
+              fontSize: "14px", color: "#6b6055", background: "#f9f6f1",
+            }}>
+              <span style={{ flex: 1 }}>{email}</span>
+              {emailVerifie ? (
+                <span style={{ fontSize: "12px", color: "#16a34a", fontWeight: "600" }}>✅ Vérifié</span>
+              ) : (
+                <button type="button" onClick={handleRenvoiVerification} style={{
+                  fontSize: "12px", color: "#b45309", background: "none", border: "none",
+                  cursor: "pointer", fontWeight: "600", textDecoration: "underline", whiteSpace: "nowrap",
+                }}>
+                  ⚠️ Vérifier
+                </button>
+              )}
+            </div>
+          </div>
+
+          {message && <p style={{ color: "#16a34a", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>✅ {message}</p>}
+          {erreur && <p style={{ color: "#dc2626", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>⚠️ {erreur}</p>}
+
+          <button type="submit" disabled={sauvegarde} style={{
+            width: "100%", padding: "14px", borderRadius: "12px", border: "none",
+            background: sauvegarde ? "#d4b483" : "#b45309", color: "white", fontWeight: "700",
+            fontSize: "15px", cursor: sauvegarde ? "not-allowed" : "pointer",
+          }}>
+            {sauvegarde ? "Sauvegarde..." : "Enregistrer les modifications"}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}

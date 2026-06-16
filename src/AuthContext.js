@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
   const [panier, setPanier] = useState([]);
 
   const handleConnexion = (u) => {
+    localStorage.setItem('utilisateur', JSON.stringify(u));
     setUtilisateur(u);
   };
 

@@ -312,6 +312,17 @@ export default function CatalogueMiel(){
                 </button>
               )}
               <button
+                onClick={() => navigate('/mon-profil')}
+                style={{
+                  background: "none", border: "1.5px solid #e5ddd0",
+                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+                  fontSize: "13px", color: "#6b6055",
+                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                }}
+              >
+                👤 {isAr ? "حسابي" : "Mon profil"}
+              </button>
+              <button
                 onClick={() => navigate('/mes-commandes')}
                 style={{
                   background: "none", border: "1.5px solid #e5ddd0",
