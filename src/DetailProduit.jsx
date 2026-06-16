@@ -287,7 +287,6 @@ export default function DetailProduit() {
                   <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>{spec.value}</span>
                 </div>
               ))}
-              ))}
               {caracteristiques.length > 0 && <div style={{ height: "1px", background: "#f0ebe3", margin: "8px 0" }} />}
               {caracteristiques.map((carac) => (
                 <div key={carac.id} style={{
