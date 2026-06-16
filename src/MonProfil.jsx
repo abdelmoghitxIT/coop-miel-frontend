@@ -32,6 +32,13 @@ export default function MonProfil() {
   const [message, setMessage] = useState("");
   const [erreur, setErreur] = useState("");
 
+  // Password change
+  const [afficherMdp, setAfficherMdp] = useState(false);
+  const [ancienMotDePasse, setAncienMotDePasse] = useState("");
+  const [nouveauMotDePasse, setNouveauMotDePasse] = useState("");
+  const [confirmerMotDePasse, setConfirmerMotDePasse] = useState("");
+  const [mdpChargement, setMdpChargement] = useState(false);
+
   useEffect(() => {
     const charger = async () => {
       const token = localStorage.getItem('token');
@@ -83,6 +90,39 @@ export default function MonProfil() {
       setErreur("Impossible de contacter le serveur.");
     } finally {
       setSauvegarde(false);
+    }
+  };
+
+  const handleChangerMotDePasse = async (e) => {
+    e.preventDefault();
+    setMessage("");
+    setErreur("");
+    if (nouveauMotDePasse !== confirmerMotDePasse) {
+      setErreur(isAr ? "كلمة المرور الجديدة غير متطابقة" : "Les mots de passe ne correspondent pas");
+      return;
+    }
+    setMdpChargement(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/auth/mot-de-passe`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ ancien_mot_de_passe: ancienMotDePasse, nouveau_mot_de_passe: nouveauMotDePasse }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setMessage(isAr ? "تم تغيير كلمة المرور بنجاح !" : "Mot de passe changé avec succès !");
+        setAfficherMdp(false);
+        setAncienMotDePasse("");
+        setNouveauMotDePasse("");
+        setConfirmerMotDePasse("");
+      } else {
+        setErreur(data.erreur || (isAr ? "خطأ في تغيير كلمة المرور" : "Erreur lors du changement"));
+      }
+    } catch {
+      setErreur(isAr ? "تعذر الاتصال بالخادم" : "Impossible de contacter le serveur.");
+    } finally {
+      setMdpChargement(false);
     }
   };
 
@@ -221,6 +261,56 @@ export default function MonProfil() {
                 </button>
               )}
             </div>
+          </div>
+
+          {/* Mot de passe */}
+          <div style={{ borderTop: "1px solid #f0ebe3", paddingTop: "20px", marginTop: "8px" }}>
+            <button onClick={() => setAfficherMdp(!afficherMdp)} style={{
+              background: "none", border: "none", cursor: "pointer", padding: 0,
+              display: "flex", alignItems: "center", gap: "8px",
+              fontSize: "14px", fontWeight: "700", color: "#b45309", fontFamily: "inherit",
+            }}>
+              🔑 {isAr ? "تغيير كلمة المرور" : "Changer le mot de passe"}
+              <span style={{ fontSize: "12px", color: "#a8977f" }}>{afficherMdp ? "▲" : "▼"}</span>
+            </button>
+
+            {afficherMdp && (
+              <form onSubmit={handleChangerMotDePasse} style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                <div>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+                    {isAr ? "كلمة المرور الحالية" : "Mot de passe actuel"}
+                  </label>
+                  <input type="password" value={ancienMotDePasse}
+                    onChange={(e) => setAncienMotDePasse(e.target.value)}
+                    required style={inputStyle} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+                    {isAr ? "كلمة المرور الجديدة" : "Nouveau mot de passe"}
+                  </label>
+                  <input type="password" value={nouveauMotDePasse}
+                    onChange={(e) => setNouveauMotDePasse(e.target.value)}
+                    required style={inputStyle}
+                    placeholder={isAr ? "8 أحرف، حرف كبير، رقم" : "8 car., 1 maj., 1 chiffre"} />
+                </div>
+                <div>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+                    {isAr ? "تأكيد كلمة المرور الجديدة" : "Confirmer le nouveau mot de passe"}
+                  </label>
+                  <input type="password" value={confirmerMotDePasse}
+                    onChange={(e) => setConfirmerMotDePasse(e.target.value)}
+                    required style={inputStyle} />
+                </div>
+                <button type="submit" disabled={mdpChargement} style={{
+                  padding: "12px", borderRadius: "10px", border: "none",
+                  background: mdpChargement ? "#d4b483" : "#b45309",
+                  color: "white", fontWeight: "700", fontSize: "14px",
+                  cursor: mdpChargement ? "not-allowed" : "pointer",
+                }}>
+                  {mdpChargement ? "..." : (isAr ? "تغيير كلمة المرور" : "Changer le mot de passe")}
+                </button>
+              </form>
+            )}
           </div>
 
           {message && <p style={{ color: "#16a34a", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>✅ {message}</p>}

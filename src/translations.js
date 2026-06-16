@@ -205,6 +205,14 @@ const translations = {
     produitsEmpty: "Aucun produit",
     ajoutEnCours: "Ajout en cours...",
     partagerWhatsapp: "Partager sur WhatsApp",
+    videoUrl: "URL Vidéo (YouTube)",
+    changerMotDePasse: "Changer le mot de passe",
+    motDePasseActuel: "Mot de passe actuel",
+    confirmerNouveauMotDePasse: "Confirmer le nouveau mot de passe",
+    motDePasseChange: "Mot de passe changé avec succès !",
+    mdpNonCorrespondent: "Les mots de passe ne correspondent pas",
+    mdpRequis: "Ancien et nouveau mot de passe requis",
+    mdpIncorrect: "Mot de passe actuel incorrect",
   },
 
   ar: {
@@ -413,6 +421,14 @@ const translations = {
     produitsEmpty: "لا توجد منتجات",
     ajoutEnCours: "جارٍ الإضافة...",
     partagerWhatsapp: "مشاركة عبر واتساب",
+    videoUrl: "رابط فيديو (يوتيوب)",
+    changerMotDePasse: "تغيير كلمة المرور",
+    motDePasseActuel: "كلمة المرور الحالية",
+    confirmerNouveauMotDePasse: "تأكيد كلمة المرور الجديدة",
+    motDePasseChange: "تم تغيير كلمة المرور بنجاح !",
+    mdpNonCorrespondent: "كلمة المرور الجديدة غير متطابقة",
+    mdpRequis: "كلمة المرور الحالية والجديدة مطلوبة",
+    mdpIncorrect: "كلمة المرور الحالية غير صحيحة",
   }
 };
 

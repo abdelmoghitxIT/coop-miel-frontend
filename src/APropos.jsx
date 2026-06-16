@@ -6,16 +6,16 @@ const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_51
 const INFO = {
   nom_fr: "Coopérative Apicole Kawit",
   nom_ar: "التعاونية الفلاحية لتربية النحل كاويت",
-  fondee: "____",
-  membres: "____",
-  ruches: "____",
+  fondee: "2024",
+  membres: "12",
+  ruches: "500+",
   wilaya: "Tlemcen",
-  commune: "____",
-  adresse: "____",
+  commune: "Tlemcen",
+  adresse: "Tlemcen, Algérie",
   telephone: "+213 696 242 396",
-  email: "____@gmail.com",
-  description_fr: "____",
-  description_ar: "____",
+  email: "coop.nhal.tlemcen@gmail.com",
+  description_fr: "La Coopérative Apicole Kawit est une coopérative agricole basée à Tlemcen, spécialisée dans la production de miel et produits de la ruche de haute qualité. Fondée par des apiculteurs passionnés, notre coopérative valorise le savoir-faire local et les richesses naturelles de la région de Tlemcen.",
+  description_ar: "التعاونية الفلاحية لتربية النحل كاويت هي تعاونية فلاحية مقرها تلمسان، متخصصة في إنتاج العسل ومنتجات الخلية عالية الجودة. أسسها مربو نحل متحمسون، تعزز تعاونيتنا الخبرة المحلية والثروات الطبيعية لمنطقة تلمسان.",
 };
 
 export default function APropos() {

@@ -198,6 +198,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
     categorie_id: produit.categorie_id || "",
     origine: produit.origine || "",
     recolte: produit.recolte || "",
+    video_url: produit.video_url || "",
   });
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
@@ -260,6 +261,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
           categorie_id: Number(categorieId),
           origine: form.origine || null,
           recolte: form.recolte || null,
+          video_url: form.video_url || null,
         }),
       });
       const data = await res.json();
@@ -352,6 +354,12 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
               <label style={labelStyle}>{t.recolte}</label>
               <input name="recolte" value={form.recolte} onChange={handleChange} placeholder="2025" style={inputStyle} />
             </div>
+          </div>
+
+          <div>
+            <label style={labelStyle}>{t.videoUrl}</label>
+            <input name="video_url" value={form.video_url} onChange={handleChange}
+              placeholder="https://youtube.com/watch?v=..." style={inputStyle} />
           </div>
 
           <div style={{ borderTop: "1px solid #f0ebe3", paddingTop: "14px" }}>
