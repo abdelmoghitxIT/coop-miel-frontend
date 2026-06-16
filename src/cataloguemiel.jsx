@@ -12,7 +12,10 @@ const CATEGORIES = (t) => [
   { id: "pollen", label: t.pollen },
   { id: "cire & propolis", label: t.cire },
   { id: "coffrets", label: t.coffrets },
+  { id: "autres", label: t.autres },
 ];
+
+const CATEGORIES_SPECIFIQUES = ["miels", "pollen", "cire & propolis", "coffrets"];
 
 function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
   const [ajoute, setAjoute] = useState(false);
@@ -236,7 +239,9 @@ export default function CatalogueMiel(){
   const produitsFiltres = useMemo(() => {
     return produits.filter((p) => {
       const matchCat = categorieActive === "tous" ||
-        p.categorie_nom?.toLowerCase() === categorieActive.toLowerCase();
+        (categorieActive === "autres"
+          ? !CATEGORIES_SPECIFIQUES.some((cat) => p.categorie_nom?.toLowerCase() === cat.toLowerCase())
+          : p.categorie_nom?.toLowerCase() === categorieActive.toLowerCase());
       const matchRecherche =
         p.nom.toLowerCase().includes(recherche.toLowerCase()) ||
         (p.description && p.description.toLowerCase().includes(recherche.toLowerCase()));
