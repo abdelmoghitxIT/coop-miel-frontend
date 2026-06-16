@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import FormulaireCommande from './FormulaireCommande';
 import { useLangue } from './LangueContext';
@@ -195,6 +195,8 @@ export default function CatalogueMiel(){
   const [chargement, setChargement] = useState(true);
   const [commandeEnCours, setCommandeEnCours] = useState(false);
   const [commandeConfirmee, setCommandeConfirmee] = useState(null);
+  const [menuUtilisateur, setMenuUtilisateur] = useState(false);
+  const menuRef = useRef(null);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -210,6 +212,16 @@ export default function CatalogueMiel(){
         setChargement(false);
       });
   }, [API_URL]);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuUtilisateur(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   const ajouterAuPanier = (produit) => {
     setPanier((prev) => {
@@ -253,103 +265,145 @@ export default function CatalogueMiel(){
         </div>
       )}
 
-      {/* Navbar Responsive */}
+      {/* Navigation */}
       <header style={{
         background: "white", borderBottom: "1px solid #f0ebe3",
-        padding: "10px 20px", minHeight: "68px", display: "flex",
-        alignItems: "center", justifyContent: "space-between",
-        flexWrap: "wrap", gap: "15px",
+        padding: "0 32px", height: "68px",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
         boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <img src={LOGO_URL} alt="logo" style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover" }} />
-          <div>
-            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
-              {t.siteName}
-            </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a", letterSpacing: "0.06em", textTransform: "uppercase" }}>
-              {t.siteSubtitle}
-            </p>
+        <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }} onClick={() => navigate('/')}>
+            <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
+            <div>
+              <p style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
+                {t.siteName}
+              </p>
+              <p style={{ margin: 0, fontSize: "10px", color: "#a57c3a", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+                {t.siteSubtitle}
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <button onClick={() => navigate('/a-propos')} style={{
+              background: "none", border: "none", cursor: "pointer",
+              fontSize: "13px", color: "#6b6055", fontWeight: "500", padding: "6px 10px",
+            }}>
+              {isAr ? "من نحن" : "À propos"}
+            </button>
           </div>
         </div>
 
-        {/* Liste des boutons flexible */}
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-          <button onClick={() => navigate('/a-propos')} style={{ margin: '0 10px', background: "none", border: "1px solid #e5ddd0", borderRadius: "8px", padding: "6px 12px", cursor: "pointer", fontSize: "13px", color: "#6b6055" }}>
-            À propos de nous
-          </button>
-          
-          {/* Bouton FR/AR */}
-          <div style={{ display: "flex", gap: "3px", background: "#f0ebe3", borderRadius: "8px", padding: "3px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          {/* FR/AR */}
+          <div style={{ display: "flex", gap: "2px", background: "#f0ebe3", borderRadius: "6px", padding: "2px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
-              padding: "5px 10px", borderRadius: "6px", border: "none", cursor: "pointer",
-              fontSize: "12px", fontWeight: "700",
+              padding: "4px 8px", borderRadius: "4px", border: "none", cursor: "pointer",
+              fontSize: "11px", fontWeight: "700",
               background: langue === 'fr' ? "#b45309" : "transparent",
               color: langue === 'fr' ? "white" : "#6b6055",
             }}>FR</button>
             <button onClick={() => langue === 'fr' && toggleLangue()} style={{
-              padding: "5px 10px", borderRadius: "6px", border: "none", cursor: "pointer",
-              fontSize: "12px", fontWeight: "700",
+              padding: "4px 8px", borderRadius: "4px", border: "none", cursor: "pointer",
+              fontSize: "11px", fontWeight: "700",
               background: langue === 'ar' ? "#b45309" : "transparent",
               color: langue === 'ar' ? "white" : "#6b6055",
             }}>AR</button>
           </div>
 
+          {/* Menu utilisateur */}
           {utilisateur ? (
-            <>
-              <span style={{ fontSize: "14px", color: "#6b6055" }}>
-                {t.bonjour}, {utilisateur.nom} 👋
-              </span>
-              {utilisateur?.role === 'admin' && (
-                <button onClick={() => navigate('/dashboard')} style={{
-                  background: "#78350f", color: "white", border: "none",
-                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                  fontSize: "13px", fontWeight: "700",
-                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+            <div ref={menuRef} style={{ position: "relative" }}>
+              <button
+                onClick={() => setMenuUtilisateur(!menuUtilisateur)}
+                style={{
+                  display: "flex", alignItems: "center", gap: "6px",
+                  background: "none", border: "1.5px solid #e5ddd0",
+                  borderRadius: "8px", padding: "8px 12px", cursor: "pointer",
+                  fontSize: "13px", color: "#1c1008", fontWeight: "600",
+                }}
+              >
+                <span style={{
+                  width: "28px", height: "28px", borderRadius: "50%",
+                  background: "#b45309", color: "white", display: "flex",
+                  alignItems: "center", justifyContent: "center",
+                  fontSize: "12px", fontWeight: "700",
                 }}>
-                  👑 {t.dashboard}
-                </button>
-              )}
-              <button
-                onClick={() => navigate('/mon-profil')}
-                style={{
-                  background: "none", border: "1.5px solid #e5ddd0",
-                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                  fontSize: "13px", color: "#6b6055",
-                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-                }}
-              >
-                👤 {isAr ? "حسابي" : "Mon profil"}
-              </button>
-              <button
-                onClick={() => navigate('/mes-commandes')}
-                style={{
-                  background: "none", border: "1.5px solid #e5ddd0",
-                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                  fontSize: "13px", color: "#6b6055",
-                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-                }}
-              >
-                {isAr ? "طلباتي 📋" : "📋 Mes commandes"}
+                  {utilisateur.nom.charAt(0).toUpperCase()}
+                </span>
+                <span>{utilisateur.nom.split(' ')[0]}</span>
+                <span style={{ fontSize: "10px", color: "#a8977f" }}>{menuUtilisateur ? "▲" : "▼"}</span>
               </button>
 
-              <button
-                onClick={handleDeconnexion}
-                style={{
-                  background: "none", border: "1.5px solid #e5ddd0",
-                  borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
-                  fontSize: "13px", color: "#6b6055",
-                  fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-                }}
-              >
-                {t.deconnexion}
-              </button>
-            </>
+              {menuUtilisateur && (
+                <div style={{
+                  position: "absolute", top: "calc(100% + 6px)", right: 0,
+                  background: "white", borderRadius: "12px",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+                  border: "1px solid #f0ebe3", minWidth: "200px",
+                  overflow: "hidden", zIndex: 200,
+                }}>
+                  <div style={{ padding: "12px 16px", borderBottom: "1px solid #f8f4ef" }}>
+                    <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#1c1008" }}>
+                      {utilisateur.nom}
+                    </p>
+                    <p style={{ margin: "2px 0 0", fontSize: "11px", color: "#a8977f" }}>
+                      {utilisateur.email}
+                    </p>
+                  </div>
+                  <button onClick={() => { setMenuUtilisateur(false); navigate('/mon-profil'); }} style={{
+                    display: "block", width: "100%", padding: "10px 16px", border: "none",
+                    background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                    textAlign: "left", fontFamily: "inherit",
+                  }}
+                    onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                    onMouseLeave={(e) => e.target.style.background = "none"}
+                  >
+                    👤 {isAr ? "حسابي" : "Mon profil"}
+                  </button>
+                  <button onClick={() => { setMenuUtilisateur(false); navigate('/mes-commandes'); }} style={{
+                    display: "block", width: "100%", padding: "10px 16px", border: "none",
+                    background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                    textAlign: "left", fontFamily: "inherit",
+                  }}
+                    onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                    onMouseLeave={(e) => e.target.style.background = "none"}
+                  >
+                    📋 {isAr ? "طلباتي" : "Mes commandes"}
+                  </button>
+                  {utilisateur?.role === 'admin' && (
+                    <button onClick={() => { setMenuUtilisateur(false); navigate('/dashboard'); }} style={{
+                      display: "block", width: "100%", padding: "10px 16px", border: "none",
+                      background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                      textAlign: "left", fontFamily: "inherit",
+                    }}
+                      onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                      onMouseLeave={(e) => e.target.style.background = "none"}
+                    >
+                      👑 {t.dashboard}
+                    </button>
+                  )}
+                  <div style={{ borderTop: "1px solid #f8f4ef" }}>
+                    <button onClick={() => { setMenuUtilisateur(false); handleDeconnexion(); }} style={{
+                      display: "block", width: "100%", padding: "10px 16px", border: "none",
+                      background: "none", cursor: "pointer", fontSize: "13px", color: "#dc2626",
+                      textAlign: "left", fontFamily: "inherit",
+                    }}
+                      onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                      onMouseLeave={(e) => e.target.style.background = "none"}
+                    >
+                      {t.deconnexion}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           ) : (
             <button onClick={() => navigate('/login')} style={{
               background: "none", border: "1.5px solid #b45309",
-              borderRadius: "8px", padding: "8px 14px", cursor: "pointer",
+              borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
               fontSize: "13px", color: "#b45309", fontWeight: "600",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}>
@@ -357,6 +411,7 @@ export default function CatalogueMiel(){
             </button>
           )}
 
+          {/* Panier */}
           <button onClick={() => setPanierOuvert(true)} style={{
             display: "flex", alignItems: "center", gap: "8px",
             background: "#b45309", color: "white", border: "none",
@@ -381,42 +436,57 @@ export default function CatalogueMiel(){
       </header>
 
       {/* Hero */}
-      <div style={{ background: "linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)", padding: "60px 40px", textAlign: "center" }}>
+      <div style={{
+        background: "linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)",
+        padding: "80px 40px", textAlign: "center", position: "relative",
+        overflow: "hidden",
+      }}>
+        <div style={{
+          position: "absolute", inset: 0, opacity: 0.08,
+          backgroundImage: "radial-gradient(circle at 25% 50%, white 1px, transparent 1px), radial-gradient(circle at 75% 50%, white 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }} />
         <h2 style={{
-          margin: "0 0 12px", fontSize: "38px", fontWeight: "800", color: "white",
+          margin: "0 0 16px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", color: "white",
           fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
+          position: "relative",
         }}>
           {t.heroTitle}
         </h2>
         <p style={{
           margin: "0 auto", fontSize: "16px", color: "rgba(255,255,255,0.85)",
-          maxWidth: "600px", direction: "rtl", fontFamily: "'Amiri', serif", lineHeight: "1.8",
+          maxWidth: "600px", lineHeight: "1.8", position: "relative",
         }}>
           {t.heroSub}
         </p>
       </div>
 
       {/* Filtres */}
-      <div style={{ padding: "28px 40px 0", maxWidth: "1200px", margin: "0 auto" }}>
-        <div style={{ position: "relative", marginBottom: "24px" }}>
-          <span style={{ position: "absolute", left: isAr ? "auto" : "16px", right: isAr ? "16px" : "auto", top: "50%", transform: "translateY(-50%)", fontSize: "18px" }}>🔍</span>
-          <input
-            type="text"
-            placeholder={t.rechercherProduit}
-            value={recherche}
-            onChange={(e) => setRecherche(e.target.value)}
-            style={{
-              width: "100%", maxWidth: "480px",
-              padding: isAr ? "13px 46px 13px 16px" : "13px 16px 13px 46px",
-              borderRadius: "12px", border: "1.5px solid #e5ddd0",
-              background: "white", fontSize: "15px", color: "#1c1008", outline: "none",
-              fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-              direction: isAr ? "rtl" : "ltr",
-            }}
-          />
+      <div style={{ padding: "36px 40px 0", maxWidth: "1200px", margin: "0 auto" }}>
+        <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "24px", flexWrap: "wrap" }}>
+          <div style={{ position: "relative", flex: "1 1 280px", maxWidth: "400px" }}>
+            <span style={{ position: "absolute", left: isAr ? "auto" : "16px", right: isAr ? "16px" : "auto", top: "50%", transform: "translateY(-50%)", fontSize: "16px", opacity: 0.5 }}>🔍</span>
+            <input
+              type="text"
+              placeholder={t.rechercherProduit}
+              value={recherche}
+              onChange={(e) => setRecherche(e.target.value)}
+              style={{
+                width: "100%",
+                padding: isAr ? "13px 46px 13px 16px" : "13px 16px 13px 46px",
+                borderRadius: "12px", border: "1.5px solid #e5ddd0",
+                background: "white", fontSize: "15px", color: "#1c1008", outline: "none",
+                fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                direction: isAr ? "rtl" : "ltr",
+              }}
+            />
+          </div>
+          <p style={{ margin: 0, fontSize: "14px", color: "#a8977f", fontWeight: "500" }}>
+            {produitsFiltres.length} {produitsFiltres.length > 1 ? t.produitsTrouves : t.produitTrouve}
+          </p>
         </div>
 
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "28px", justifyContent: isAr ? "flex-end" : "flex-start" }}>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "32px" }}>
           {CATEGORIES(t).map((cat) => (
             <button
               key={cat.id}
@@ -434,10 +504,6 @@ export default function CatalogueMiel(){
             </button>
           ))}
         </div>
-
-        <p style={{ margin: "0 0 20px", fontSize: "14px", color: "#a8977f", fontWeight: "500", textAlign: isAr ? "right" : "left" }}>
-          {produitsFiltres.length} {produitsFiltres.length > 1 ? t.produitsTrouves : t.produitTrouve}
-        </p>
       </div>
 
       {/* Grille produits */}
