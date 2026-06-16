@@ -201,6 +201,8 @@ export default function CatalogueMiel(){
   const [commandeConfirmee, setCommandeConfirmee] = useState(null);
   const [menuUtilisateur, setMenuUtilisateur] = useState(false);
   const menuRef = useRef(null);
+  const [page, setPage] = useState(1);
+  const [produitsParPage] = useState(12);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -250,6 +252,13 @@ export default function CatalogueMiel(){
       return matchCat && matchRecherche;
     });
   }, [categorieActive, recherche, produits]);
+
+  const pageCount = Math.ceil(produitsFiltres.length / produitsParPage);
+  const produitsAffiches = produitsFiltres.slice((page - 1) * produitsParPage, page * produitsParPage);
+
+  useEffect(() => {
+    setPage(1);
+  }, [categorieActive, recherche]);
 
   const totalPanier = panier.reduce((sum, p) => sum + p.qte, 0);
 
@@ -532,7 +541,7 @@ export default function CatalogueMiel(){
             <p style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>{t.aucunProduit}</p>
           </div>
         ) : (
-          produitsFiltres.map((produit) => (
+          produitsAffiches.map((produit) => (
             <CarteProduit
               key={produit.id}
               produit={produit}
@@ -543,6 +552,44 @@ export default function CatalogueMiel(){
           ))
         )}
       </div>
+
+      {pageCount > 1 && (
+        <div style={{
+          display: "flex", alignItems: "center", justifyContent: "center",
+          gap: "12px", padding: "0 40px 40px",
+          maxWidth: "1200px", margin: "0 auto", fontFamily: "'DM Sans', sans-serif",
+        }}>
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            style={{
+              padding: "8px 18px", borderRadius: "8px", border: "none",
+              background: page === 1 ? "#e5e7eb" : "#b45309",
+              color: page === 1 ? "#9ca3af" : "white",
+              fontWeight: "700", fontSize: "14px", cursor: page === 1 ? "not-allowed" : "pointer",
+              transition: "all 0.2s",
+            }}
+          >
+            {t.pagePrecedente || "Précédent"}
+          </button>
+          <span style={{ fontSize: "14px", fontWeight: "600", color: "#6b6055" }}>
+            {isAr ? `الصفحة ${page} من ${pageCount}` : `Page ${page} sur ${pageCount}`}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
+            disabled={page === pageCount}
+            style={{
+              padding: "8px 18px", borderRadius: "8px", border: "none",
+              background: page === pageCount ? "#e5e7eb" : "#b45309",
+              color: page === pageCount ? "#9ca3af" : "white",
+              fontWeight: "700", fontSize: "14px", cursor: page === pageCount ? "not-allowed" : "pointer",
+              transition: "all 0.2s",
+            }}
+          >
+            {t.pageSuivante || "Suivant"}
+          </button>
+        </div>
+      )}
 
       {/* Panier */}
       {panierOuvert && (

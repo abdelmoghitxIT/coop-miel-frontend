@@ -11,7 +11,7 @@ export default function DetailProduit() {
   const { id: produitId } = useParams();
   const navigate = useNavigate();
   const { t, isAr, toggleLangue, langue } = useLangue();
-  const { setPanier } = useAuth();
+  const { utilisateur, setPanier } = useAuth();
   const [produit, setProduit] = useState(null);
   const [chargement, setChargement] = useState(true);
   const [photoActive, setPhotoActive] = useState(0);
@@ -19,6 +19,11 @@ export default function DetailProduit() {
   const [ajoute, setAjoute] = useState(false);
   const [photoAgrandie, setPhotoAgrandie] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [avis, setAvis] = useState([]);
+  const [nouvelleNote, setNouvelleNote] = useState(0);
+  const [nouveauCommentaire, setNouveauCommentaire] = useState('');
+  const [chargementAvis, setChargementAvis] = useState(true);
+  const [envoiAvis, setEnvoiAvis] = useState(false);
 
   useEffect(() => {
     fetch(`${API_URL}/api/produits/${produitId}`)
@@ -30,6 +35,19 @@ export default function DetailProduit() {
       .catch((err) => {
         console.error("Erreur:", err);
         setChargement(false);
+      });
+  }, [produitId]);
+
+  useEffect(() => {
+    fetch(`${API_URL}/api/produits/${produitId}/avis`)
+      .then((res) => res.json())
+      .then((data) => {
+        setAvis(data);
+        setChargementAvis(false);
+      })
+      .catch((err) => {
+        console.error("Erreur chargement avis:", err);
+        setChargementAvis(false);
       });
   }, [produitId]);
 
@@ -48,6 +66,32 @@ export default function DetailProduit() {
     });
     setAjoute(true);
     setTimeout(() => setAjoute(false), 1500);
+  };
+
+  const handleSubmitAvis = async () => {
+    if (nouvelleNote === 0) return;
+    setEnvoiAvis(true);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/produits/${produitId}/avis`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ note: nouvelleNote, commentaire: nouveauCommentaire }),
+      });
+      if (!res.ok) {
+        const errData = await res.json();
+        alert(errData.erreur);
+        return;
+      }
+      const nouvelAvis = await res.json();
+      setAvis((prev) => [nouvelAvis, ...prev]);
+      setNouvelleNote(0);
+      setNouveauCommentaire('');
+    } catch (err) {
+      console.error("Erreur envoi avis:", err);
+    } finally {
+      setEnvoiAvis(false);
+    }
   };
 
   if (chargement) {
@@ -92,6 +136,9 @@ export default function DetailProduit() {
     { label: t.conservation, value: t.conservationDesc },
   ];
   const caracteristiques = produit?.caracteristiques || [];
+
+  const moyenne = avis.length > 0 ? (avis.reduce((s, a) => s + a.note, 0) / avis.length).toFixed(1) : 0;
+  const renderEtoiles = (note) => '★'.repeat(note) + '☆'.repeat(5 - note);
 
   return (
     <div style={{
@@ -389,6 +436,138 @@ export default function DetailProduit() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* AVIS CLIENTS */}
+        <div style={{ marginTop: "48px" }}>
+          <h2 style={{
+            fontSize: "22px", fontWeight: "800", color: "#1c1008", margin: "0 0 4px",
+            fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
+          }}>
+            {isAr ? "تقييمات العملاء" : "Avis clients"}
+          </h2>
+
+          {chargementAvis ? (
+            <p style={{ color: "#a8977f", fontSize: "14px" }}>{isAr ? "جاري التحميل..." : "Chargement..."}</p>
+          ) : (
+            <>
+              {/* Moyenne */}
+              {avis.length > 0 && (
+                <div style={{
+                  display: "flex", alignItems: "center", gap: "10px",
+                  marginBottom: "24px", flexDirection: isAr ? "row-reverse" : "row",
+                }}>
+                  <span style={{ fontSize: "28px", color: "#b45309", letterSpacing: "2px" }}>
+                    {renderEtoiles(Math.round(moyenne))}
+                  </span>
+                  <span style={{ fontSize: "20px", fontWeight: "800", color: "#1c1008" }}>{moyenne}</span>
+                  <span style={{ fontSize: "14px", color: "#a8977f" }}>
+                    ({avis.length} {isAr ? "تقييم" : "avis"})
+                  </span>
+                </div>
+              )}
+
+              {/* Liste des avis */}
+              {avis.length === 0 && !chargementAvis && (
+                <p style={{ color: "#a8977f", fontSize: "14px", marginBottom: "24px" }}>
+                  {isAr ? "لا توجد تقييمات بعد" : "Aucun avis pour le moment"}
+                </p>
+              )}
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px", marginBottom: "32px" }}>
+                {avis.map((a) => (
+                  <div key={a.id} style={{
+                    background: "white", borderRadius: "12px", padding: "16px",
+                    border: "1px solid #f0ebe3",
+                  }}>
+                    <div style={{
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      marginBottom: "6px", flexDirection: isAr ? "row-reverse" : "row",
+                    }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px", flexDirection: isAr ? "row-reverse" : "row" }}>
+                        <span style={{ fontWeight: "700", fontSize: "14px", color: "#1c1008" }}>{a.nom_utilisateur}</span>
+                        <span style={{ fontSize: "12px", color: "#a8977f" }}>
+                          {new Date(a.created_at).toLocaleDateString(isAr ? "ar-DZ" : "fr-FR")}
+                        </span>
+                      </div>
+                      <span style={{ fontSize: "16px", color: "#b45309", letterSpacing: "1px" }}>
+                        {renderEtoiles(a.note)}
+                      </span>
+                    </div>
+                    {a.commentaire && (
+                      <p style={{ margin: 0, fontSize: "14px", color: "#6b6055", lineHeight: "1.6" }}>
+                        {a.commentaire}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* Formulaire d'avis (authentifié seulement) */}
+              {utilisateur ? (
+                <div style={{
+                  background: "white", borderRadius: "12px", padding: "20px",
+                  border: "1px solid #f0ebe3",
+                }}>
+                  <h3 style={{
+                    margin: "0 0 16px", fontSize: "16px", fontWeight: "700", color: "#1c1008",
+                    fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                  }}>
+                    {isAr ? "أضف تقييمك" : "Donnez votre avis"}
+                  </h3>
+                  <div style={{ marginBottom: "12px" }}>
+                    <p style={{ margin: "0 0 6px", fontSize: "13px", fontWeight: "600", color: "#6b6055" }}>
+                      {isAr ? "تقييمك" : "Votre note"}
+                    </p>
+                    <div style={{ display: "flex", gap: "4px" }}>
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <span
+                          key={n}
+                          onClick={() => setNouvelleNote(n)}
+                          style={{
+                            fontSize: "28px", cursor: "pointer", color: n <= nouvelleNote ? "#b45309" : "#e5ddd0",
+                            transition: "color 0.15s", userSelect: "none",
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = "#b45309"}
+                          onMouseLeave={(e) => e.currentTarget.style.color = n <= nouvelleNote ? "#b45309" : "#e5ddd0"}
+                        >
+                          {n <= nouvelleNote ? "★" : "☆"}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea
+                    value={nouveauCommentaire}
+                    onChange={(e) => setNouveauCommentaire(e.target.value)}
+                    placeholder={isAr ? "اكتب تعليقك (اختياري)" : "Votre commentaire (optionnel)"}
+                    rows={3}
+                    style={{
+                      width: "100%", padding: "12px", borderRadius: "10px",
+                      border: "1.5px solid #e5ddd0", fontSize: "14px", fontFamily: "inherit",
+                      resize: "vertical", marginBottom: "12px", background: "#fdf8f0",
+                      color: "#1c1008", boxSizing: "border-box",
+                    }}
+                  />
+                  <button
+                    onClick={handleSubmitAvis}
+                    disabled={nouvelleNote === 0 || envoiAvis}
+                    style={{
+                      padding: "12px 24px", borderRadius: "10px", border: "none",
+                      background: nouvelleNote === 0 ? "#e5e7eb" : "#b45309",
+                      color: nouvelleNote === 0 ? "#9ca3af" : "white",
+                      fontWeight: "700", fontSize: "14px", cursor: nouvelleNote === 0 ? "not-allowed" : "pointer",
+                      fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                    }}
+                  >
+                    {envoiAvis ? (isAr ? "جاري الإرسال..." : "Envoi...") : (isAr ? "إرسال" : "Envoyer")}
+                  </button>
+                </div>
+              ) : (
+                <p style={{ color: "#a8977f", fontSize: "14px", textAlign: "center" }}>
+                  {isAr ? "قم بتسجيل الدخول لإضافة تقييم" : "Connectez-vous pour ajouter un avis"}
+                </p>
+              )}
+            </>
+          )}
         </div>
       </div>
 

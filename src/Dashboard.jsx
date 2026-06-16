@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useLangue } from './LangueContext';
@@ -6,6 +6,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { chargerConfig, formaterTelephoneAlgerie, lienWhatsapp, messageStatutCommande } from './utils/whatsapp';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -671,6 +672,8 @@ export default function Dashboard() {
   const [modifierProduit, setModifierProduit] = useState(null);
   const [gererPhotos, setGererPhotos] = useState(null);
   const [rechercheCommande, setRechercheCommande] = useState("");
+  const [pageCommandes, setPageCommandes] = useState(1);
+  const [commandesParPage] = useState(20);
 
   useEffect(() => { chargerConfig(); chargerDonnees(); }, []);
 
@@ -682,6 +685,16 @@ export default function Dashboard() {
       || (c.client_telephone || '').includes(q)
       || (c.adresse_livraison || '').toLowerCase().includes(q);
   });
+
+  useEffect(() => {
+    setPageCommandes(1);
+  }, [rechercheCommande]);
+
+  const pageCommandesCount = Math.ceil(commandesFiltrees.length / commandesParPage);
+  const commandesAffichees = commandesFiltrees.slice(
+    (pageCommandes - 1) * commandesParPage,
+    pageCommandes * commandesParPage
+  );
 
   const exporterExcel = () => {
     const data = commandes.map((c) => ({
@@ -916,7 +929,48 @@ export default function Dashboard() {
     setAjouterProduit(false);
   };
 
+  const moisNom = useMemo(() => ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"], []);
 
+  const donneesVentesMensuelles = useMemo(() => {
+    const ventesMensuelles = commandes
+      .filter(c => c.statut !== "annulee")
+      .reduce((acc, c) => {
+        const d = new Date(c.created_at);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+        acc[key] = (acc[key] || 0) + Number(c.total);
+        return acc;
+      }, {});
+    return Object.entries(ventesMensuelles)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([key, total]) => {
+        const [, m] = key.split("-");
+        return { mois: `${moisNom[parseInt(m) - 1]}`, ventes: Math.round(total) };
+      });
+  }, [commandes, moisNom]);
+
+  const commandesParStatut = useMemo(() =>
+    STATUTS.map(s => ({
+      name: s.label,
+      value: commandes.filter(c => c.statut === s.id).length,
+      color: s.color,
+    })),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [commandes]);
+
+  const topProduits = useMemo(() => {
+    const produitsAggreges = commandes
+      .filter(c => c.statut !== "annulee" && c.produits)
+      .flatMap(c => c.produits.filter(Boolean))
+      .reduce((acc, p) => {
+        const nom = p.nom || "Inconnu";
+        acc[nom] = (acc[nom] || 0) + (p.quantite || 1);
+        return acc;
+      }, {});
+    return Object.entries(produitsAggreges)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 10)
+      .map(([nom, quantite]) => ({ nom, quantite }));
+  }, [commandes]);
 
   return (
     <div style={{ minHeight: "100vh", background: "#fdf8f0", fontFamily: "'DM Sans', sans-serif" }}>
@@ -973,6 +1027,7 @@ export default function Dashboard() {
         <div style={{ display: "flex", gap: "4px", background: "#f0ebe3", borderRadius: "10px", padding: "4px", marginBottom: "20px", width: "fit-content" }}>
           {[
             { id: "commandes", label: t.tabCommandes },
+            { id: "statistiques", label: t.tabStatistiques },
             { id: "produits", label: t.tabProduits },
           ].map((o) => (
             <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.2s" }}>
@@ -1025,6 +1080,7 @@ export default function Dashboard() {
                       <p style={{ fontSize: "15px", fontWeight: "600" }}>{t.aucuneCorrespondance}</p>
                     </div>
                   ) : (
+                    <>
                     <div style={{ overflowX: "auto" }}>
                       <table>
                         <thead>
@@ -1035,7 +1091,7 @@ export default function Dashboard() {
                           </tr>
                         </thead>
                         <tbody>
-                          {commandesFiltrees.map((c, index) => (
+                          {commandesAffichees.map((c, index) => (
                             <tr key={c.id}>
                               <td><strong>#{index + 1}</strong></td>
                               <td>{c.client_nom || "—"}</td>
@@ -1095,9 +1151,91 @@ export default function Dashboard() {
                         </tbody>
                       </table>
                     </div>
+                    {pageCommandesCount > 1 && (
+                      <div style={{
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        gap: "12px", padding: "16px",
+                      }}>
+                        <button
+                          onClick={() => setPageCommandes((p) => Math.max(1, p - 1))}
+                          disabled={pageCommandes === 1}
+                          style={{
+                            padding: "8px 18px", borderRadius: "8px", border: "none",
+                            background: pageCommandes === 1 ? "#e5e7eb" : "#b45309",
+                            color: pageCommandes === 1 ? "#9ca3af" : "white",
+                            fontWeight: "700", fontSize: "14px",
+                            cursor: pageCommandes === 1 ? "not-allowed" : "pointer",
+                          }}
+                        >
+                          {t.pagePrecedente || "Précédent"}
+                        </button>
+                        <span style={{ fontSize: "14px", fontWeight: "600", color: "#6b6055" }}>
+                          {isAr ? `الصفحة ${pageCommandes} من ${pageCommandesCount}` : `Page ${pageCommandes} sur ${pageCommandesCount}`}
+                        </span>
+                        <button
+                          onClick={() => setPageCommandes((p) => Math.min(pageCommandesCount, p + 1))}
+                          disabled={pageCommandes === pageCommandesCount}
+                          style={{
+                            padding: "8px 18px", borderRadius: "8px", border: "none",
+                            background: pageCommandes === pageCommandesCount ? "#e5e7eb" : "#b45309",
+                            color: pageCommandes === pageCommandesCount ? "#9ca3af" : "white",
+                            fontWeight: "700", fontSize: "14px",
+                            cursor: pageCommandes === pageCommandesCount ? "not-allowed" : "pointer",
+                          }}
+                        >
+                          {t.pageSuivante || "Suivant"}
+                        </button>
+                      </div>
+                    )}
+                  </>
                   )}
                 </div>
               </>
+            )}
+
+            {onglet === "statistiques" && (
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "24px" }}>
+                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Ventes mensuelles</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={donneesVentesMensuelles}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
+                      <XAxis dataKey="mois" tick={{ fontSize: 12, fill: "#6b6055" }} />
+                      <YAxis tick={{ fontSize: 12, fill: "#6b6055" }} />
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
+                      <Bar dataKey="ventes" fill="#b45309" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Répartition des commandes</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie data={commandesParStatut} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
+                        {commandesParStatut.map((entry, i) => (
+                          <Cell key={i} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Produits les plus vendus</h3>
+                  <ResponsiveContainer width="100%" height={350}>
+                    <BarChart data={topProduits} layout="vertical" margin={{ left: 100 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
+                      <XAxis type="number" tick={{ fontSize: 12, fill: "#6b6055" }} />
+                      <YAxis type="category" dataKey="nom" tick={{ fontSize: 12, fill: "#6b6055" }} width={90} />
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
+                      <Bar dataKey="quantite" fill="#92400e" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
             )}
 
             {onglet === "produits" && (
