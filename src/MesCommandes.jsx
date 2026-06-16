@@ -21,6 +21,29 @@ export default function MesCommandes() {
   const [commandes, setCommandes] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [commandeOuverte, setCommandeOuverte] = useState(null);
+  const [annulationEnCours, setAnnulationEnCours] = useState(null);
+
+  const annulerCommande = async (id) => {
+    if (!window.confirm(isAr ? 'Êtes-vous sûr de vouloir annuler cette commande ?' : 'Es-tu sûr de vouloir annuler cette commande ?')) return;
+    setAnnulationEnCours(id);
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_URL}/api/commandes/${id}/annuler`, {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setCommandes((prev) => prev.map((c) => c.id === id ? { ...c, statut: 'annulee' } : c));
+      } else {
+        alert(data.erreur || (isAr ? 'Erreur lors de l\'annulation' : 'Erreur lors de l\'annulation'));
+      }
+    } catch {
+      alert(isAr ? 'Impossible de contacter le serveur' : 'Impossible de contacter le serveur');
+    } finally {
+      setAnnulationEnCours(null);
+    }
+  };
 
   useEffect(() => {
     if (!utilisateur?.id) return;
@@ -205,6 +228,26 @@ export default function MesCommandes() {
                             </p>
                           )}
                         </div>
+                      )}
+
+                      {/* Bouton annulation */}
+                      {['en_attente', 'confirmee'].includes(c.statut) && (
+                        <button
+                          onClick={() => annulerCommande(c.id)}
+                          disabled={annulationEnCours === c.id}
+                          style={{
+                            width: "100%", marginBottom: "12px", padding: "10px",
+                            borderRadius: "10px", border: "1.5px solid #dc2626",
+                            background: annulationEnCours === c.id ? "#fee2e2" : "white",
+                            color: "#dc2626", fontWeight: "700", fontSize: "13px",
+                            cursor: annulationEnCours === c.id ? "not-allowed" : "pointer",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          {annulationEnCours === c.id
+                            ? (isAr ? "جاري الإلغاء..." : "Annulation en cours...")
+                            : (isAr ? "❌ إلغاء الطلب" : "❌ Annuler la commande")}
+                        </button>
                       )}
 
                       {/* Produits */}
