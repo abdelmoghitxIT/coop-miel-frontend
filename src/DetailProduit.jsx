@@ -64,7 +64,7 @@ export default function DetailProduit() {
           <p style={{ fontSize: "16px", color: "#6b6055", marginTop: "12px" }}>
             {isAr ? "المنتج غير موجود" : "Produit non trouvé"}
           </p>
-          <button onClick={() => navigate('/')} style={{ marginTop: "16px", background: "#b45309", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
+          <button onClick={() => navigate('/catalogue')} style={{ marginTop: "16px", background: "#b45309", color: "white", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
             {t.retourCatalogue}
           </button>
         </div>

@@ -143,7 +143,7 @@ export default function MonProfil() {
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/')} style={{
+        <button onClick={() => navigate('/catalogue')} style={{
           background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700",
         }}>

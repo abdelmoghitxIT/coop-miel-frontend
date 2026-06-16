@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import Accueil from './Accueil';
 import CatalogueMiel from './cataloguemiel';
 import Login from './Login';
 import Dashboard from './Dashboard';
@@ -16,7 +17,8 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<CatalogueMiel />} />
+      <Route path="/" element={<Accueil />} />
+      <Route path="/catalogue" element={<CatalogueMiel />} />
       <Route path="/login" element={<Login />} />
       <Route path="/mot-de-passe-oublie" element={<MotDePasseOublie />} />
       <Route path="/mon-profil" element={

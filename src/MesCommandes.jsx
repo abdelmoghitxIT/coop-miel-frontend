@@ -60,7 +60,7 @@ export default function MesCommandes() {
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/')} style={{
+        <button onClick={() => navigate('/catalogue')} style={{
           background: "#b45309", color: "white", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",
@@ -92,7 +92,7 @@ export default function MesCommandes() {
             <p style={{ fontSize: "14px", color: "#a8977f", margin: 0 }}>
               {isAr ? "تصفح منتجاتنا وضع طلبك الأول !" : "Parcourez nos produits et passez votre première commande !"}
             </p>
-        <button onClick={() => navigate('/')} style={{
+        <button onClick={() => navigate('/catalogue')} style={{
               marginTop: "20px", background: "#b45309", color: "white",
               border: "none", borderRadius: "10px", padding: "12px 24px",
               cursor: "pointer", fontWeight: "700", fontSize: "14px",
