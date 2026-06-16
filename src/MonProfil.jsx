@@ -22,10 +22,13 @@ export default function MonProfil() {
 
   const [nom, setNom] = useState("");
   const [wilaya, setWilaya] = useState("");
+  const [telephone, setTelephone] = useState("");
   const [email, setEmail] = useState("");
   const [emailVerifie, setEmailVerifie] = useState(false);
   const [chargement, setChargement] = useState(true);
+  const [modeEdition, setModeEdition] = useState(false);
   const [sauvegarde, setSauvegarde] = useState(false);
+  const [renvoi, setRenvoi] = useState(false);
   const [message, setMessage] = useState("");
   const [erreur, setErreur] = useState("");
 
@@ -41,6 +44,7 @@ export default function MonProfil() {
         if (res.ok) {
           setNom(data.nom || "");
           setWilaya(data.wilaya || "");
+          setTelephone(data.telephone || "");
           setEmail(data.email || "");
           setEmailVerifie(data.email_verifie || false);
         } else {
@@ -71,6 +75,7 @@ export default function MonProfil() {
       if (res.ok) {
         setMessage("Profil mis à jour !");
         handleConnexion(data);
+        setModeEdition(false);
       } else {
         setErreur(data.erreur || "Erreur de sauvegarde");
       }
@@ -84,6 +89,7 @@ export default function MonProfil() {
   const handleRenvoiVerification = async () => {
     setMessage("");
     setErreur("");
+    setRenvoi(true);
     try {
       const token = localStorage.getItem('token');
       const res = await fetch(`${API_URL}/api/auth/renvoyer-verification`, {
@@ -98,6 +104,8 @@ export default function MonProfil() {
       }
     } catch {
       setErreur("Impossible de contacter le serveur.");
+    } finally {
+      setRenvoi(false);
     }
   };
 
@@ -108,6 +116,12 @@ export default function MonProfil() {
       </div>
     );
   }
+
+  const inputStyle = {
+    width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
+    fontSize: "14px", color: "#1c1008", background: modeEdition ? "white" : "#f9f6f1",
+    boxSizing: "border-box", outline: "none",
+  };
 
   return (
     <div style={{
@@ -138,35 +152,52 @@ export default function MonProfil() {
       </header>
 
       <div style={{ maxWidth: "600px", margin: "40px auto", padding: "0 20px" }}>
-        <form onSubmit={handleSauvegarder} style={{
+        <div style={{
           background: "white", borderRadius: "16px", padding: "32px",
           boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
         }}>
-          <h2 style={{ color: "#1c1008", fontSize: "20px", margin: "0 0 24px" }}>
-            {isAr ? "معلومات الحساب" : "Informations du compte"}
-          </h2>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+            <h2 style={{ color: "#1c1008", fontSize: "20px", margin: 0 }}>
+              {isAr ? "معلومات الحساب" : "Informations du compte"}
+            </h2>
+            {!modeEdition && (
+              <button onClick={() => setModeEdition(true)} style={{
+                background: "#b45309", color: "white", border: "none",
+                borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
+                fontWeight: "600", fontSize: "13px",
+              }}>
+                ✏️ {isAr ? "تعديل" : "Modifier"}
+              </button>
+            )}
+          </div>
 
           <div style={{ marginBottom: "20px" }}>
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
               {isAr ? "الاسم الكامل" : "Nom complet"}
             </label>
-            <input value={nom} onChange={(e) => setNom(e.target.value)} style={{
-              width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
-              fontSize: "14px", color: "#1c1008", background: "white", boxSizing: "border-box",
-            }} />
+            <input value={nom} onChange={(e) => setNom(e.target.value)}
+              disabled={!modeEdition} style={inputStyle} />
+          </div>
+
+          <div style={{ marginBottom: "20px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+              {isAr ? "رقم الهاتف" : "Téléphone"}
+            </label>
+            <input value={telephone} disabled style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: "20px" }}>
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
               {isAr ? "الولاية" : "Wilaya"}
             </label>
-            <select value={wilaya} onChange={(e) => setWilaya(e.target.value)} style={{
-              width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
-              fontSize: "14px", color: "#1c1008", background: "white", boxSizing: "border-box",
-            }}>
-              <option value="">{isAr ? "اختر ولاية" : "Sélectionnez votre wilaya"}</option>
-              {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
-            </select>
+            {modeEdition ? (
+              <select value={wilaya} onChange={(e) => setWilaya(e.target.value)} style={inputStyle}>
+                <option value="">{isAr ? "اختر ولاية" : "Sélectionnez votre wilaya"}</option>
+                {WILAYAS.map((w) => <option key={w} value={w}>{w}</option>)}
+              </select>
+            ) : (
+              <input value={wilaya} disabled style={inputStyle} />
+            )}
           </div>
 
           <div style={{ marginBottom: "20px" }}>
@@ -182,11 +213,11 @@ export default function MonProfil() {
               {emailVerifie ? (
                 <span style={{ fontSize: "12px", color: "#16a34a", fontWeight: "600" }}>✅ Vérifié</span>
               ) : (
-                <button type="button" onClick={handleRenvoiVerification} style={{
+                <button type="button" onClick={handleRenvoiVerification} disabled={renvoi} style={{
                   fontSize: "12px", color: "#b45309", background: "none", border: "none",
                   cursor: "pointer", fontWeight: "600", textDecoration: "underline", whiteSpace: "nowrap",
                 }}>
-                  ⚠️ Vérifier
+                  {renvoi ? "..." : "⚠️ Vérifier"}
                 </button>
               )}
             </div>
@@ -195,14 +226,24 @@ export default function MonProfil() {
           {message && <p style={{ color: "#16a34a", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>✅ {message}</p>}
           {erreur && <p style={{ color: "#dc2626", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>⚠️ {erreur}</p>}
 
-          <button type="submit" disabled={sauvegarde} style={{
-            width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-            background: sauvegarde ? "#d4b483" : "#b45309", color: "white", fontWeight: "700",
-            fontSize: "15px", cursor: sauvegarde ? "not-allowed" : "pointer",
-          }}>
-            {sauvegarde ? "Sauvegarde..." : "Enregistrer les modifications"}
-          </button>
-        </form>
+          {modeEdition && (
+            <div style={{ display: "flex", gap: "12px" }}>
+              <button onClick={() => { setModeEdition(false); setErreur(""); setMessage(""); }} style={{
+                flex: 1, padding: "14px", borderRadius: "12px", border: "2px solid #e5ddd0",
+                background: "transparent", color: "#6b6055", fontWeight: "600", fontSize: "15px", cursor: "pointer",
+              }}>
+                {isAr ? "إلغاء" : "Annuler"}
+              </button>
+              <button type="submit" disabled={sauvegarde} onClick={handleSauvegarder} style={{
+                flex: 1, padding: "14px", borderRadius: "12px", border: "none",
+                background: sauvegarde ? "#d4b483" : "#b45309", color: "white", fontWeight: "700",
+                fontSize: "15px", cursor: sauvegarde ? "not-allowed" : "pointer",
+              }}>
+                {sauvegarde ? "..." : "Enregistrer"}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
