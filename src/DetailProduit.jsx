@@ -15,6 +15,8 @@ export default function DetailProduit() {
   const [photoActive, setPhotoActive] = useState(0);
   const [quantite, setQuantite] = useState(1);
   const [ajoute, setAjoute] = useState(false);
+  const [photoAgrandie, setPhotoAgrandie] = useState(false);
+  const [zoom, setZoom] = useState(1);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -170,7 +172,8 @@ export default function DetailProduit() {
                 <img
                   src={images[photoActive]}
                   alt={produit.nom}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  onClick={() => setPhotoAgrandie(true)}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", cursor: "pointer" }}
                 />
               ) : (
                 <span style={{ fontSize: "100px" }}>{iconProduit}</span>
@@ -358,6 +361,69 @@ export default function DetailProduit() {
           </div>
         </div>
       </div>
+
+      {/* Lightbox */}
+      {photoAgrandie && (
+        <div
+          onClick={() => { setPhotoAgrandie(false); setZoom(1); }}
+          style={{
+            position: "fixed", inset: 0, zIndex: 9999,
+            background: "rgba(0,0,0,0.9)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "zoom-out",
+          }}
+        >
+          <button
+            onClick={(e) => { e.stopPropagation(); setPhotoAgrandie(false); setZoom(1); }}
+            style={{
+              position: "absolute", top: "20px", right: "20px",
+              background: "rgba(255,255,255,0.15)", color: "white", border: "none",
+              borderRadius: "50%", width: "44px", height: "44px",
+              fontSize: "22px", cursor: "pointer", display: "flex",
+              alignItems: "center", justifyContent: "center",
+              fontWeight: "700", zIndex: 1,
+            }}
+          >
+            ✕
+          </button>
+          <div style={{ position: "absolute", bottom: "30px", display: "flex", gap: "12px", zIndex: 1 }}>
+            <button
+              onClick={(e) => { e.stopPropagation(); setZoom(z => Math.max(1, z - 0.5)); }}
+              style={{
+                background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.3)",
+                borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontWeight: "700", fontSize: "16px",
+              }}
+            >
+              −
+            </button>
+            <span style={{ color: "white", fontWeight: "600", fontSize: "14px", alignSelf: "center" }}>
+              {Math.round(zoom * 100)}%
+            </span>
+            <button
+              onClick={(e) => { e.stopPropagation(); setZoom(z => Math.min(3, z + 0.5)); }}
+              style={{
+                background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.3)",
+                borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontWeight: "700", fontSize: "16px",
+              }}
+            >
+              +
+            </button>
+          </div>
+          <img
+            src={images[photoActive]}
+            alt={produit.nom}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              maxWidth: "90vw", maxHeight: "90vh",
+              transform: `scale(${zoom})`,
+              transition: "transform 0.2s",
+              borderRadius: "8px",
+              cursor: "zoom-in",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 }
