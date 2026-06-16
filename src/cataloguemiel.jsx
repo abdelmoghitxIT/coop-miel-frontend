@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import FormulaireCommande from './FormulaireCommande';
 import { useLangue } from './LangueContext';
 import { useAuth } from './AuthContext';
+import { chargerConfig, getAdminWhatsapp, formaterTelephoneAlgerie, lienWhatsapp, messageNouvelleCommande, messageConfirmationClient } from './utils/whatsapp';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 
@@ -204,6 +205,7 @@ export default function CatalogueMiel(){
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
   useEffect(() => {
+    chargerConfig();
     fetch(`${API_URL}/api/produits`)
       .then((res) => res.json())
       .then((data) => {
@@ -564,17 +566,14 @@ export default function CatalogueMiel(){
           onAnnuler={() => setCommandeEnCours(false)}
           onSuccess={(commande, infoClient) => {
             setCommandeEnCours(false);
-            const telClient = infoClient.telephone?.replace(/\s/g, '').replace(/^0/, '213');
-            const ADMIN_WHATSAPP = "213696242396"; 
-            
-            const msgAdmin = `🍯 *Nouvelle commande #${commande.id}*\n👤 Client : ${infoClient.nom}\n📞 Téléphone : ${infoClient.telephone}\n📍 Adresse : ${infoClient.adresse}\n💰 Total : ${infoClient.total} DA\n🛒 Produits :\n${infoClient.produits}\n⏳ En attente de confirmation`;
-            const msgClient = `🍯 *التعاونية الفلاحية لتربية النحل كاويت*\nمرحباً ${infoClient.nom} !\n✅ تم تأكيد طلبك بنجاح\n💰 المجموع : ${infoClient.total} DA\n🚚 سيتم التواصل معك قريباً للتوصيل\nشكراً لثقتكم 🌟`;
+            const telClient = formaterTelephoneAlgerie(infoClient.telephone);
+            const adminTel = getAdminWhatsapp();
             
             setCommandeConfirmee({
               ...commande,
-              msgAdmin: ADMIN_WHATSAPP ? msgAdmin : null,
-              adminTel: ADMIN_WHATSAPP,
-              msgClient,
+              msgAdmin: messageNouvelleCommande(commande, infoClient),
+              adminTel,
+              msgClient: messageConfirmationClient(infoClient),
               telClient,
             });
             setPanier([]);
@@ -603,41 +602,37 @@ export default function CatalogueMiel(){
               {t.commandeDesc}
             </p>
 
-            {/* Bouton WhatsApp Client */}
-            {utilisateur?.role !== 'admin' && commandeConfirmee?.msgAdmin && (
-              <a 
-                href={`https://wa.me/${commandeConfirmee.adminTel}?text=${encodeURIComponent(commandeConfirmee.msgAdmin)}`}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                  width: "100%", padding: "13px", borderRadius: "12px", border: "none",
-                  background: "#25D366", color: "white", fontWeight: "700",
-                  fontSize: "14px", cursor: "pointer", marginBottom: "10px",
-                  textDecoration: "none",
-                }}
-              >
-                {t.envoyerAdminWA}
-              </a>
-            )}
-
-            {/* Bouton WhatsApp Admin */}
-            {utilisateur?.role === 'admin' && commandeConfirmee?.msgClient && commandeConfirmee?.telClient && (
-              <a 
-                href={`https://wa.me/${commandeConfirmee.telClient}?text=${encodeURIComponent(commandeConfirmee.msgClient)}`}
-                target="_blank"
-                rel="noreferrer"
-                style={{
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
-                  width: "100%", padding: "13px", borderRadius: "12px", border: "none",
-                  background: "#25D366", color: "white", fontWeight: "700",
-                  fontSize: "14px", cursor: "pointer", marginBottom: "10px",
-                  textDecoration: "none",
-                }}
-              >
-                {t.envoyerClientWA}
-              </a>
-            )}
+            {(() => {
+              const btnStyle = {
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                width: "100%", padding: "13px", borderRadius: "12px", border: "none",
+                background: "#25D366", color: "white", fontWeight: "700",
+                fontSize: "14px", cursor: "pointer", marginBottom: "10px",
+                textDecoration: "none", transition: "opacity 0.2s",
+              };
+              return (
+                <>
+                  {utilisateur?.role !== 'admin' && commandeConfirmee?.msgAdmin && (
+                    <a href={lienWhatsapp(commandeConfirmee.adminTel, commandeConfirmee.msgAdmin)}
+                      target="_blank" rel="noreferrer" style={btnStyle}
+                      onMouseEnter={(e) => e.target.style.opacity = "0.85"}
+                      onMouseLeave={(e) => e.target.style.opacity = "1"}
+                    >
+                      📲 {t.envoyerAdminWA}
+                    </a>
+                  )}
+                  {utilisateur?.role === 'admin' && commandeConfirmee?.msgClient && commandeConfirmee?.telClient && (
+                    <a href={lienWhatsapp(commandeConfirmee.telClient, commandeConfirmee.msgClient)}
+                      target="_blank" rel="noreferrer" style={btnStyle}
+                      onMouseEnter={(e) => e.target.style.opacity = "0.85"}
+                      onMouseLeave={(e) => e.target.style.opacity = "1"}
+                    >
+                      📲 {t.envoyerClientWA}
+                    </a>
+                  )}
+                </>
+              );
+            })()}
 
             <button
               onClick={() => setCommandeConfirmee(null)}

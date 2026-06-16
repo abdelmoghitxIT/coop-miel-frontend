@@ -204,6 +204,7 @@ const translations = {
     commandeEmpty: "Aucune commande pour l'instant",
     produitsEmpty: "Aucun produit",
     ajoutEnCours: "Ajout en cours...",
+    partagerWhatsapp: "Partager sur WhatsApp",
   },
 
   ar: {
@@ -411,6 +412,7 @@ const translations = {
     commandeEmpty: "لا توجد طلبات حالياً",
     produitsEmpty: "لا توجد منتجات",
     ajoutEnCours: "جارٍ الإضافة...",
+    partagerWhatsapp: "مشاركة عبر واتساب",
   }
 };
 

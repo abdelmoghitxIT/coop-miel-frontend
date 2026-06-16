@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLangue } from './LangueContext';
 import { useAuth } from './AuthContext';
+import { lienWhatsapp, messagePartageProduit } from './utils/whatsapp';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -352,6 +353,23 @@ export default function DetailProduit() {
             >
               {ajoute ? t.ajoute : produit.stock_quantite === 0 ? t.rupture : "🛒 " + t.ajouterPanier}
             </button>
+
+            {/* Partager sur WhatsApp */}
+            <a
+              href={lienWhatsapp('', messagePartageProduit(produit))}
+              target="_blank" rel="noreferrer"
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
+                padding: "12px", borderRadius: "10px", border: "1.5px solid #25D366",
+                background: "white", color: "#25D366", fontWeight: "700",
+                fontSize: "14px", cursor: "pointer", textDecoration: "none",
+                transition: "all 0.2s",
+              }}
+              onMouseEnter={(e) => { e.target.style.background = "#25D366"; e.target.style.color = "white"; }}
+              onMouseLeave={(e) => { e.target.style.background = "white"; e.target.style.color = "#25D366"; }}
+            >
+              📤 {t.partagerWhatsapp}
+            </a>
 
             {/* Livraison */}
             <div style={{

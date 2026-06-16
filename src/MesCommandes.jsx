@@ -173,6 +173,40 @@ export default function MesCommandes() {
                         </div>
                       </div>
 
+                      {/* Tracking Yalidine */}
+                      {c.tracking_number && (
+                        <div style={{ background: "white", borderRadius: "10px", padding: "12px", border: "1px solid #f0ebe3", marginBottom: "12px" }}>
+                          <p style={{ margin: "0 0 6px", fontSize: "11px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase" }}>
+                            {isAr ? "تتبع الشحنة" : "Suivi de livraison"} 🚚
+                          </p>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                            <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>
+                              {isAr ? "رقم التتبع" : "Tracking"}:
+                            </span>
+                            <code style={{ fontSize: "14px", fontWeight: "800", color: "#b45309", background: "#fef9ee", padding: "2px 10px", borderRadius: "6px" }}>
+                              {c.tracking_number}
+                            </code>
+                            <a
+                              href={`https://tracking.yalidine.com/${c.tracking_number}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{
+                                marginLeft: "auto", fontSize: "12px", fontWeight: "700", color: "white",
+                                background: "#b45309", padding: "6px 14px", borderRadius: "8px",
+                                textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px",
+                              }}
+                            >
+                              {isAr ? "تتبع 🚚" : "Suivre 🚚"}
+                            </a>
+                          </div>
+                          {c.yalidine_status && (
+                            <p style={{ margin: "6px 0 0", fontSize: "12px", color: "#6b6055" }}>
+                              {isAr ? "الحالة" : "Statut Yalidine"}: <strong>{c.yalidine_status}</strong>
+                            </p>
+                          )}
+                        </div>
+                      )}
+
                       {/* Produits */}
                       {c.produits && c.produits[0] && (
                         <div style={{ background: "white", borderRadius: "10px", padding: "12px", border: "1px solid #f0ebe3" }}>

@@ -5,6 +5,7 @@ import { useLangue } from './LangueContext';
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { chargerConfig, formaterTelephoneAlgerie, lienWhatsapp, messageStatutCommande } from './utils/whatsapp';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -663,7 +664,7 @@ export default function Dashboard() {
   const [gererPhotos, setGererPhotos] = useState(null);
   const [rechercheCommande, setRechercheCommande] = useState("");
 
-  useEffect(() => { chargerDonnees(); }, []);
+  useEffect(() => { chargerConfig(); chargerDonnees(); }, []);
 
   const commandesFiltrees = commandes.filter((c) => {
     if (!rechercheCommande) return true;
@@ -1021,8 +1022,8 @@ export default function Dashboard() {
                         <thead>
                           <tr>
                             <th>#</th><th>{isAr ? "العميل" : "Client"}</th><th>{isAr ? "الهاتف" : "Téléphone"}</th>
-                            <th>{isAr ? "العنوان" : "Adresse"}</th><th>{isAr ? "المجموع" : "Total"}</th><th>{isAr ? "التاريخ" : "Date"}</th>
-                            <th>{isAr ? "الحالة" : "Statut"}</th><th>{isAr ? "الإجراء" : "Action"}</th>
+                            <th>{isAr ? "العنوان" : "Adresse"}</th><th>{isAr ? "التتبع" : "Tracking"}</th><th>{isAr ? "المجموع" : "Total"}</th><th>{isAr ? "التاريخ" : "Date"}</th>
+                            <th>{isAr ? "الحالة" : "Statut"}</th><th>{t.whatsapp}</th><th>{isAr ? "الإجراء" : "Action"}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1032,9 +1033,39 @@ export default function Dashboard() {
                               <td>{c.client_nom || "—"}</td>
                               <td>{c.client_telephone || "—"}</td>
                               <td style={{ maxWidth: "180px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.adresse_livraison}</td>
+                              <td>
+                                {c.tracking_number ? (
+                                  <a href={`https://tracking.yalidine.com/${c.tracking_number}`} target="_blank" rel="noopener noreferrer"
+                                    style={{ color: "#b45309", fontWeight: "700", fontSize: "12px", textDecoration: "none" }}>
+                                    {c.tracking_number} ↗
+                                  </a>
+                                ) : (
+                                  <span style={{ color: "#a8977f", fontSize: "12px" }}>—</span>
+                                )}
+                              </td>
                               <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
                               <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
                               <td><BadgeStatut statut={c.statut} /></td>
+                              <td>
+                                {c.client_telephone ? (
+                                  <a
+                                    href={lienWhatsapp(formaterTelephoneAlgerie(c.client_telephone), messageStatutCommande(c, c.statut, isAr ? 'ar' : 'fr'))}
+                                    target="_blank" rel="noreferrer"
+                                    title={isAr ? "إرسال تحديث الحالة عبر واتساب" : "Envoyer le statut par WhatsApp"}
+                                    style={{
+                                      display: "inline-flex", alignItems: "center", gap: "4px",
+                                      background: "#25D366", color: "white", border: "none",
+                                      borderRadius: "6px", padding: "5px 8px", cursor: "pointer",
+                                      fontSize: "12px", fontWeight: "700", textDecoration: "none",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    📲 {c.client_telephone}
+                                  </a>
+                                ) : (
+                                  <span style={{ color: "#a8977f", fontSize: "12px" }}>—</span>
+                                )}
+                              </td>
                               <td>
                                 <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
                                   <select value={c.statut} onChange={(e) => changerStatut(c.id, e.target.value)} style={{ flex: 1 }}>
