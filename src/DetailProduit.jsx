@@ -4,12 +4,17 @@ import { useLangue } from './LangueContext';
 import { useAuth } from './AuthContext';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+const entetesAuth = () => {
+  const token = localStorage.getItem('token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
 
 export default function DetailProduit() {
   const { id: produitId } = useParams();
   const navigate = useNavigate();
   const { t, isAr, toggleLangue, langue } = useLangue();
-  const { setPanier } = useAuth();
+  const { setPanier, utilisateur } = useAuth();
   const [produit, setProduit] = useState(null);
   const [chargement, setChargement] = useState(true);
   const [photoActive, setPhotoActive] = useState(0);
@@ -17,21 +22,33 @@ export default function DetailProduit() {
   const [ajoute, setAjoute] = useState(false);
   const [photoAgrandie, setPhotoAgrandie] = useState(false);
   const [zoom, setZoom] = useState(1);
+  const [caracteristiques, setCaracteristiques] = useState([]);
+  const [editCarac, setEditCarac] = useState(null);
+  const [nouvelleCle, setNouvelleCle] = useState("");
+  const [nouvelleValeur, setNouvelleValeur] = useState("");
+  const [afficherAjout, setAfficherAjout] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+  const estAdmin = utilisateur?.role === 'admin';
 
   useEffect(() => {
     fetch(`${API_URL}/api/produits/${produitId}`)
       .then((res) => res.json())
       .then((data) => {
         setProduit(data);
+        setCaracteristiques(data.caracteristiques || []);
         setChargement(false);
       })
       .catch((err) => {
         console.error("Erreur:", err);
         setChargement(false);
       });
-  }, [produitId, API_URL]);
+  }, [produitId]);
+
+  useEffect(() => {
+    if (produit) {
+      setCaracteristiques(produit.caracteristiques || []);
+    }
+  }, [produit]);
 
   const handleAjouter = () => {
     setPanier((prev) => {
@@ -84,6 +101,56 @@ export default function DetailProduit() {
     : "🎁";
 
   const stockFaible = produit.stock_quantite < 10;
+
+  const ajouterCarac = async () => {
+    if (!nouvelleCle.trim() || !nouvelleValeur.trim()) return;
+    try {
+      const res = await fetch(`${API_URL}/api/produits/${produitId}/caracteristiques`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...entetesAuth() },
+        body: JSON.stringify({ cle: nouvelleCle.trim(), valeur: nouvelleValeur.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setCaracteristiques((prev) => [...prev, data]);
+      setNouvelleCle("");
+      setNouvelleValeur("");
+      setAfficherAjout(false);
+    } catch {
+      alert("Erreur lors de l'ajout");
+    }
+  };
+
+  const modifierCarac = async (idCarac) => {
+    if (!editCarac.cle.trim() || !editCarac.valeur.trim()) return;
+    try {
+      const res = await fetch(`${API_URL}/api/produits/caracteristiques/${idCarac}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', ...entetesAuth() },
+        body: JSON.stringify({ cle: editCarac.cle.trim(), valeur: editCarac.valeur.trim() }),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setCaracteristiques((prev) => prev.map((c) => (c.id === idCarac ? data : c)));
+      setEditCarac(null);
+    } catch {
+      alert("Erreur lors de la modification");
+    }
+  };
+
+  const supprimerCarac = async (idCarac) => {
+    if (!window.confirm(isAr ? "Supprimer cette caractéristique ?" : "Supprimer cette caractéristique ?")) return;
+    try {
+      const res = await fetch(`${API_URL}/api/produits/caracteristiques/${idCarac}`, {
+        method: 'DELETE',
+        headers: { ...entetesAuth() },
+      });
+      if (!res.ok) throw new Error();
+      setCaracteristiques((prev) => prev.filter((c) => c.id !== idCarac));
+    } catch {
+      alert("Erreur lors de la suppression");
+    }
+  };
 
   const specs = [
     { label: t.origine, value: produit.origine || "Tlemcen, Algérie" },
@@ -287,6 +354,91 @@ export default function DetailProduit() {
                   <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>{spec.value}</span>
                 </div>
               ))}
+              {caracteristiques.length > 0 && <div style={{ height: "1px", background: "#f0ebe3", margin: "4px 0" }} />}
+              {caracteristiques.map((carac) => (
+                <div key={carac.id}>
+                  {editCarac?.id === carac.id ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "8px 0" }}>
+                      <div style={{ display: "flex", gap: "6px" }}>
+                        <input value={editCarac.cle} onChange={(e) => setEditCarac({ ...editCarac, cle: e.target.value })}
+                          placeholder={t.cleCaracteristique}
+                          style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                        <input value={editCarac.valeur} onChange={(e) => setEditCarac({ ...editCarac, valeur: e.target.value })}
+                          placeholder={t.valeurCaracteristique}
+                          style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                      </div>
+                      <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
+                        <button onClick={() => modifierCarac(carac.id)} style={{
+                          background: "#16a34a", color: "white", border: "none", borderRadius: "6px",
+                          padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                        }}>{t.enregistrer}</button>
+                        <button onClick={() => setEditCarac(null)} style={{
+                          background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                          padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                        }}>{t.annuler}</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{
+                      display: "flex", justifyContent: "space-between", alignItems: "center",
+                      padding: "8px 0", borderBottom: "1px solid #f8f4ef",
+                      flexDirection: isAr ? "row-reverse" : "row",
+                    }}>
+                      <span style={{ fontSize: "13px", color: "#a8977f", fontWeight: "600" }}>{carac.cle}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                        <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>{carac.valeur}</span>
+                        {estAdmin && (
+                          <>
+                            <button onClick={() => setEditCarac({ id: carac.id, cle: carac.cle, valeur: carac.valeur })} style={{
+                              background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#b45309", fontWeight: "700", padding: "2px",
+                            }}>✏️</button>
+                            <button onClick={() => supprimerCarac(carac.id)} style={{
+                              background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#dc2626", fontWeight: "700", padding: "2px",
+                            }}>🗑️</button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+              {caracteristiques.length === 0 && !afficherAjout && (
+                <p style={{ fontSize: "13px", color: "#a8977f", textAlign: "center", margin: "12px 0" }}>
+                  {t.aucuneCaracteristique}
+                </p>
+              )}
+              {estAdmin && afficherAjout && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "8px 0" }}>
+                  <div style={{ display: "flex", gap: "6px" }}>
+                    <input value={nouvelleCle} onChange={(e) => setNouvelleCle(e.target.value)}
+                      placeholder={t.cleCaracteristique}
+                      style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                    <input value={nouvelleValeur} onChange={(e) => setNouvelleValeur(e.target.value)}
+                      placeholder={t.valeurCaracteristique}
+                      style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                  </div>
+                  <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
+                    <button onClick={ajouterCarac} style={{
+                      background: "#16a34a", color: "white", border: "none", borderRadius: "6px",
+                      padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                    }}>{t.enregistrer}</button>
+                    <button onClick={() => { setAfficherAjout(false); setNouvelleCle(""); setNouvelleValeur(""); }} style={{
+                      background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                      padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
+                    }}>{t.annuler}</button>
+                  </div>
+                </div>
+              )}
+              {estAdmin && !afficherAjout && (
+                <button onClick={() => setAfficherAjout(true)} style={{
+                  width: "100%", marginTop: "8px", padding: "8px", borderRadius: "8px",
+                  border: "1.5px dashed #b45309", background: "transparent",
+                  color: "#b45309", fontWeight: "700", fontSize: "13px", cursor: "pointer",
+                  fontFamily: "inherit",
+                }}>
+                  {t.ajouterCaracteristique}
+                </button>
+              )}
             </div>
 
             {/* Quantité */}

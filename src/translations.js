@@ -152,6 +152,10 @@ const translations = {
     quantite: "Quantité",
     paiementReception: "Paiement à la réception — 100% sécurisé",
     livraisonDetail: "Livraison 58 wilayas",
+    ajouterCaracteristique: "+ Ajouter une caractéristique",
+    cleCaracteristique: "Caractéristique",
+    valeurCaracteristique: "Valeur",
+    aucuneCaracteristique: "Aucune caractéristique pour le moment",
 
     // Dashboard
     dashboardAdmin: "Dashboard Admin",
@@ -354,6 +358,10 @@ const translations = {
     quantite: "الكمية",
     paiementReception: "الدفع عند الاستلام — آمن 100%",
     livraisonDetail: "التوصيل إلى 58 ولاية",
+    ajouterCaracteristique: "+ إضافة مواصفة",
+    cleCaracteristique: "الخاصية",
+    valeurCaracteristique: "القيمة",
+    aucuneCaracteristique: "لا توجد مواصفات بعد",
 
     // Dashboard
     dashboardAdmin: "لوحة التحكم",
