@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useLangue } from './LangueContext';
@@ -7,6 +7,9 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { chargerConfig, formaterTelephoneAlgerie, lienWhatsapp, messageStatutCommande } from './utils/whatsapp';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { toast } from './utils/toast';
+import { initCommandesSSE } from './utils/notifications';
+import BeeSpinner from './BeeSpinner';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -683,6 +686,14 @@ export default function Dashboard() {
 
   useEffect(() => { chargerConfig(); chargerDonnees(); }, []);
 
+  useEffect(() => {
+    if (utilisateur?.role !== 'admin') return;
+    const cleanup = initCommandesSSE(utilisateur, (data) => {
+      toast(`Nouvelle commande de ${data.nom_client} — ${data.total} DA`, 'info', 6000);
+    });
+    return () => cleanup();
+  }, [utilisateur]);
+
   const commandesFiltrees = commandes.filter((c) => {
     if (!rechercheCommande) return true;
     const q = rechercheCommande.toLowerCase();
@@ -1007,6 +1018,10 @@ export default function Dashboard() {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+            <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", animation: "pulse 1.5s infinite" }} />
+            <span style={{ fontSize: "10px", fontWeight: "700", color: "#86efac" }}>LIVE</span>
+          </span>
           <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)" }}>👑 {utilisateur?.nom}</span>
           <button onClick={() => navigate('/')} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
             onMouseEnter={(e) => { e.target.style.background = "rgba(255,255,255,0.25)"; }}
@@ -1049,7 +1064,7 @@ export default function Dashboard() {
         </div>
 
         {chargement ? (
-          <div style={{ textAlign: "center", padding: "60px", fontSize: "40px" }}>🍯</div>
+          <BeeSpinner size={48} text={isAr ? "جاري التحميل..." : "Chargement..."} />
         ) : (
           <>
             {onglet === "commandes" && (

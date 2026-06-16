@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useLangue } from './LangueContext';
+import BeeSpinner from './BeeSpinner';
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
@@ -102,7 +103,7 @@ export default function MesCommandes() {
         </h2>
 
         {chargement ? (
-          <div style={{ textAlign: "center", padding: "60px", fontSize: "40px" }}>🍯</div>
+          <BeeSpinner size={48} text={isAr ? "جاري التحميل..." : "Chargement..."} />
         ) : commandes.length === 0 ? (
           <div style={{
             textAlign: "center", padding: "80px 20px",

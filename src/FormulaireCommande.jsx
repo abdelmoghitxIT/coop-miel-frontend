@@ -1,20 +1,45 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+
+const WILAYAS = [
+  "Adrar","Chlef","Laghouat","Oum El Bouaghi","Batna","Béjaïa","Biskra","Béchar","Blida","Bouira",
+  "Tamanrasset","Tébessa","Tlemcen","Tiaret","Tizi Ouzou","Alger","Djelfa","Jijel","Sétif","Saïda",
+  "Skikda","Sidi Bel Abbès","Annaba","Guelma","Constantine","Médéa","Mostaganem","M'Sila","Mascara",
+  "Ouargla","Oran","El Bayadh","Illizi","Bordj Bou Arreridj","Boumerdès","El Tarf","Tindouf",
+  "Tissemsilt","El Oued","Khenchela","Souk Ahras","Tipaza","Mila","Aïn Defla","Naâma","Aïn Témouchent",
+  "Ghardaïa","Relizane","Timimoun","Bordj Badji Mokhtar","Ouled Djellal","Béni Abbès","In Salah",
+  "In Guezzam","Touggourt","Djanet","El M'Ghair","El Menia",
+];
 
 export default function FormulaireCommande({ panier, utilisateur, onAnnuler, onSuccess, t, isAr }) {
   const [nom, setNom] = useState(utilisateur?.nom || "");
   const [telephone, setTelephone] = useState(utilisateur?.telephone || "");
-  const [adresse, setAdresse] = useState("");
+  const [wilaya, setWilaya] = useState("");
+  const [adresseDetails, setAdresseDetails] = useState("");
+  const [fraisLivraison, setFraisLivraison] = useState(null);
+  const [chargementFrais, setChargementFrais] = useState(false);
   const [chargement, setChargement] = useState(false);
   const [erreur, setErreur] = useState("");
 
-  const total = panier.reduce((sum, item) => sum + Number(item.prix) * item.qte, 0);
+  const sousTotal = panier.reduce((sum, item) => sum + Number(item.prix) * item.qte, 0);
+  const frais = fraisLivraison ? Number(fraisLivraison.prix) : 0;
+  const total = sousTotal + frais;
+
+  useEffect(() => {
+    if (!wilaya) { setFraisLivraison(null); return; }
+    setChargementFrais(true);
+    fetch(`${API_URL}/api/frais-livraison/${encodeURIComponent(wilaya)}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => setFraisLivraison(data))
+      .catch(() => setFraisLivraison(null))
+      .finally(() => setChargementFrais(false));
+  }, [wilaya]);
 
   const handleCommander = async () => {
     if (!nom.trim()) { setErreur("Veuillez entrer votre nom"); return; }
     if (!telephone.trim()) { setErreur("Veuillez entrer votre téléphone"); return; }
-    if (!adresse.trim()) { setErreur("Veuillez entrer votre adresse"); return; }
+    if (!wilaya) { setErreur("Veuillez sélectionner votre wilaya de livraison"); return; }
 
     setChargement(true);
     setErreur("");
@@ -27,7 +52,8 @@ export default function FormulaireCommande({ panier, utilisateur, onAnnuler, onS
           client_id: utilisateur?.id || null,
           nom_client: nom,
           telephone_client: telephone,
-          adresse_livraison: adresse,
+          adresse_livraison: `${wilaya}${adresseDetails ? ' - ' + adresseDetails : ''}`,
+          wilaya,
           items: panier.map((p) => ({
             id: p.id,
             prix: p.prix,
@@ -45,7 +71,7 @@ export default function FormulaireCommande({ panier, utilisateur, onAnnuler, onS
 onSuccess(data.commande, {
   nom: nom,
   telephone: telephone,
-  adresse: adresse,
+  adresse: `${wilaya}${adresseDetails ? ' - ' + adresseDetails : ''}`,
   total: total.toLocaleString(),
   produits: produitsList,
 });
@@ -97,6 +123,16 @@ onSuccess(data.commande, {
               </span>
             </div>
           ))}
+          {wilaya && (
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #f0ebe3" }}>
+              <span style={{ fontSize: "13px", color: "#1c1008" }}>
+                {t ? t.fraisLivraison || "Frais de livraison" : "Frais de livraison"}
+              </span>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "#92400e" }}>
+                {chargementFrais ? "..." : `${frais.toLocaleString()} DA`}
+              </span>
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
             <span style={{ fontSize: "15px", fontWeight: "700", color: "#1c1008" }}>
               {t ? t.total : "Total"}
@@ -137,16 +173,32 @@ onSuccess(data.commande, {
             <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
               {t ? t.adresseLivraison : "Adresse de livraison"} *
             </label>
-            <textarea
-              value={adresse}
-              onChange={(e) => setAdresse(e.target.value)}
-              placeholder="Ex: Rue Larbi Ben M'hidi, Tlemcen"
-              rows={3}
-              style={{ ...inputStyle, resize: "none" }}
+            <select
+              value={wilaya}
+              onChange={(e) => setWilaya(e.target.value)}
+              style={inputStyle}
+            >
+              <option value="">{t ? t.selectionnezWilaya : "Sélectionnez votre wilaya"}</option>
+              {WILAYAS.map((w) => (
+                <option key={w} value={w}>{w}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label style={{ fontSize: "12px", fontWeight: "500", color: "#a8977f", display: "block", marginBottom: "4px" }}>
+              {t ? t.adresseDetails || "Rue, commune (optionnel)" : "Rue, commune (optionnel)"}
+            </label>
+            <input
+              value={adresseDetails}
+              onChange={(e) => setAdresseDetails(e.target.value)}
+              placeholder="Ex: Rue Larbi Ben M'hidi"
+              style={inputStyle}
             />
           </div>
 
           {/* Paiement */}
+
           <div style={{
             background: "#f0fdf4", border: "1px solid #bbf7d0",
             borderRadius: "10px", padding: "12px 14px",

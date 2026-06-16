@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useLangue } from './LangueContext';
 import { useAuth } from './AuthContext';
 import { lienWhatsapp, messagePartageProduit } from './utils/whatsapp';
+import BeeSpinner from './BeeSpinner';
 
 const LOGO_URL = "https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo";
 const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -468,7 +469,7 @@ export default function DetailProduit() {
           </h2>
 
           {chargementAvis ? (
-            <p style={{ color: "#a8977f", fontSize: "14px" }}>{isAr ? "جاري التحميل..." : "Chargement..."}</p>
+            <BeeSpinner size={48} text={isAr ? "جاري التحميل..." : "Chargement..."} />
           ) : (
             <>
               {/* Moyenne */}
