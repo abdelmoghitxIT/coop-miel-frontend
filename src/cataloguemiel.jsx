@@ -43,32 +43,32 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
 
   return (
     <div
-      className="fade-in-up"
+      className="fade-in-up card-glass"
       onClick={() => navigate(`/produit/${produit.id}`)}
       style={{
-        background: "white",
+        background: "#141414",
         borderRadius: "16px",
-        border: "1px solid #f0ebe3",
+        border: "1px solid rgba(255,255,255,0.06)",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
         transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02)",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
         cursor: "pointer",
         position: "relative",
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
-        e.currentTarget.style.boxShadow = "0 20px 40px rgba(180,83,9,0.14), 0 8px 20px rgba(180,83,9,0.08), 0 0 0 1px rgba(180,83,9,0.08)";
-        e.currentTarget.style.borderColor = "rgba(180,83,9,0.2)";
+        e.currentTarget.style.boxShadow = "0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(212,168,84,0.2)";
+        e.currentTarget.style.borderColor = "rgba(212,168,84,0.3)";
         if (imgRef.current) imgRef.current.style.transform = "scale(1.08)";
         if (iconRef.current) iconRef.current.style.transform = "scale(1.15)";
         if (borderRef.current) borderRef.current.style.transform = "scaleX(1)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0) scale(1)";
-        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02)";
-        e.currentTarget.style.borderColor = "#f0ebe3";
+        e.currentTarget.style.boxShadow = "0 4px 16px rgba(0,0,0,0.2)";
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)";
         if (imgRef.current) imgRef.current.style.transform = "scale(1)";
         if (iconRef.current) iconRef.current.style.transform = "scale(1)";
         if (borderRef.current) borderRef.current.style.transform = "scaleX(0)";
@@ -76,15 +76,16 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
     >
       <div style={{
         height: "160px",
-        background: "repeating-linear-gradient(45deg,#fef9ee,#fef9ee 10px,#fdf3d8 10px,#fdf3d8 20px)",
+        background: "repeating-linear-gradient(45deg,rgba(212,168,84,0.06),rgba(212,168,84,0.06) 10px,rgba(212,168,84,0.1) 10px,rgba(212,168,84,0.1) 20px)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         fontSize: "52px",
         overflow: "hidden",
         position: "relative",
+        borderBottom: "1px solid rgba(212,168,84,0.15)",
       }}>
-        <div ref={borderRef} style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg, transparent, #b45309, #d97706, transparent)", transform: "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: isAr ? "right" : "left" }} />
+        <div ref={borderRef} style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "linear-gradient(90deg, transparent, #e8c97a, #c49a3c, transparent)", transform: "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: isAr ? "right" : "left" }} />
         {produit.images && produit.images[0] ? (
           <img
             ref={imgRef}
@@ -93,7 +94,7 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
             style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.35s ease" }}
           />
         ) : (
-          <div ref={iconRef} style={{ transition: "transform 0.3s ease" }}>
+              <div ref={iconRef} style={{ transition: "transform 0.3s ease", color: "#d4a854" }}>
             {produit.categorie_nom?.toLowerCase().includes("miel") && "🍯"}
             {produit.categorie_nom?.toLowerCase().includes("pollen") && "🌼"}
             {produit.categorie_nom?.toLowerCase().includes("cire") && "🕯️"}
@@ -103,34 +104,34 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
       </div>
 
       <div style={{ padding: "18px", flex: 1, display: "flex", flexDirection: "column", gap: "10px" }}>
-        <h3 style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#1c1008", lineHeight: "1.3", textAlign: isAr ? "right" : "left" }}>
+        <h3 style={{ margin: 0, fontSize: "17px", fontWeight: "700", color: "#f5f0e8", lineHeight: "1.3", textAlign: isAr ? "right" : "left" }}>
           {produit.nom}
         </h3>
 
-        <p style={{ margin: 0, fontSize: "13px", color: "#6b6055", lineHeight: "1.6", flex: 1, textAlign: isAr ? "right" : "left" }}>
+        <p style={{ margin: 0, fontSize: "13px", color: "#a09080", lineHeight: "1.6", flex: 1, textAlign: isAr ? "right" : "left" }}>
           {produit.description}
         </p>
 
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexDirection: isAr ? "row-reverse" : "row" }}>
           <div style={{ display: "flex", alignItems: "baseline", gap: "4px" }}>
-            <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>
+            <span style={{ fontSize: "22px", fontWeight: "800", color: "#e8c97a" }}>
               {Number(produit.prix).toLocaleString("fr-DZ")}
             </span>
             <span style={{
-              fontSize: "11px", fontWeight: "700", color: "#92400e",
-              background: "linear-gradient(135deg, #fef9ee, #fdf3d8)",
+              fontSize: "11px", fontWeight: "700", color: "#e8c97a",
+              background: "linear-gradient(135deg, rgba(212,168,84,0.15), rgba(212,168,84,0.3))",
               padding: "1px 6px", borderRadius: "4px",
-              boxShadow: "0 1px 3px rgba(180,83,9,0.08)",
+              boxShadow: "0 1px 3px rgba(212,168,84,0.08)",
             }}>
               DA
             </span>
           </div>
           <span style={{
             fontSize: "11px",
-            color: stockFaible ? "#dc2626" : "#16a34a",
-            background: stockFaible ? "#fee2e2" : "#dcfce7",
+            color: stockFaible ? "#dc2626" : "#1a7a36",
+            background: stockFaible ? "rgba(220,38,38,0.15)" : "rgba(22,163,74,0.15)",
             padding: "3px 10px", borderRadius: "20px", fontWeight: "700",
-            boxShadow: stockFaible ? "0 0 0 1px #fecaca" : "0 0 0 1px #bbf7d0",
+            boxShadow: stockFaible ? "0 0 0 1px rgba(220,38,38,0.2)" : "0 0 0 1px rgba(22,163,74,0.2)",
           }}>
             {stockFaible ? `⚠️ ${t.reste} ${produit.stock_quantite}` : `✓ ${t.enStock}`}
           </span>
@@ -144,8 +145,8 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
             width: "100%", padding: "11px", borderRadius: "10px", border: "none",
             cursor: produit.stock_quantite === 0 ? "not-allowed" : "pointer",
             fontWeight: "700", fontSize: "14px", transition: "all 0.2s, transform 0.15s ease",
-            background: ajoute ? "#16a34a" : produit.stock_quantite === 0 ? "#e5e7eb" : "#b45309",
-            color: produit.stock_quantite === 0 ? "#9ca3af" : "white",
+            background: ajoute ? "#1a7a36" : produit.stock_quantite === 0 ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+            color: produit.stock_quantite === 0 ? "rgba(245,240,232,0.4)" : ajoute ? "white" : "#0a0a0a",
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             transform: "scale(1)",
           }}
@@ -162,42 +163,42 @@ function Panier({ items, onFermer, onCommander, t, isAr }) {
   return (
     <div style={{
       position: "fixed", top: 0, right: 0, bottom: 0, width: "360px",
-      background: "white", boxShadow: "-8px 0 40px rgba(0,0,0,0.15)",
+      background: "#141414", boxShadow: "-8px 0 40px rgba(0,0,0,0.5)",
       zIndex: 1000, display: "flex", flexDirection: "column",
       direction: isAr ? "rtl" : "ltr",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       animation: "slideInRight 0.35s ease-out",
     }}>
-      <div style={{ padding: "24px", borderBottom: "1px solid #f0ebe3", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "700", color: "#1c1008" }}>{t.votrePanier}</h2>
-        <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055", transition: "transform 0.2s", padding: "4px" }}
-          onMouseEnter={(e) => e.target.style.transform = "rotate(90deg)"}
-          onMouseLeave={(e) => e.target.style.transform = "rotate(0)"}
+        <div style={{ padding: "24px", borderBottom: "1px solid rgba(212,168,84,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "700", color: "#f5f0e8" }}>{t.votrePanier}</h2>
+        <button onClick={onFermer} className="btn-ghost" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#a09080", transition: "transform 0.2s, color 0.2s", padding: "4px" }}
+          onMouseEnter={(e) => { e.target.style.transform = "rotate(90deg)"; e.target.style.color = "#d4a854"; }}
+          onMouseLeave={(e) => { e.target.style.transform = "rotate(0)"; e.target.style.color = "#a09080"; }}
         >✕</button>
       </div>
 
       <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         {items.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "60px 20px", color: "#a8977f" }}>
+          <div style={{ textAlign: "center", padding: "60px 20px", color: "rgba(245,240,232,0.4)" }}>
             <div className="float" style={{ fontSize: "48px", marginBottom: "12px" }}>🍯</div>
             <p style={{ margin: 0, fontSize: "15px" }}>{t.panierVide}</p>
           </div>
         ) : (
           items.map((item, idx) => (
             <div key={item.id} style={{
-              display: "flex", gap: "12px", padding: "14px 0", borderBottom: "1px solid #f8f4ef", alignItems: "center",
+              display: "flex", gap: "12px", padding: "14px 0", borderBottom: "1px solid rgba(255,255,255,0.03)", alignItems: "center",
               animation: `fadeInUp 0.3s ease ${idx * 0.06}s both`,
             }}>
-              <div style={{ fontSize: "28px", width: "44px", height: "44px", background: "#fef9ee", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
+              <div style={{ fontSize: "28px", width: "44px", height: "44px", background: "rgba(212,168,84,0.06)", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                 {item.images && item.images[0] ? (
                   <img src={item.images[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : "🍯"}
               </div>
               <div style={{ flex: 1 }}>
-                <p style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: "#1c1008" }}>{item.nom}</p>
-                <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#a8977f" }}>{Number(item.prix).toLocaleString()} DA × {item.qte}</p>
+                <p style={{ margin: 0, fontSize: "14px", fontWeight: "600", color: "#f5f0e8" }}>{item.nom}</p>
+                <p style={{ margin: "2px 0 0", fontSize: "12px", color: "rgba(245,240,232,0.4)" }}>{Number(item.prix).toLocaleString()} DA × {item.qte}</p>
               </div>
-              <span style={{ fontSize: "14px", fontWeight: "700", color: "#92400e" }}>
+              <span style={{ fontSize: "14px", fontWeight: "700", color: "#e8c97a" }}>
                 {(Number(item.prix) * item.qte).toLocaleString()} DA
               </span>
             </div>
@@ -206,25 +207,25 @@ function Panier({ items, onFermer, onCommander, t, isAr }) {
       </div>
 
       {items.length > 0 && (
-        <div style={{ padding: "20px", borderTop: "1px solid #f0ebe3" }}>
+        <div style={{ padding: "20px", borderTop: "1px solid rgba(212,168,84,0.15)" }}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "16px" }}>
-            <span style={{ fontSize: "15px", color: "#6b6055" }}>{t.total}</span>
-            <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>{total.toLocaleString()} DA</span>
+            <span style={{ fontSize: "15px", color: "#a09080" }}>{t.total}</span>
+            <span style={{ fontSize: "22px", fontWeight: "800", color: "#e8c97a" }}>{total.toLocaleString()} DA</span>
           </div>
           <button
             onClick={() => onCommander()}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-              background: "#b45309", color: "white", fontWeight: "700",
+              background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", fontWeight: "700",
               fontSize: "15px", cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}
-            onMouseEnter={(e) => { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; }}
+            onMouseEnter={(e) => { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
             onMouseLeave={(e) => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = "none"; }}
           >
            {t.commander}
           </button>
-          <p style={{ textAlign: "center", margin: "10px 0 0", fontSize: "12px", color: "#a8977f" }}>
+          <p style={{ textAlign: "center", margin: "10px 0 0", fontSize: "12px", color: "rgba(245,240,232,0.4)" }}>
             {t.livraison}
           </p>
         </div>
@@ -323,7 +324,7 @@ export default function CatalogueMiel(){
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#fdf8f0",
+      background: "#0a0a0a",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
@@ -340,17 +341,17 @@ export default function CatalogueMiel(){
       {chargement && (
         <div style={{ padding: "0 40px 60px", maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px", paddingTop: "200px" }}>
           {[1,2,3,4,5,6].map((i) => (
-            <div key={i} style={{ background: "white", borderRadius: "16px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
-              <div className="shimmer-pulse" style={{ height: "160px", background: "#f0ebe3" }} />
+            <div key={i} className="card-glass" style={{ background: "#141414", borderRadius: "16px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+              <div className="shimmer-pulse" style={{ height: "160px", background: "rgba(255,255,255,0.06)", borderBottom: "1px solid rgba(212,168,84,0.15)" }} />
               <div style={{ padding: "18px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                <div className="shimmer-pulse" style={{ height: "20px", width: `clamp(120px, ${50 + i * 7}%, ${80 + i * 3}%)`, background: "#f0ebe3", borderRadius: "6px" }} />
-                <div className="shimmer-pulse" style={{ height: "14px", width: "100%", background: "#f0ebe3", borderRadius: "6px" }} />
-                <div className="shimmer-pulse" style={{ height: "14px", width: "75%", background: "#f0ebe3", borderRadius: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "20px", width: `clamp(120px, ${50 + i * 7}%, ${80 + i * 3}%)`, background: "rgba(255,255,255,0.06)", borderRadius: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "14px", width: "100%", background: "rgba(255,255,255,0.06)", borderRadius: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "14px", width: "75%", background: "rgba(255,255,255,0.06)", borderRadius: "6px" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-                  <div className="shimmer-pulse" style={{ height: "24px", width: "80px", background: "#f0ebe3", borderRadius: "6px" }} />
-                  <div className="shimmer-pulse" style={{ height: "20px", width: "60px", background: "#f0ebe3", borderRadius: "20px" }} />
+                  <div className="shimmer-pulse" style={{ height: "24px", width: "80px", background: "rgba(255,255,255,0.06)", borderRadius: "6px" }} />
+                  <div className="shimmer-pulse" style={{ height: "20px", width: "60px", background: "rgba(255,255,255,0.06)", borderRadius: "20px" }} />
                 </div>
-                <div className="shimmer-pulse" style={{ height: "40px", width: "100%", background: "#f0ebe3", borderRadius: "10px", marginTop: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "40px", width: "100%", background: "rgba(255,255,255,0.06)", borderRadius: "10px", marginTop: "6px" }} />
               </div>
             </div>
           ))}
@@ -359,20 +360,21 @@ export default function CatalogueMiel(){
 
       {/* Navigation */}
       <header style={{
-        background: "white", borderBottom: "1px solid #f0ebe3",
+        background: "rgba(10,10,10,0.85)", borderBottom: "1px solid rgba(255,255,255,0.06)",
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
         padding: "0 clamp(8px, 3vw, 32px)", height: "68px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
-        boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
+        boxShadow: "0 1px 8px rgba(0,0,0,0.4)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "clamp(8px, 3vw, 40px)" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }} onClick={() => navigate('/')}>
             <img src={LOGO_URL} alt="logo" style={{ width: "clamp(32px, 5vw, 40px)", height: "clamp(32px, 5vw, 40px)", borderRadius: "50%", objectFit: "cover" }} />
             <div>
-              <p style={{ margin: 0, fontSize: "clamp(12px, 2vw, 15px)", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
+              <p style={{ margin: 0, fontSize: "clamp(12px, 2vw, 15px)", fontWeight: "800", color: "#f5f0e8", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
                 {t.siteName}
               </p>
-              <p style={{ margin: 0, fontSize: "clamp(8px, 1.3vw, 10px)", color: "#a57c3a", letterSpacing: "0.06em", textTransform: "uppercase" }}>
+              <p style={{ margin: 0, fontSize: "clamp(8px, 1.3vw, 10px)", color: "#d4a854", letterSpacing: "0.12em", textTransform: "uppercase", opacity: "0.8" }}>
                 {t.siteSubtitle}
               </p>
             </div>
@@ -381,7 +383,7 @@ export default function CatalogueMiel(){
           <div className="r-hide" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
             <button onClick={() => navigate('/a-propos')} style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "13px", color: "#6b6055", fontWeight: "500", padding: "6px 10px",
+              fontSize: "13px", color: "#a09080", fontWeight: "500", padding: "6px 10px",
             }}>
               {t.aPropos}
             </button>
@@ -390,19 +392,19 @@ export default function CatalogueMiel(){
 
         <div style={{ display: "flex", alignItems: "center", gap: "clamp(6px, 1.5vw, 12px)" }}>
           {/* FR/AR */}
-          <div style={{ display: "flex", gap: "2px", background: "#f0ebe3", borderRadius: "6px", padding: "2px" }}>
+          <div style={{ display: "flex", gap: "2px", background: "rgba(255,255,255,0.06)", borderRadius: "6px", padding: "2px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
-              padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
-              fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
-              background: langue === 'fr' ? "#b45309" : "transparent",
-              color: langue === 'fr' ? "white" : "#6b6055",
-            }}>FR</button>
+                padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
+                fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
+                background: langue === 'fr' ? "linear-gradient(135deg, #d4a854, #c49a3c)" : "transparent",
+                color: langue === 'fr' ? "#0a0a0a" : "#a09080",
+              }}>FR</button>
             <button onClick={() => langue === 'fr' && toggleLangue()} style={{
-              padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
-              fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
-              background: langue === 'ar' ? "#b45309" : "transparent",
-              color: langue === 'ar' ? "white" : "#6b6055",
-            }}>AR</button>
+                padding: "clamp(3px, 0.8vw, 4px) clamp(5px, 1vw, 8px)", borderRadius: "4px", border: "none", cursor: "pointer",
+                fontSize: "clamp(10px, 1.3vw, 11px)", fontWeight: "700",
+                background: langue === 'ar' ? "linear-gradient(135deg, #d4a854, #c49a3c)" : "transparent",
+                color: langue === 'ar' ? "#0a0a0a" : "#a09080",
+              }}>AR</button>
           </div>
 
           {/* Menu utilisateur */}
@@ -412,55 +414,55 @@ export default function CatalogueMiel(){
                 onClick={() => setMenuUtilisateur(!menuUtilisateur)}
                 style={{
                   display: "flex", alignItems: "center", gap: "6px",
-                  background: "none", border: "1.5px solid #e5ddd0",
+                  background: "none", border: "1.5px solid rgba(255,255,255,0.1)",
                   borderRadius: "8px", padding: "clamp(6px, 1.2vw, 8px) clamp(8px, 1.5vw, 12px)", cursor: "pointer",
-                  fontSize: "13px", color: "#1c1008", fontWeight: "600",
+                  fontSize: "13px", color: "#f5f0e8", fontWeight: "600",
                 }}
               >
                 <span style={{
                   width: "28px", height: "28px", borderRadius: "50%",
-                  background: "#b45309", color: "white", display: "flex",
+                  background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", display: "flex",
                   alignItems: "center", justifyContent: "center",
                   fontSize: "12px", fontWeight: "700",
                 }}>
                   {utilisateur.nom.charAt(0).toUpperCase()}
                 </span>
                 <span className="r-hide">{utilisateur.nom.split(' ')[0]}</span>
-                <span className="r-hide" style={{ fontSize: "10px", color: "#a8977f" }}>{menuUtilisateur ? "▲" : "▼"}</span>
+                <span className="r-hide" style={{ fontSize: "10px", color: "rgba(245,240,232,0.4)" }}>{menuUtilisateur ? "▲" : "▼"}</span>
               </button>
 
               {menuUtilisateur && (
                 <div style={{
                   position: "absolute", top: "calc(100% + 6px)", right: 0,
-                  background: "white", borderRadius: "12px",
-                  boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
-                  border: "1px solid #f0ebe3", minWidth: "200px",
+                  background: "#141414", borderRadius: "12px",
+                  boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
+                  border: "1px solid rgba(212,168,84,0.15)", minWidth: "200px",
                   overflow: "hidden", zIndex: 200,
                 }}>
-                  <div style={{ padding: "12px 16px", borderBottom: "1px solid #f8f4ef" }}>
-                    <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#1c1008" }}>
+                  <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                    <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#f5f0e8" }}>
                       {utilisateur.nom}
                     </p>
-                    <p style={{ margin: "2px 0 0", fontSize: "11px", color: "#a8977f" }}>
+                    <p style={{ margin: "2px 0 0", fontSize: "11px", color: "rgba(245,240,232,0.4)" }}>
                       {utilisateur.email}
                     </p>
                   </div>
                   <button onClick={() => { setMenuUtilisateur(false); navigate('/mon-profil'); }} style={{
                     display: "block", width: "100%", padding: "10px 16px", border: "none",
-                    background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                    background: "none", cursor: "pointer", fontSize: "13px", color: "#f5f0e8",
                     textAlign: "left", fontFamily: "inherit",
                   }}
-                    onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                    onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.03)"}
                     onMouseLeave={(e) => e.target.style.background = "none"}
                   >
                     👤 {t.monProfil}
                   </button>
                   <button onClick={() => { setMenuUtilisateur(false); navigate('/mes-commandes'); }} style={{
                     display: "block", width: "100%", padding: "10px 16px", border: "none",
-                    background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                    background: "none", cursor: "pointer", fontSize: "13px", color: "#f5f0e8",
                     textAlign: "left", fontFamily: "inherit",
                   }}
-                    onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                    onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.03)"}
                     onMouseLeave={(e) => e.target.style.background = "none"}
                   >
                     📋 {t.mesCommandes}
@@ -468,22 +470,22 @@ export default function CatalogueMiel(){
                   {utilisateur?.role === 'admin' && (
                     <button onClick={() => { setMenuUtilisateur(false); navigate('/dashboard'); }} style={{
                       display: "block", width: "100%", padding: "10px 16px", border: "none",
-                      background: "none", cursor: "pointer", fontSize: "13px", color: "#1c1008",
+                      background: "none", cursor: "pointer", fontSize: "13px", color: "#f5f0e8",
                       textAlign: "left", fontFamily: "inherit",
                     }}
-                      onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                      onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.03)"}
                       onMouseLeave={(e) => e.target.style.background = "none"}
                     >
                       👑 {t.dashboard}
                     </button>
                   )}
-                  <div style={{ borderTop: "1px solid #f8f4ef" }}>
+                  <div style={{ borderTop: "1px solid rgba(255,255,255,0.03)" }}>
                     <button onClick={() => { setMenuUtilisateur(false); handleDeconnexion(); }} style={{
                       display: "block", width: "100%", padding: "10px 16px", border: "none",
                       background: "none", cursor: "pointer", fontSize: "13px", color: "#dc2626",
                       textAlign: "left", fontFamily: "inherit",
                     }}
-                      onMouseEnter={(e) => e.target.style.background = "#fdf8f0"}
+                      onMouseEnter={(e) => e.target.style.background = "rgba(255,255,255,0.03)"}
                       onMouseLeave={(e) => e.target.style.background = "none"}
                     >
                       {t.deconnexion}
@@ -493,10 +495,10 @@ export default function CatalogueMiel(){
               )}
             </div>
           ) : (
-            <button onClick={() => navigate('/login')} style={{
-              background: "none", border: "1.5px solid #b45309",
+            <button onClick={() => navigate('/login')} className="btn-gold" style={{
+              background: "transparent", border: "1.5px solid #d4a854",
               borderRadius: "8px", padding: "clamp(6px, 1.2vw, 8px) clamp(10px, 2vw, 16px)", cursor: "pointer",
-              fontSize: "clamp(11px, 1.5vw, 13px)", color: "#b45309", fontWeight: "600",
+              fontSize: "clamp(11px, 1.5vw, 13px)", color: "#d4a854", fontWeight: "600",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}>
               {t.seConnecter}
@@ -504,9 +506,9 @@ export default function CatalogueMiel(){
           )}
 
           {/* Panier */}
-          <button onClick={() => setPanierOuvert(true)} style={{
+          <button onClick={() => setPanierOuvert(true)} className="btn-gold-filled" style={{
             display: "flex", alignItems: "center", gap: "8px",
-            background: "#b45309", color: "white", border: "none",
+            background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none",
             borderRadius: "10px", padding: "clamp(8px, 1.5vw, 10px) clamp(10px, 2vw, 18px)", cursor: "pointer",
             fontWeight: "700", fontSize: "14px", position: "relative",
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
@@ -535,7 +537,7 @@ export default function CatalogueMiel(){
 
       {/* Hero */}
       <div style={{
-        background: "linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)",
+        background: "linear-gradient(135deg, #0a0a0a 0%, #141008 50%, #1a1208 100%)",
         padding: "clamp(60px, 8vw, 100px) clamp(20px, 5vw, 40px)",
         textAlign: "center", position: "relative",
         overflow: "hidden",
@@ -555,18 +557,18 @@ export default function CatalogueMiel(){
           transform: "translate(-50%, -50%)",
           width: "clamp(300px, 50vw, 500px)", height: "clamp(300px, 50vw, 500px)",
           borderRadius: "50%",
-          background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(212,168,84,0.12) 0%, rgba(212,168,84,0.04) 40%, transparent 70%)",
           pointerEvents: "none",
         }} />
         <div style={{ position: "relative", zIndex: 1 }}>
-          <div className="float" style={{ fontSize: "clamp(48px, 6vw, 64px)", marginBottom: "8px", lineHeight: 1 }}>🍯</div>
+          <div className="float" style={{ fontSize: "clamp(48px, 6vw, 64px)", marginBottom: "8px", lineHeight: 1, color: "#d4a854" }}>🍯</div>
           <h2 style={{
             margin: "0 0 16px",
             fontSize: "clamp(28px, 4vw, 42px)",
             fontWeight: "800",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
             position: "relative",
-            background: "linear-gradient(90deg, #fff, #fef9ee, #fdf3d8, #fff)",
+            background: "linear-gradient(90deg, #e8c97a, #d4a854, #c49a3c, #d4a854, #e8c97a)",
             backgroundSize: "300% auto",
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
@@ -597,25 +599,25 @@ export default function CatalogueMiel(){
               style={{
                 width: "100%",
                 padding: isAr ? "13px 46px 13px 16px" : "13px 16px 13px 46px",
-                borderRadius: "12px", border: "1.5px solid #e5ddd0",
-                background: "white", fontSize: "15px", color: "#1c1008", outline: "none",
+                borderRadius: "12px", border: "1.5px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.05)", fontSize: "15px", color: "#f5f0e8", outline: "none",
                 fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
                 direction: isAr ? "rtl" : "ltr",
                 transition: "border-color 0.25s ease, box-shadow 0.25s ease",
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = "#b45309";
-                e.target.style.boxShadow = "0 0 0 3px rgba(180,83,9,0.1), 0 0 0 1px #b45309";
+                e.target.style.borderColor = "#d4a854";
+                e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.1), 0 0 0 1px #d4a854";
                 if (searchIconRef.current) searchIconRef.current.style.transform = "translateY(-50%) scale(1.1)";
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = "#e5ddd0";
+                e.target.style.borderColor = "rgba(255,255,255,0.1)";
                 e.target.style.boxShadow = "none";
                 if (searchIconRef.current) searchIconRef.current.style.transform = "translateY(-50%) scale(1)";
               }}
             />
           </div>
-          <p style={{ margin: 0, fontSize: "14px", color: "#a8977f", fontWeight: "500" }}>
+          <p style={{ margin: 0, fontSize: "14px", color: "rgba(245,240,232,0.4)", fontWeight: "500" }}>
             {produitsFiltres.length} {produitsFiltres.length > 1 ? t.produitsTrouves : t.produitTrouve}
           </p>
         </div>
@@ -628,24 +630,26 @@ export default function CatalogueMiel(){
               style={{
                 padding: "9px 20px", borderRadius: "30px",
                 border: "1.5px solid",
-                borderColor: categorieActive === cat.id ? "transparent" : "#e5ddd0",
-                background: categorieActive === cat.id ? "linear-gradient(135deg, #b45309, #d97706)" : "transparent",
-                color: categorieActive === cat.id ? "white" : "#6b6055",
+                borderColor: categorieActive === cat.id ? "transparent" : "rgba(255,255,255,0.1)",
+                background: categorieActive === cat.id ? "linear-gradient(135deg, #d4a854, #c49a3c)" : "transparent",
+                color: categorieActive === cat.id ? "#0a0a0a" : "#a09080",
                 fontWeight: "600", fontSize: "14px", cursor: "pointer",
                 fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
                 transition: "all 0.2s ease",
-                boxShadow: categorieActive === cat.id ? "0 2px 8px rgba(180,83,9,0.2)" : "none",
+                boxShadow: categorieActive === cat.id ? "0 4px 16px rgba(0,0,0,0.3), 0 0 0 1px rgba(212,168,84,0.2)" : "none",
               }}
               onMouseEnter={(e) => {
                 if (categorieActive !== cat.id) {
-                  e.target.style.background = "#fef9ee";
-                  e.target.style.borderColor = "#d4b483";
+                  e.target.style.background = "rgba(212,168,84,0.08)";
+                  e.target.style.borderColor = "#d4a854";
+                  e.target.style.color = "#d4a854";
                 }
               }}
               onMouseLeave={(e) => {
                 if (categorieActive !== cat.id) {
                   e.target.style.background = "transparent";
-                  e.target.style.borderColor = "#e5ddd0";
+                  e.target.style.borderColor = "rgba(255,255,255,0.1)";
+                  e.target.style.color = "#a09080";
                 }
               }}
             >
@@ -661,10 +665,10 @@ export default function CatalogueMiel(){
         display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px",
       }}>
         {produitsFiltres.length === 0 ? (
-          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "80px 20px", color: "#a8977f", animation: "fadeInUp 0.4s ease" }}>
+          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "80px 20px", color: "rgba(245,240,232,0.4)", animation: "fadeInUp 0.4s ease" }}>
             <div className="float" style={{ fontSize: "64px", marginBottom: "20px" }}>🔍</div>
-            <p style={{ fontSize: "20px", fontWeight: "700", margin: "0 0 6px", color: "#6b6055" }}>{t.aucunProduit}</p>
-            <p style={{ fontSize: "14px", fontWeight: "400", margin: 0, color: "#a8977f" }}>{t.essayerAutreRecherche || "Essayez de modifier vos filtres ou votre recherche"}</p>
+            <p style={{ fontSize: "20px", fontWeight: "700", margin: "0 0 6px", color: "#a09080" }}>{t.aucunProduit}</p>
+            <p style={{ fontSize: "14px", fontWeight: "400", margin: 0, color: "rgba(245,240,232,0.4)" }}>{t.essayerAutreRecherche || "Essayez de modifier vos filtres ou votre recherche"}</p>
           </div>
         ) : (
           produitsAffiches.map((produit) => (
@@ -690,22 +694,22 @@ export default function CatalogueMiel(){
             disabled={page === 1}
             style={{
               padding: "8px 16px", borderRadius: "8px", border: "none",
-              background: page === 1 ? "#e5e7eb" : "#b45309",
-              color: page === 1 ? "#9ca3af" : "white",
+              background: page === 1 ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              color: page === 1 ? "rgba(245,240,232,0.4)" : "#0a0a0a",
               fontWeight: "700", fontSize: "13px", cursor: page === 1 ? "not-allowed" : "pointer",
               transition: "all 0.25s ease",
-              boxShadow: page === 1 ? "none" : "0 2px 8px rgba(180,83,9,0.2)",
+              boxShadow: page === 1 ? "none" : "0 2px 8px rgba(212,168,84,0.2)",
             }}
             onMouseEnter={(e) => {
               if (page !== 1) {
                 e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)";
+                e.target.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)";
               }
             }}
             onMouseLeave={(e) => {
               if (page !== 1) {
                 e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "0 2px 8px rgba(180,83,9,0.2)";
+                e.target.style.boxShadow = "0 2px 8px rgba(212,168,84,0.2)";
               }
             }}
           >
@@ -714,31 +718,33 @@ export default function CatalogueMiel(){
 
           {getPageNumbers().map((p, idx) =>
             p === "..." ? (
-              <span key={`ellipsis-${idx}`} style={{ fontSize: "14px", color: "#a8977f", padding: "0 4px" }}>...</span>
+              <span key={`ellipsis-${idx}`} style={{ fontSize: "14px", color: "rgba(245,240,232,0.4)", padding: "0 4px" }}>...</span>
             ) : (
               <button
                 key={p}
                 onClick={() => setPage(p)}
                 style={{
                   width: "36px", height: "36px", borderRadius: "8px", border: "none",
-                  background: p === page ? "#b45309" : "transparent",
-                  color: p === page ? "white" : "#6b6055",
+                  background: p === page ? "linear-gradient(135deg, #d4a854, #c49a3c)" : "transparent",
+                  color: p === page ? "#0a0a0a" : "#a09080",
                   fontWeight: "700", fontSize: "14px", cursor: "pointer",
                   transition: "all 0.2s ease",
-                  boxShadow: p === page ? "0 2px 8px rgba(180,83,9,0.2)" : "none",
+                  boxShadow: p === page ? "0 2px 8px rgba(212,168,84,0.2)" : "none",
                 }}
-                onMouseEnter={(e) => {
-                  if (p !== page) {
-                    e.target.style.background = "#fef9ee";
-                    e.target.style.color = "#b45309";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (p !== page) {
-                    e.target.style.background = "transparent";
-                    e.target.style.color = "#6b6055";
-                  }
-                }}
+                  onMouseEnter={(e) => {
+                    if (p !== page) {
+                      e.target.style.background = "rgba(212,168,84,0.1)";
+                      e.target.style.color = "#d4a854";
+                      e.target.style.boxShadow = "0 0 0 1px rgba(212,168,84,0.3)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (p !== page) {
+                      e.target.style.background = "transparent";
+                      e.target.style.color = "#a09080";
+                      e.target.style.boxShadow = "none";
+                    }
+                  }}
               >
                 {p}
               </button>
@@ -750,22 +756,22 @@ export default function CatalogueMiel(){
             disabled={page === pageCount}
             style={{
               padding: "8px 16px", borderRadius: "8px", border: "none",
-              background: page === pageCount ? "#e5e7eb" : "#b45309",
-              color: page === pageCount ? "#9ca3af" : "white",
+              background: page === pageCount ? "rgba(255,255,255,0.08)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              color: page === pageCount ? "rgba(245,240,232,0.4)" : "#0a0a0a",
               fontWeight: "700", fontSize: "13px", cursor: page === pageCount ? "not-allowed" : "pointer",
               transition: "all 0.25s ease",
-              boxShadow: page === pageCount ? "none" : "0 2px 8px rgba(180,83,9,0.2)",
+              boxShadow: page === pageCount ? "none" : "0 2px 8px rgba(212,168,84,0.2)",
             }}
             onMouseEnter={(e) => {
               if (page !== pageCount) {
                 e.target.style.transform = "translateY(-2px)";
-                e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)";
+                e.target.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)";
               }
             }}
             onMouseLeave={(e) => {
               if (page !== pageCount) {
                 e.target.style.transform = "translateY(0)";
-                e.target.style.boxShadow = "0 2px 8px rgba(180,83,9,0.2)";
+                e.target.style.boxShadow = "0 2px 8px rgba(212,168,84,0.2)";
               }
             }}
           >
@@ -779,9 +785,9 @@ export default function CatalogueMiel(){
         <>
           <div onClick={() => setPanierOuvert(false)} style={{
             position: "fixed", inset: 0,
-            background: "rgba(0,0,0,0.4)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
+            background: "rgba(0,0,0,0.7)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
             zIndex: 999, animation: "fadeIn 0.3s ease",
           }} />
           <Panier
@@ -822,19 +828,19 @@ export default function CatalogueMiel(){
       {/* Confirmation commande */}
       {commandeConfirmee && (
         <div style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 1000,
+          position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)", zIndex: 1000,
           display: "flex", alignItems: "center", justifyContent: "center", padding: "20px"
         }}>
           <div style={{
-            background: "white", padding: "40px 20px", borderRadius: "16px",
+            background: "#141414", padding: "40px 20px", borderRadius: "16px",
             textAlign: "center", maxWidth: "400px", width: "100%",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.2)"
+            boxShadow: "0 10px 40px rgba(0,0,0,0.5)"
           }}>
             <div style={{ fontSize: "64px", marginBottom: "16px" }}>🎉</div>
-            <h2 style={{ margin: "0 0 8px", fontSize: "22px", fontWeight: "800", color: "#1c1008" }}>
+            <h2 style={{ margin: "0 0 8px", fontSize: "22px", fontWeight: "800", color: "#f5f0e8" }}>
               {t.commandeConfirmee}
             </h2>
-            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "#a8977f" }}>
+            <p style={{ margin: "0 0 20px", fontSize: "13px", color: "rgba(245,240,232,0.4)" }}>
               {t.commandeDesc}
             </p>
 
@@ -874,7 +880,7 @@ export default function CatalogueMiel(){
               onClick={() => setCommandeConfirmee(null)}
               style={{
                 width: "100%", padding: "13px", borderRadius: "12px", border: "none",
-                background: "#b45309", color: "white", fontWeight: "700",
+                background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", fontWeight: "700",
                 fontSize: "15px", cursor: "pointer",
                 marginTop: "10px"
               }}

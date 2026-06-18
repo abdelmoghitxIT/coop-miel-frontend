@@ -66,7 +66,7 @@ export default function Login() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#fdf8f0",
+      background: "#0a0a0a",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -75,18 +75,18 @@ export default function Login() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        @keyframes borderGlow { 0%,100% { border-color: #f0ebe3; box-shadow: 0 8px 40px rgba(180,120,0,0.12); } 50% { border-color: #d97706; box-shadow: 0 8px 40px rgba(180,120,0,0.22); } }
-        .login-input:focus { border-color: #b45309 !important; box-shadow: 0 0 0 3px rgba(180,83,9,0.12) !important; outline: none !important; }
+        @keyframes borderGlow { 0%,100% { border-color: rgba(212,168,84,0.15); box-shadow: 0 8px 40px rgba(212,168,84,0.06); } 50% { border-color: #d4a854; box-shadow: 0 8px 40px rgba(212,168,84,0.18); } }
+        .login-input:focus { border-color: #d4a854 !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }
       `}</style>
 
       <div style={{
-        background: "white",
+        background: "#141414",
         borderRadius: "20px",
         padding: "40px",
         width: "100%",
         maxWidth: "420px",
-        boxShadow: "0 8px 40px rgba(180,120,0,0.12)",
-        border: "1px solid #f0ebe3",
+        boxShadow: "0 8px 40px rgba(212,168,84,0.08)",
+        border: "1px solid rgba(212,168,84,0.2)",
         animation: "borderGlow 3s ease-in-out infinite",
       }}>
         {/* Logo */}
@@ -99,18 +99,18 @@ export default function Login() {
           />
           <h1 style={{
             margin: 0, fontSize: "22px", fontWeight: "800",
-            color: "#1c1008", fontFamily: "'Playfair Display', serif",
+            color: "#f5f0e8", fontFamily: "'Playfair Display', serif",
           }}>
             التعاونية الفلاحية لتربية النحل كاويت
           </h1>
-          <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#a57c3a" }}>
+          <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#d4a854" }}>
             Coopérative apicole
           </p>
         </div>
 
         {/* Tabs */}
         <div style={{
-          display: "flex", background: "#fdf8f0",
+          display: "flex", background: "#0a0a0a",
           borderRadius: "10px", padding: "4px", marginBottom: "24px",
         }}>
           {["connexion", "inscription"].map((m) => (
@@ -123,9 +123,9 @@ export default function Login() {
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: "700", fontSize: "13px",
                 transition: "all 0.2s",
-                background: mode === m ? "white" : "transparent",
-                color: mode === m ? "#b45309" : "#a8977f",
-                boxShadow: mode === m ? "0 1px 4px rgba(0,0,0,0.08)" : "none",
+                background: mode === m ? "#141414" : "transparent",
+                color: mode === m ? "#d4a854" : "rgba(245,240,232,0.4)",
+                boxShadow: mode === m ? "0 1px 4px rgba(0,0,0,0.2)" : "none",
               }}
             >
               {m === "connexion" ? t.seConnecterBtn : t.sInscrire}
@@ -137,7 +137,7 @@ export default function Login() {
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {mode === "inscription" && (
             <div>
-              <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
                 {t.nomComplet}
               </label>
               <input
@@ -148,9 +148,9 @@ export default function Login() {
                 placeholder="Ahmed Benaissa"
                 style={{
                   width: "100%", padding: "12px 14px",
-                  borderRadius: "10px", border: "1.5px solid #e5ddd0",
+                  borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                  color: "#1c1008", background: "white",
+                  color: "#f5f0e8", background: "#0a0a0a",
                   transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
@@ -158,7 +158,7 @@ export default function Login() {
           )}
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
               {t.email}
             </label>
             <input
@@ -170,16 +170,16 @@ export default function Login() {
               placeholder="ahmed@example.com"
               style={{
                 width: "100%", padding: "12px 14px",
-                borderRadius: "10px", border: "1.5px solid #e5ddd0",
+                borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                color: "#1c1008", background: "white",
-                transition: "border-color 0.2s, box-shadow 0.2s",
-              }}
-            />
-          </div>
+                  color: "#f5f0e8", background: "#0a0a0a",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
+                }}
+              />
+            </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
               {t.motDePasse}
             </label>
             <input
@@ -191,9 +191,9 @@ export default function Login() {
               placeholder="••••••••"
               style={{
                 width: "100%", padding: "12px 14px",
-                borderRadius: "10px", border: "1.5px solid #e5ddd0",
+                borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                color: "#1c1008", background: "white",
+                color: "#f5f0e8", background: "#0a0a0a",
                 transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             />
@@ -202,21 +202,21 @@ export default function Login() {
           {mode === "connexion" && (
             <button type="button" onClick={() => navigate('/mot-de-passe-oublie')} style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "13px", color: "#b45309", fontWeight: "600",
+              fontSize: "13px", color: "#d4a854", fontWeight: "600",
               textAlign: "right", padding: "4px 0 0",
               fontFamily: "'DM Sans', sans-serif",
               alignSelf: "flex-end",
               transition: "color 0.2s",
             }}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#78350f"}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#b45309"}>
+              onMouseEnter={(e) => e.currentTarget.style.color = "#c49a3c"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "#d4a854"}>
               {t.motDePasseOublie}
             </button>
           )}
 
           {mode === "inscription" && (
             <div>
-              <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
                 {t.telephone}
               </label>
               <input
@@ -227,9 +227,9 @@ export default function Login() {
                 placeholder="0555 123 456"
                 style={{
                   width: "100%", padding: "12px 14px",
-                  borderRadius: "10px", border: "1.5px solid #e5ddd0",
+                  borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                  color: "#1c1008", background: "white",
+                  color: "#f5f0e8", background: "#0a0a0a",
                   transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
@@ -238,7 +238,7 @@ export default function Login() {
 
           {erreur && (
             <div style={{
-              background: "#fee2e2", border: "1px solid #fecaca",
+              background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)",
               borderRadius: "8px", padding: "10px 14px",
               fontSize: "13px", color: "#dc2626",
               fontFamily: "'DM Sans', sans-serif",
@@ -257,8 +257,8 @@ export default function Login() {
             style={{
               width: "100%", padding: "13px",
               borderRadius: "10px", border: "none",
-              background: chargement ? "#d4b483" : "#b45309",
-              color: "white", fontWeight: "700", fontSize: "15px",
+              background: chargement ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
               cursor: chargement ? "not-allowed" : "pointer",
               fontFamily: "'DM Sans', sans-serif",
               transition: "background 0.2s, transform 0.1s",
@@ -275,7 +275,7 @@ export default function Login() {
 
         <div style={{
           textAlign: "center", margin: "20px 0 0",
-          fontSize: "12px", color: "#a8977f",
+          fontSize: "12px", color: "rgba(245,240,232,0.4)",
           fontFamily: "'DM Sans', sans-serif",
           lineHeight: "1.6",
         }}>
@@ -283,14 +283,14 @@ export default function Login() {
             onClick={() => navigate('/')}
             style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "14px", color: "#a8977f",
+              fontSize: "14px", color: "rgba(245,240,232,0.4)",
               textDecoration: "underline", display: "block",
               margin: "0 auto 12px",
               fontFamily: "'DM Sans', sans-serif",
               transition: "color 0.2s",
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "#b45309"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "#a8977f"}
+            onMouseEnter={(e) => e.currentTarget.style.color = "#d4a854"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "rgba(245,240,232,0.4)"}
           >
             {t.retourAccueil}
           </button>

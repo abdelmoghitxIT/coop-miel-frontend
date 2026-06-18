@@ -52,22 +52,23 @@ export default function ResetPassword() {
   };
 
   return (
-    <div style={{
-      minHeight: "100vh", display: "flex", justifyContent: "center", 
-      alignItems: "center", background: "#fdf8f0", fontFamily: "sans-serif"
-    }}>
       <div style={{
-        background: "white", padding: "40px", borderRadius: "12px", 
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)", width: "100%", maxWidth: "400px"
+        minHeight: "100vh", display: "flex", justifyContent: "center", 
+        alignItems: "center", background: "#0a0a0a", fontFamily: "sans-serif"
       }}>
-        <h2 style={{ color: "#78350f", margin: "0 0 8px", textAlign: "center" }}>{t.nouveauMotDePasse}</h2>
-        <p style={{ color: "#6b6055", textAlign: "center", fontSize: "14px", marginBottom: "24px" }}>
+        <div style={{
+          background: "#141414", padding: "40px", borderRadius: "12px", 
+          boxShadow: "0 4px 20px rgba(0,0,0,0.2)", width: "100%", maxWidth: "400px",
+          border: "1px solid rgba(212,168,84,0.2)",
+        }}>
+        <h2 style={{ color: "#d4a854", margin: "0 0 8px", textAlign: "center" }}>{t.nouveauMotDePasse}</h2>
+        <p style={{ color: "#a09080", textAlign: "center", fontSize: "14px", marginBottom: "24px" }}>
           {t.choisirMotDePasse}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
-            <label style={{ display: "block", color: "#1c1008", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
+            <label style={{ display: "block", color: "#f5f0e8", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
               {t.nouveauMotDePasse}
             </label>
             <input 
@@ -75,12 +76,14 @@ export default function ResetPassword() {
               required
               value={nouveauMdp}
               onChange={(e) => setNouveauMdp(e.target.value)}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #f0ebe3" }}
+              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid rgba(255,255,255,0.1)", background: "#0a0a0a", color: "#f5f0e8", outline: "none" }}
+              onFocus={(e) => { e.target.style.borderColor = "#d4a854"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", color: "#1c1008", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
+            <label style={{ display: "block", color: "#f5f0e8", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
               {t.confirmerMotDePasse}
             </label>
             <input 
@@ -88,7 +91,9 @@ export default function ResetPassword() {
               required
               value={confirmationMdp}
               onChange={(e) => setConfirmationMdp(e.target.value)}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1px solid #f0ebe3" }}
+              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid rgba(255,255,255,0.1)", background: "#0a0a0a", color: "#f5f0e8", outline: "none" }}
+              onFocus={(e) => { e.target.style.borderColor = "#d4a854"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
@@ -99,7 +104,7 @@ export default function ResetPassword() {
             type="submit" 
             disabled={chargement}
             style={{
-              background: "#b45309", color: "white", border: "none", 
+              background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none", 
               padding: "12px", borderRadius: "8px", cursor: "pointer", 
               fontWeight: "bold", fontSize: "16px", marginTop: "8px"
             }}

@@ -84,60 +84,63 @@ onSuccess(data.commande, {
 
   const inputStyle = {
     width: "100%", padding: "12px 14px", borderRadius: "10px",
-    border: "1.5px solid #e5ddd0", fontSize: "14px",
-    color: "#1c1008", outline: "none",
+    border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "14px",
+    color: "#f5f0e8", outline: "none",
+    background: "rgba(255,255,255,0.04)",
     fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
     direction: isAr ? "rtl" : "ltr",
   };
 
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
+      backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
     }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;600;700&display=swap');`}</style>
 
-      <div style={{
-        background: "white", borderRadius: "20px", padding: "32px",
+      <div className="card-glass" style={{
+        borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "480px", maxHeight: "90vh", overflowY: "auto",
         direction: isAr ? "rtl" : "ltr",
         fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+        backgroundColor: "#141414",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: "#1c1008" }}>
+          <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: "#f5f0e8" }}>
             {t ? t.finaliserCommande : "Finaliser la commande"}
           </h2>
-          <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+          <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#a09080" }}>✕</button>
         </div>
 
         {/* Récapitulatif */}
-        <div style={{ background: "#fdf8f0", borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
-          <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+        <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
+          <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
             {t ? t.recapitulatif : "Récapitulatif"}
           </p>
           {panier.map((item) => (
-            <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #f0ebe3" }}>
-              <span style={{ fontSize: "13px", color: "#1c1008" }}>{item.nom} × {item.qte}</span>
-              <span style={{ fontSize: "13px", fontWeight: "700", color: "#92400e" }}>
+            <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <span style={{ fontSize: "13px", color: "#f5f0e8" }}>{item.nom} × {item.qte}</span>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
                 {(Number(item.prix) * item.qte).toLocaleString()} DA
               </span>
             </div>
           ))}
           {wilaya && (
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid #f0ebe3" }}>
-              <span style={{ fontSize: "13px", color: "#1c1008" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+              <span style={{ fontSize: "13px", color: "#f5f0e8" }}>
                 {t ? t.fraisLivraison || "Frais de livraison" : "Frais de livraison"}
               </span>
-              <span style={{ fontSize: "13px", fontWeight: "700", color: "#92400e" }}>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
                 {chargementFrais ? "..." : `${frais.toLocaleString()} DA`}
               </span>
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-            <span style={{ fontSize: "15px", fontWeight: "700", color: "#1c1008" }}>
+            <span style={{ fontSize: "15px", fontWeight: "700", color: "#f5f0e8" }}>
               {t ? t.total : "Total"}
             </span>
-            <span style={{ fontSize: "18px", fontWeight: "800", color: "#92400e" }}>
+            <span style={{ fontSize: "18px", fontWeight: "800", color: "#d4a854" }}>
               {total.toLocaleString()} DA
             </span>
           </div>
@@ -146,7 +149,7 @@ onSuccess(data.commande, {
         {/* Formulaire */}
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
               {t ? t.nomComplet : "Nom complet"} *
             </label>
             <input
@@ -158,7 +161,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
               {t ? t.telephone : "Téléphone"} *
             </label>
             <input
@@ -170,7 +173,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#6b6055", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
               {t ? t.adresseLivraison : "Adresse de livraison"} *
             </label>
             <select
@@ -186,7 +189,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "12px", fontWeight: "500", color: "#a8977f", display: "block", marginBottom: "4px" }}>
+            <label style={{ fontSize: "12px", fontWeight: "500", color: "#a09080", display: "block", marginBottom: "4px" }}>
               {t ? t.adresseDetails || "Rue, commune (optionnel)" : "Rue, commune (optionnel)"}
             </label>
             <input
@@ -200,23 +203,23 @@ onSuccess(data.commande, {
           {/* Paiement */}
 
           <div style={{
-            background: "#f0fdf4", border: "1px solid #bbf7d0",
+            background: "rgba(212,168,84,0.06)", border: "1px solid rgba(212,168,84,0.15)",
             borderRadius: "10px", padding: "12px 14px",
             display: "flex", alignItems: "center", gap: "10px",
           }}>
             <span style={{ fontSize: "20px" }}>💵</span>
             <div>
-              <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#166534" }}>
+              <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
                 {t ? t.paiementLivraison : "Paiement à la livraison"}
               </p>
-              <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#16a34a" }}>
+              <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#d4a854" }}>
                 {t ? t.paiementDesc : "Vous payez en cash à la réception de votre commande"}
               </p>
             </div>
           </div>
 
           {erreur && (
-            <div style={{ background: "#fee2e2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#dc2626" }}>
+            <div style={{ background: "rgba(248,113,113,0.15)", border: "1px solid rgba(248,113,113,0.3)", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#f87171" }}>
               ⚠️ {erreur}
             </div>
           )}
@@ -226,8 +229,8 @@ onSuccess(data.commande, {
             disabled={chargement}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-              background: chargement ? "#d4b483" : "#b45309",
-              color: "white", fontWeight: "700", fontSize: "15px",
+              background: chargement ? "rgba(212,168,84,0.4)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
               cursor: chargement ? "not-allowed" : "pointer",
             }}
           >
@@ -236,8 +239,8 @@ onSuccess(data.commande, {
 
           <button onClick={onAnnuler} style={{
             width: "100%", padding: "12px", borderRadius: "12px",
-            border: "1.5px solid #e5ddd0", background: "white",
-            color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+            border: "1.5px solid rgba(255,255,255,0.1)", background: "transparent",
+            color: "#a09080", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
             {t ? t.annuler : "Annuler"}
           </button>

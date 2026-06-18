@@ -25,7 +25,7 @@ export default function APropos() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#fdf8f0",
+      background: "#0a0a0a",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
@@ -36,25 +36,26 @@ export default function APropos() {
 
       {/* Navbar */}
       <header style={{
-        background: "white", borderBottom: "1px solid #f0ebe3",
+        background: "rgba(10,10,10,0.85)", borderBottom: "1px solid rgba(212,168,84,0.15)",
         padding: "0 40px", height: "64px", display: "flex",
         alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
-        boxShadow: "0 1px 8px rgba(180,120,0,0.06)",
+        backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+        boxShadow: "0 1px 8px rgba(0,0,0,0.2)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
           <div>
-            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#1c1008", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
+            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#f5f0e8", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
               {isAr ? INFO.nom_ar : INFO.nom_fr}
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#a57c3a" }}>
+            <p style={{ margin: 0, fontSize: "11px", color: "#d4a854" }}>
               {isAr ? "تعاونية فلاحية" : "Coopérative Apicole"}
             </p>
           </div>
         </div>
         <button onClick={() => navigate('/')} style={{
-          background: "#b45309", color: "white", border: "none",
+          background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",
           fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
@@ -65,11 +66,11 @@ export default function APropos() {
 
       {/* Hero */}
       <div style={{
-        background: "linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)",
+        background: "linear-gradient(135deg, #c49a3c 0%, #d4a854 50%, #d4a854 100%)",
         padding: "80px 40px", textAlign: "center",
       }}>
         <img src={LOGO_URL} alt="logo" style={{ width: "100px", height: "100px", borderRadius: "50%", objectFit: "cover", border: "4px solid rgba(255,255,255,0.3)", marginBottom: "20px" }} />
-        <h2 style={{ margin: "0 0 12px", fontSize: "32px", fontWeight: "800", color: "white", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif" }}>
+        <h2 style={{ margin: "0 0 12px", fontSize: "32px", fontWeight: "800", color: "#f5f0e8", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif" }}>
           {isAr ? INFO.nom_ar : INFO.nom_fr}
         </h2>
         <p style={{ margin: "0 auto", fontSize: "16px", color: "rgba(255,255,255,0.85)", maxWidth: "600px", lineHeight: "1.8", fontFamily: "'Amiri', serif", direction: "rtl" }}>
@@ -87,34 +88,34 @@ export default function APropos() {
             { icon: "🐝", value: INFO.ruches, label: isAr ? "خلية نحل" : "Ruches" },
           ].map((stat, i) => (
             <div key={i} style={{
-              background: "white", borderRadius: "16px", padding: "24px",
-              textAlign: "center", border: "1px solid #f0ebe3",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+              background: "#141414", borderRadius: "16px", padding: "24px",
+              textAlign: "center", border: "1px solid rgba(255,255,255,0.06)",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
             }}>
               <div style={{ fontSize: "36px", marginBottom: "8px" }}>{stat.icon}</div>
-              <div style={{ fontSize: "28px", fontWeight: "800", color: "#b45309", marginBottom: "4px" }}>{stat.value}</div>
-              <div style={{ fontSize: "13px", color: "#a8977f", fontWeight: "600" }}>{stat.label}</div>
+              <div style={{ fontSize: "28px", fontWeight: "800", color: "#d4a854", marginBottom: "4px" }}>{stat.value}</div>
+              <div style={{ fontSize: "13px", color: "rgba(245,240,232,0.4)", fontWeight: "600" }}>{stat.label}</div>
             </div>
           ))}
         </div>
 
         {/* Notre histoire */}
-        <div style={{ background: "white", borderRadius: "16px", padding: "32px", border: "1px solid #f0ebe3", marginBottom: "24px" }}>
+        <div style={{ background: "#141414", borderRadius: "16px", padding: "32px", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px" }}>
           <h3 style={{
-            margin: "0 0 16px", fontSize: "22px", fontWeight: "800", color: "#1c1008",
+            margin: "0 0 16px", fontSize: "22px", fontWeight: "800", color: "#f5f0e8",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
           }}>
             {isAr ? "🍯 قصتنا" : "🍯 Notre histoire"}
           </h3>
-          <p style={{ margin: 0, fontSize: "15px", color: "#6b6055", lineHeight: "1.9", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif" }}>
+          <p style={{ margin: 0, fontSize: "15px", color: "#a09080", lineHeight: "1.9", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif" }}>
             {isAr ? INFO.description_ar : INFO.description_fr}
           </p>
         </div>
 
         {/* Nos valeurs */}
-        <div style={{ background: "white", borderRadius: "16px", padding: "32px", border: "1px solid #f0ebe3", marginBottom: "24px" }}>
+        <div style={{ background: "#141414", borderRadius: "16px", padding: "32px", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px" }}>
           <h3 style={{
-            margin: "0 0 20px", fontSize: "22px", fontWeight: "800", color: "#1c1008",
+            margin: "0 0 20px", fontSize: "22px", fontWeight: "800", color: "#f5f0e8",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
           }}>
             {isAr ? "💎 قيمنا" : "💎 Nos valeurs"}
@@ -127,21 +128,21 @@ export default function APropos() {
               { icon: "🌍", title: isAr ? "محلي" : "Local", desc: isAr ? "منتجات من جبال تلمسان الجميلة" : "Produits des montagnes de Tlemcen" },
             ].map((v, i) => (
               <div key={i} style={{
-                background: "#fdf8f0", borderRadius: "12px", padding: "16px",
-                border: "1px solid #f0ebe3",
+                background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "16px",
+                border: "1px solid rgba(212,168,84,0.15)",
               }}>
                 <div style={{ fontSize: "28px", marginBottom: "8px" }}>{v.icon}</div>
-                <div style={{ fontSize: "15px", fontWeight: "700", color: "#1c1008", marginBottom: "6px" }}>{v.title}</div>
-                <div style={{ fontSize: "13px", color: "#6b6055", lineHeight: "1.6" }}>{v.desc}</div>
+                <div style={{ fontSize: "15px", fontWeight: "700", color: "#f5f0e8", marginBottom: "6px" }}>{v.title}</div>
+                <div style={{ fontSize: "13px", color: "#a09080", lineHeight: "1.6" }}>{v.desc}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Nos produits */}
-        <div style={{ background: "white", borderRadius: "16px", padding: "32px", border: "1px solid #f0ebe3", marginBottom: "24px" }}>
+        <div style={{ background: "#141414", borderRadius: "16px", padding: "32px", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "24px" }}>
           <h3 style={{
-            margin: "0 0 20px", fontSize: "22px", fontWeight: "800", color: "#1c1008",
+            margin: "0 0 20px", fontSize: "22px", fontWeight: "800", color: "#f5f0e8",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
           }}>
             {isAr ? "🛒 منتجاتنا" : "🛒 Nos produits"}
@@ -154,18 +155,18 @@ export default function APropos() {
               { icon: "🎁", name: isAr ? "علب هدايا" : "Coffrets" },
             ].map((p, i) => (
               <div key={i} style={{
-                background: "#fdf8f0", borderRadius: "12px", padding: "16px",
-                textAlign: "center", border: "1px solid #f0ebe3",
+                background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "16px",
+                textAlign: "center", border: "1px solid rgba(255,255,255,0.06)",
               }}>
                 <div style={{ fontSize: "32px", marginBottom: "8px" }}>{p.icon}</div>
-                <div style={{ fontSize: "13px", fontWeight: "700", color: "#1c1008" }}>{p.name}</div>
+                <div style={{ fontSize: "13px", fontWeight: "700", color: "#f5f0e8" }}>{p.name}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Contact */}
-        <div style={{ background: "linear-gradient(135deg, #78350f, #b45309)", borderRadius: "16px", padding: "32px", color: "white" }}>
+        <div style={{ background: "linear-gradient(135deg, #c49a3c, #d4a854)", borderRadius: "16px", padding: "32px", color: "#0a0a0a" }}>
           <h3 style={{
             margin: "0 0 20px", fontSize: "22px", fontWeight: "800",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",

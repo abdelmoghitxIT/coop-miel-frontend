@@ -87,32 +87,34 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
 
   const inputStyle = {
     width: "100%", padding: "11px 14px", borderRadius: "10px",
-    border: "1.5px solid #e5ddd0", fontSize: "14px",
-    color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "14px",
+    color: "#f5f0e8", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    background: "#141414",
     transition: "border-color 0.2s, box-shadow 0.2s",
   };
   const labelStyle = {
-    fontSize: "13px", fontWeight: "600", color: "#6b6055",
+    fontSize: "13px", fontWeight: "600", color: "#a09080",
     display: "block", marginBottom: "6px",
   };
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-      backdropFilter: "blur(4px)",
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+      backdropFilter: "blur(6px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
-      <div style={{
-        background: "white", borderRadius: "20px", padding: "32px",
+      <div className="card-glass" style={{
+        background: "#141414", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
-        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(212,168,84,0.2)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
+          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif" }}>
             {t.ajouterProduit}
           </h2>
-          <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+          <button onClick={onAnnuler} className="btn-ghost" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#d4a854" }}>✕</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -171,15 +173,15 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
           </div>
 
           {erreur && (
-            <div style={{ background: "#fee2e2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#dc2626" }}>
+            <div style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.3)", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#ef4444" }}>
               ⚠️ {erreur}
             </div>
           )}
 
           <button onClick={handleSubmit} disabled={chargement} style={{
             width: "100%", padding: "13px", borderRadius: "10px", border: "none",
-            background: chargement ? "#d4b483" : "#b45309",
-            color: "white", fontWeight: "700", fontSize: "15px",
+            background: chargement ? "rgba(212,168,84,0.4)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+            color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
             cursor: chargement ? "not-allowed" : "pointer",
           }}>
             {chargement ? t.ajoutEnCours : (isAr ? "إضافة المنتج" : "Ajouter le produit")}
@@ -187,8 +189,8 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
 
           <button onClick={onAnnuler} style={{
             width: "100%", padding: "11px", borderRadius: "10px",
-            border: "1.5px solid #e5ddd0", background: "white",
-            color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+            border: "1.5px solid rgba(212,168,84,0.5)", background: "transparent",
+            color: "#d4a854", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
             {t.annuler}
           </button>
@@ -288,32 +290,34 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
 
   const inputStyle = {
     width: "100%", padding: "11px 14px", borderRadius: "10px",
-    border: "1.5px solid #e5ddd0", fontSize: "14px",
-    color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "14px",
+    color: "#f5f0e8", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    background: "#141414",
     transition: "border-color 0.2s, box-shadow 0.2s",
   };
   const labelStyle = {
-    fontSize: "13px", fontWeight: "600", color: "#6b6055",
+    fontSize: "13px", fontWeight: "600", color: "#a09080",
     display: "block", marginBottom: "6px",
   };
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-      backdropFilter: "blur(4px)",
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+      backdropFilter: "blur(6px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
-      <div style={{
-        background: "white", borderRadius: "20px", padding: "32px",
+      <div className="card-glass" style={{
+        background: "#141414", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
-        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(212,168,84,0.2)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
+          <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif" }}>
             ✏️ {isAr ? `تعديل — ${produit.nom}` : `${t.modifierTitre} — ${produit.nom}`}
           </h2>
-          <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+          <button onClick={onFermer} className="btn-ghost" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#d4a854" }}>✕</button>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
@@ -376,12 +380,12 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
               placeholder="https://youtube.com/watch?v=..." style={inputStyle} />
           </div>
 
-          <div style={{ borderTop: "1px solid #f0ebe3", paddingTop: "14px" }}>
-            <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "14px" }}>
+            <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
               {t.caracteristiques}
             </p>
             {caracLoading ? (
-              <p style={{ fontSize: "13px", color: "#a8977f" }}>⏳</p>
+              <p style={{ fontSize: "13px", color: "rgba(245,240,232,0.4)" }}>⏳</p>
             ) : (
               <>
                 {caracteristiques.map((carac) => (
@@ -391,10 +395,10 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                         <div style={{ display: "flex", gap: "6px" }}>
                           <input value={editCarac.cle} onChange={(e) => setEditCarac({ ...editCarac, cle: e.target.value })}
                             placeholder={t.cleCaracteristique}
-                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "13px", fontFamily: "inherit", background: "#141414", color: "#f5f0e8" }} />
                           <input value={editCarac.valeur} onChange={(e) => setEditCarac({ ...editCarac, valeur: e.target.value })}
                             placeholder={t.valeurCaracteristique}
-                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                            style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "13px", fontFamily: "inherit", background: "#141414", color: "#f5f0e8" }} />
                         </div>
                         <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
                           <button onClick={async () => {
@@ -414,18 +418,18 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                             padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
                           }}>{t.enregistrer}</button>
                           <button onClick={() => setEditCarac(null)} style={{
-                            background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                            background: "#a09080", color: "white", border: "none", borderRadius: "6px",
                             padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
                           }}>{t.annuler}</button>
                         </div>
                       </div>
                     ) : (
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid #f8f4ef" }}>
-                        <span style={{ fontSize: "13px", color: "#a8977f", fontWeight: "600" }}>{carac.cle}</span>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.03)" }}>
+                        <span style={{ fontSize: "13px", color: "rgba(245,240,232,0.4)", fontWeight: "600" }}>{carac.cle}</span>
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                          <span style={{ fontSize: "13px", color: "#1c1008", fontWeight: "600" }}>{carac.valeur}</span>
+                          <span style={{ fontSize: "13px", color: "#f5f0e8", fontWeight: "600" }}>{carac.valeur}</span>
                           <button onClick={() => setEditCarac({ id: carac.id, cle: carac.cle, valeur: carac.valeur })} style={{
-                            background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#b45309", padding: "2px",
+                            background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#d4a854", padding: "2px",
                           }}>✏️</button>
                           <button onClick={async () => {
                             try {
@@ -442,7 +446,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                   </div>
                 ))}
                 {caracteristiques.length === 0 && !afficherAjout && (
-                  <p style={{ fontSize: "13px", color: "#a8977f", textAlign: "center", margin: "8px 0" }}>
+                  <p style={{ fontSize: "13px", color: "rgba(245,240,232,0.4)", textAlign: "center", margin: "8px 0" }}>
                     {t.aucuneCaracteristique}
                   </p>
                 )}
@@ -451,10 +455,10 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                     <div style={{ display: "flex", gap: "6px" }}>
                       <input value={nouvelleCle} onChange={(e) => setNouvelleCle(e.target.value)}
                         placeholder={t.cleCaracteristique}
-                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "13px", fontFamily: "inherit", background: "#141414", color: "#f5f0e8" }} />
                       <input value={nouvelleValeur} onChange={(e) => setNouvelleValeur(e.target.value)}
                         placeholder={t.valeurCaracteristique}
-                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid #e5ddd0", fontSize: "13px", fontFamily: "inherit" }} />
+                        style={{ flex: 1, padding: "6px 10px", borderRadius: "6px", border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "13px", fontFamily: "inherit", background: "#141414", color: "#f5f0e8" }} />
                     </div>
                     <div style={{ display: "flex", gap: "6px", justifyContent: "flex-end" }}>
                       <button onClick={async () => {
@@ -474,7 +478,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                         padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
                       }}>{t.enregistrer}</button>
                       <button onClick={() => { setAfficherAjout(false); setNouvelleCle(""); setNouvelleValeur(""); }} style={{
-                        background: "#6b6055", color: "white", border: "none", borderRadius: "6px",
+                        background: "#a09080", color: "white", border: "none", borderRadius: "6px",
                         padding: "5px 12px", cursor: "pointer", fontWeight: "700", fontSize: "12px",
                       }}>{t.annuler}</button>
                     </div>
@@ -483,8 +487,8 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
                 {!afficherAjout && (
                   <button onClick={() => setAfficherAjout(true)} style={{
                     width: "100%", marginTop: "8px", padding: "8px", borderRadius: "8px",
-                    border: "1.5px dashed #b45309", background: "transparent",
-                    color: "#b45309", fontWeight: "700", fontSize: "13px", cursor: "pointer", fontFamily: "inherit",
+                    border: "1.5px dashed #d4a854", background: "transparent",
+                    color: "#d4a854", fontWeight: "700", fontSize: "13px", cursor: "pointer", fontFamily: "inherit",
                   }}>
                     {t.ajouterCaracteristique}
                   </button>
@@ -494,15 +498,15 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
           </div>
 
           {erreur && (
-            <div style={{ background: "#fee2e2", border: "1px solid #fecaca", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#dc2626" }}>
+            <div style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.3)", borderRadius: "8px", padding: "10px 14px", fontSize: "13px", color: "#ef4444" }}>
               ⚠️ {erreur}
             </div>
           )}
 
           <button onClick={handleSubmit} disabled={chargement} style={{
             width: "100%", padding: "13px", borderRadius: "10px", border: "none",
-            background: chargement ? "#d4b483" : "#b45309",
-            color: "white", fontWeight: "700", fontSize: "15px",
+            background: chargement ? "rgba(212,168,84,0.4)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+            color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
             cursor: chargement ? "not-allowed" : "pointer",
           }}>
             {chargement ? (isAr ? "جارٍ التعديل..." : "Modification en cours...") : t.enregistrerModifications}
@@ -510,8 +514,8 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
 
           <button onClick={onFermer} style={{
             width: "100%", padding: "11px", borderRadius: "10px",
-            border: "1.5px solid #e5ddd0", background: "white",
-            color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+            border: "1.5px solid rgba(212,168,84,0.5)", background: "transparent",
+            color: "#d4a854", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
             {t.annuler}
           </button>
@@ -570,37 +574,38 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
   const images = (produit.images || []).filter(Boolean);
   return (
     <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
-      backdropFilter: "blur(4px)",
+      position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
+      backdropFilter: "blur(6px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
-      <div style={{
-        background: "white", borderRadius: "20px", padding: "32px",
+      <div className="card-glass" style={{
+        background: "#141414", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
-        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.4)",
+        border: "1px solid rgba(212,168,84,0.2)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#1c1008" }}>
+          <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#f5f0e8" }}>
             📷 {isAr ? `الصور — ${produit.nom}` : `${t.photosProduit} — ${produit.nom}`}
           </h2>
-          <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+          <button onClick={onFermer} className="btn-ghost" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#d4a854" }}>✕</button>
         </div>
 
-        <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
+        <p style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", marginBottom: "12px" }}>
           {`${t.photosActuelles} (${images.length})`}
         </p>
 
         {images.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "24px", background: "#fdf8f0", borderRadius: "12px", marginBottom: "20px", color: "#a8977f" }}>
+          <div style={{ textAlign: "center", padding: "24px", background: "#0a0a0a", borderRadius: "12px", marginBottom: "20px", color: "rgba(245,240,232,0.4)" }}>
             <div style={{ fontSize: "32px", marginBottom: "8px" }}>📷</div>
             <p style={{ margin: 0, fontSize: "13px" }}>{t.aucunePhoto}</p>
           </div>
         ) : (
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", marginBottom: "20px" }}>
             {images.map((img, i) => (
-              <div key={i} style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid #f0ebe3" }}>
+              <div key={i} style={{ position: "relative", borderRadius: "10px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <img src={img} alt="" style={{ width: "100%", height: "120px", objectFit: "cover", display: "block" }} />
                 <button
                   onClick={() => supprimerImage(img)}
@@ -617,16 +622,16 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
           </div>
         )}
 
-        <p style={{ fontSize: "13px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase", marginBottom: "12px" }}>
+        <p style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", marginBottom: "12px" }}>
           {t.ajouterPhotos}
         </p>
 
         <label style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           gap: "10px", padding: "20px", borderRadius: "12px",
-          border: "2px dashed #e5ddd0", cursor: "pointer",
-          background: chargement ? "#fef9ee" : "white",
-          color: "#b45309", fontWeight: "700", fontSize: "14px",
+          border: "2px dashed rgba(212,168,84,0.4)", cursor: "pointer",
+          background: chargement ? "rgba(212,168,84,0.06)" : "#141414",
+          color: "#d4a854", fontWeight: "700", fontSize: "14px",
         }}>
           {chargement ? t.uploadEnCours : t.choisirPhotos}
           <input
@@ -639,14 +644,14 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
           />
         </label>
 
-        <p style={{ margin: "10px 0 0", fontSize: "12px", color: "#a8977f", textAlign: "center" }}>
+        <p style={{ margin: "10px 0 0", fontSize: "12px", color: "rgba(245,240,232,0.4)", textAlign: "center" }}>
           {t.formatPhotos}
         </p>
 
         <button onClick={onFermer} style={{
           width: "100%", marginTop: "16px", padding: "12px", borderRadius: "10px",
-          border: "1.5px solid #e5ddd0", background: "white",
-          color: "#6b6055", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+          border: "1.5px solid rgba(212,168,84,0.5)", background: "transparent",
+          color: "#d4a854", fontWeight: "600", fontSize: "14px", cursor: "pointer",
         }}>
           {t.fermer}
         </button>
@@ -661,11 +666,11 @@ export default function Dashboard() {
   const { t, isAr } = useLangue();
 
   const STATUTS = [
-    { id: "en_attente", label: isAr ? "في الانتظار" : "En attente", color: "#f59e0b", bg: "#fef3c7" },
-    { id: "confirmee", label: isAr ? "مؤكدة" : "Confirmée", color: "#3b82f6", bg: "#eff6ff" },
-    { id: "en_livraison", label: isAr ? "قيد التوصيل" : "En livraison", color: "#8b5cf6", bg: "#f5f3ff" },
-    { id: "livree", label: isAr ? "تم التسليم" : "Livrée", color: "#16a34a", bg: "#dcfce7" },
-    { id: "annulee", label: isAr ? "ملغية" : "Annulée", color: "#dc2626", bg: "#fee2e2" },
+    { id: "en_attente", label: isAr ? "في الانتظار" : "En attente", color: "#f59e0b", bg: "rgba(245,158,11,0.15)" },
+    { id: "confirmee", label: isAr ? "مؤكدة" : "Confirmée", color: "#3b82f6", bg: "rgba(59,130,246,0.15)" },
+    { id: "en_livraison", label: isAr ? "قيد التوصيل" : "En livraison", color: "#8b5cf6", bg: "rgba(139,92,246,0.15)" },
+    { id: "livree", label: isAr ? "تم التسليم" : "Livrée", color: "#16a34a", bg: "rgba(22,163,74,0.15)" },
+    { id: "annulee", label: isAr ? "ملغية" : "Annulée", color: "#dc2626", bg: "rgba(220,38,38,0.15)" },
   ];
 
   function BadgeStatut({ statut }) {
@@ -749,7 +754,7 @@ export default function Dashboard() {
     const invoiceNum = `INV-${new Date(c.created_at).getFullYear()}-${String(c.id).padStart(5, '0')}`;
     const formatDA = (val) => `${Number(val).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, " ")} DA`;
 
-    doc.setFillColor(180, 83, 9);
+    doc.setFillColor(212, 168, 84);
     doc.rect(0, 0, pageWidth, 55, 'F');
 
     const logoSize = 18;
@@ -760,7 +765,7 @@ export default function Dashboard() {
     } catch (_e) {
       doc.setFillColor(255, 255, 255);
       doc.circle(logoX + logoSize / 2, logoY + logoSize / 2, logoSize / 2, 'F');
-      doc.setTextColor(180, 83, 9);
+      doc.setTextColor(212, 168, 84);
       doc.setFontSize(14);
       doc.text('K', logoX + logoSize / 2, logoY + logoSize / 2 + 5, { align: 'center' });
     }
@@ -785,14 +790,14 @@ export default function Dashboard() {
 
     const infoY = 62;
     const boxW = (pageWidth - 2 * margin) / 2 - 5;
-    doc.setFillColor(253, 248, 240);
-    doc.setDrawColor(230, 220, 210);
+    doc.setFillColor(20, 20, 20);
+    doc.setDrawColor(60, 60, 60);
     doc.roundedRect(margin, infoY, boxW, 32, 3, 3, 'FD');
-    doc.setTextColor(165, 124, 58);
+    doc.setTextColor(212, 168, 84);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
     doc.text('INFORMATIONS CLIENT', margin + 8, infoY + 8);
-    doc.setTextColor(28, 16, 8);
+    doc.setTextColor(245, 240, 232);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.text(c.client_nom || 'Client', margin + 8, infoY + 18);
@@ -802,14 +807,14 @@ export default function Dashboard() {
     doc.text(`Adr : ${c.adresse_livraison || '—'}`, margin + 8, infoY + 33, { maxWidth: boxW - 16 });
 
     const detailsX = margin + boxW + 10;
-    doc.setFillColor(253, 248, 240);
-    doc.setDrawColor(230, 220, 210);
+    doc.setFillColor(20, 20, 20);
+    doc.setDrawColor(60, 60, 60);
     doc.roundedRect(detailsX, infoY, boxW, 32, 3, 3, 'FD');
-    doc.setTextColor(165, 124, 58);
+    doc.setTextColor(212, 168, 84);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'bold');
     doc.text('DETAILS FACTURE', detailsX + 8, infoY + 8);
-    doc.setTextColor(28, 16, 8);
+    doc.setTextColor(245, 240, 232);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.text(`N° Facture : ${invoiceNum}`, detailsX + 8, infoY + 18);
@@ -830,60 +835,60 @@ export default function Dashboard() {
           ])
         : [['—', 'Produits non disponibles', '—', '—', formatDA(c.total)]],
       headStyles: {
-        fillColor: [180, 83, 9],
-        textColor: [255, 255, 255],
+        fillColor: [212, 168, 84],
+        textColor: [10, 10, 10],
         fontStyle: 'bold',
         fontSize: 9,
         halign: 'center',
       },
-      bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
+      bodyStyles: { fontSize: 9, textColor: [200, 200, 200] },
       columnStyles: {
         0: { halign: 'center', cellWidth: 10 },
         2: { halign: 'center', cellWidth: 15 },
         3: { halign: 'right', cellWidth: 35 },
         4: { halign: 'right', cellWidth: 35 },
       },
-      alternateRowStyles: { fillColor: [253, 248, 240] },
+      alternateRowStyles: { fillColor: [26, 26, 26] },
       styles: { cellPadding: 4 },
     });
 
     const finalY = doc.lastAutoTable.finalY + 8;
     const total = Number(c.total);
 
-    doc.setDrawColor(230, 220, 210);
-    doc.setFillColor(253, 248, 240);
+    doc.setDrawColor(60, 60, 60);
+    doc.setFillColor(20, 20, 20);
     doc.roundedRect(pageWidth - margin - 80, finalY, 80, 38, 3, 3, 'FD');
 
     const totX = pageWidth - margin - 72;
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
+    doc.setTextColor(160, 160, 160);
     doc.text('Sous-total', totX, finalY + 9);
     doc.text('Livraison', totX, finalY + 17);
     doc.text('Total', totX, finalY + 27);
 
-    doc.setTextColor(28, 16, 8);
+    doc.setTextColor(245, 240, 232);
     doc.setFont('helvetica', 'bold');
     doc.text(formatDA(total), pageWidth - margin - 8, finalY + 9, { align: 'right' });
     doc.text('Gratuite', pageWidth - margin - 8, finalY + 17, { align: 'right' });
 
-    doc.setFillColor(180, 83, 9);
+    doc.setFillColor(212, 168, 84);
     doc.roundedRect(pageWidth - margin - 80, finalY + 22, 80, 13, 3, 3, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(11);
     doc.text(formatDA(total), pageWidth - margin - 8, finalY + 32, { align: 'right' });
 
-    doc.setTextColor(165, 124, 58);
+    doc.setTextColor(212, 168, 84);
     doc.setFont('helvetica', 'italic');
     doc.setFontSize(10);
     doc.text('Merci pour votre confiance !', pageWidth / 2, finalY + 58, { align: 'center' });
 
-    doc.setDrawColor(180, 83, 9);
+    doc.setDrawColor(212, 168, 84);
     doc.setLineWidth(0.5);
     doc.line(margin, 280, pageWidth - margin, 280);
     doc.setFontSize(7);
-    doc.setTextColor(150, 150, 150);
+    doc.setTextColor(160, 160, 160);
     doc.setFont('helvetica', 'normal');
     doc.text('Cooperative Apicole Kawit — Tlemcen, Algerie — +213 696 242 396', pageWidth / 2, 285, { align: 'center' });
 
@@ -998,17 +1003,17 @@ export default function Dashboard() {
   }, [commandes]);
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fdf8f0", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0a0a", fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700;800&display=swap');
         * { box-sizing: border-box; }
         table { border-collapse: collapse; width: 100%; }
-        th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: #a57c3a; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid #f0ebe3; background: white; position: sticky; top: 0; z-index: 1; }
-        td { padding: 14px 16px; font-size: 14px; color: #1c1008; border-bottom: 1px solid #f8f4ef; }
-        tbody tr:nth-child(even) td { background: #fdfaf5; }
-        tbody tr:hover td { background: #fef9ee; }
-        select { border: 1.5px solid #e5ddd0; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: white; cursor: pointer; color: #1c1008; }
-        input:focus, select:focus, textarea:focus { border-color: #b45309 !important; box-shadow: 0 0 0 3px rgba(180,83,9,0.12) !important; outline: none !important; }
+        th { text-align: left; padding: 12px 16px; font-size: 12px; font-weight: 700; color: #d4a854; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1px solid rgba(255,255,255,0.06); background: #141414; position: sticky; top: 0; z-index: 1; }
+        td { padding: 14px 16px; font-size: 14px; color: #f5f0e8; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+        tbody tr:hover td { background: rgba(212,168,84,0.04); }
+        select { border: 1.5px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: #141414; cursor: pointer; color: #f5f0e8; }
+        input:focus, select:focus, textarea:focus { border-color: #d4a854 !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }
         @media (max-width: 768px) {
           table { font-size: 12px; }
           th, td { padding: 8px 10px; }
@@ -1016,7 +1021,7 @@ export default function Dashboard() {
         }
       `}</style>
 
-      <header style={{ background: "linear-gradient(135deg, #78350f, #b45309)", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 12px rgba(120,53,15,0.2)" }}>
+      <header style={{ background: "linear-gradient(135deg, #0a0a0a, #141414)", padding: "0 32px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between", position: "sticky", top: 0, zIndex: 100, boxShadow: "0 2px 12px rgba(0,0,0,0.3)", borderBottom: "1px solid rgba(212,168,84,0.3)" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <img src={LOGO_URL} alt="logo" style={{ width: "36px", height: "36px", borderRadius: "50%", objectFit: "cover", border: "2px solid rgba(255,255,255,0.3)" }} />
           <div>
@@ -1028,8 +1033,8 @@ export default function Dashboard() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ display: "inline-block", width: "10px", height: "10px", borderRadius: "50%", background: "#22c55e", animation: "pulse 1.5s infinite", boxShadow: "0 0 6px rgba(34,197,94,0.5)" }} />
-            <span style={{ fontSize: "10px", fontWeight: "700", color: "#86efac" }}>LIVE</span>
+            <span style={{ display: "inline-block", width: "10px", height: "10px", borderRadius: "50%", background: "#d4a854", animation: "pulse 1.5s infinite", boxShadow: "0 0 6px rgba(212,168,84,0.5)" }} />
+            <span style={{ fontSize: "10px", fontWeight: "700", color: "#d4a854" }}>LIVE</span>
           </span>
           <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)" }}>👑 {utilisateur?.nom}</span>
           <button onClick={() => navigate('/')} style={{ background: "rgba(255,255,255,0.15)", color: "white", border: "1px solid rgba(255,255,255,0.25)", borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700", transition: "all 0.2s" }}
@@ -1043,16 +1048,16 @@ export default function Dashboard() {
       <div style={{ padding: "24px 32px", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px", marginBottom: "28px" }}>
           {[
-            { label: t.totalVentes, value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#b45309", bg: "#fef9ee" },
-            { label: t.enAttente, value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "#fef3c7" },
-            { label: t.livrees, value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
-            { label: t.stockFaible, value: stats.stockFaible + (isAr ? " منتجات" : " produits"), icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
+            { label: t.totalVentes, value: stats.totalVentes.toLocaleString("fr-DZ") + " DA", icon: "💰", color: "#d4a854", bg: "rgba(212,168,84,0.06)" },
+            { label: t.enAttente, value: stats.enAttente, icon: "⏳", color: "#f59e0b", bg: "rgba(245,158,11,0.1)" },
+            { label: t.livrees, value: stats.livrees, icon: "✅", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
+            { label: t.stockFaible, value: stats.stockFaible + (isAr ? " منتجات" : " produits"), icon: "⚠️", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
           ].map((stat, i) => (
-            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", borderLeft: "4px solid " + stat.color, boxShadow: "0 1px 4px rgba(0,0,0,0.04), inset 0 -3px 0 " + stat.color, transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease", position: "relative", overflow: "hidden" }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(180,120,0,0.12)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04), inset 0 -3px 0 " + stat.color; }}>
+            <div key={i} className="card-glass" style={{ background: "#141414", borderRadius: "14px", padding: "20px", border: "1px solid rgba(255,255,255,0.06)", borderLeft: "4px solid " + stat.color, boxShadow: "0 1px 4px rgba(0,0,0,0.2)", transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease", position: "relative", overflow: "hidden" }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(212,168,84,0.15)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.2), inset 0 -3px 0 " + stat.color; }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
-                <span style={{ fontSize: "11px", fontWeight: "700", color: "#a8977f", textTransform: "uppercase", letterSpacing: "0.06em" }}>{stat.label}</span>
+                <span style={{ fontSize: "11px", fontWeight: "700", color: "rgba(245,240,232,0.4)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{stat.label}</span>
                 <span style={{ fontSize: "20px", background: stat.bg, padding: "6px", borderRadius: "8px" }}>{stat.icon}</span>
               </div>
               <p style={{ margin: 0, fontSize: "26px", fontWeight: "800", color: stat.color }}>{stat.value}</p>
@@ -1060,13 +1065,13 @@ export default function Dashboard() {
           ))}
         </div>
 
-        <div style={{ display: "flex", gap: "4px", background: "#f0ebe3", borderRadius: "10px", padding: "4px", marginBottom: "20px", width: "fit-content" }}>
+        <div style={{ display: "flex", gap: "4px", background: "rgba(255,255,255,0.04)", borderRadius: "10px", padding: "4px", marginBottom: "20px", width: "fit-content" }}>
           {[
             { id: "commandes", label: t.tabCommandes },
             { id: "statistiques", label: t.tabStatistiques },
             { id: "produits", label: t.tabProduits },
           ].map((o) => (
-            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.25s ease" }}>
+            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#d4a854" : "#a09080", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.25s ease" }}>
               {o.label}
             </button>
           ))}
@@ -1087,32 +1092,32 @@ export default function Dashboard() {
                       onChange={(e) => setRechercheCommande(e.target.value)}
                       style={{
                         flex: 1, minWidth: "200px", padding: "10px 14px", borderRadius: "10px",
-                        border: "1.5px solid #e5ddd0", fontSize: "13px", outline: "none",
-                        fontFamily: "'DM Sans', sans-serif", background: "white",
+                        border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "13px", outline: "none",
+                        fontFamily: "'DM Sans', sans-serif", background: "#141414", color: "#f5f0e8",
                       }}
                     />
                     <div style={{ display: "flex", gap: "8px" }}>
-                      <button onClick={exporterExcel} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#16a34a", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
-                        onMouseEnter={(e) => { e.target.style.background = "#15803d"; }}
-                        onMouseLeave={(e) => { e.target.style.background = "#16a34a"; }}>
+                      <button onClick={exporterExcel} className="btn-gold" style={{ display: "flex", alignItems: "center", gap: "6px", background: "transparent", color: "#d4a854", border: "1px solid rgba(212,168,84,0.5)", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => { e.target.style.background = "rgba(212,168,84,0.1)"; }}
+                        onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>
                         {t.exporterExcel}
                       </button>
-                      <button onClick={exporterPDF} style={{ display: "flex", alignItems: "center", gap: "6px", background: "#dc2626", color: "white", border: "none", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
-                        onMouseEnter={(e) => { e.target.style.background = "#b91c1c"; }}
-                        onMouseLeave={(e) => { e.target.style.background = "#dc2626"; }}>
+                      <button onClick={exporterPDF} className="btn-gold" style={{ display: "flex", alignItems: "center", gap: "6px", background: "transparent", color: "#d4a854", border: "1px solid rgba(212,168,84,0.5)", borderRadius: "10px", padding: "10px 18px", cursor: "pointer", fontWeight: "700", fontSize: "13px", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => { e.target.style.background = "rgba(212,168,84,0.1)"; }}
+                        onMouseLeave={(e) => { e.target.style.background = "transparent"; }}>
                         {t.exporterPDF}
                       </button>
                     </div>
                   </div>
                 )}
-                <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
+                <div style={{ background: "#141414", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
                   {commandes.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "60px", color: "#a8977f" }}>
+                    <div style={{ textAlign: "center", padding: "60px", color: "rgba(245,240,232,0.4)" }}>
                       <div style={{ fontSize: "48px", marginBottom: "12px" }}>📋</div>
                       <p style={{ fontSize: "16px", fontWeight: "600" }}>{t.commandeEmpty}</p>
                     </div>
                   ) : commandesFiltrees.length === 0 ? (
-                    <div style={{ textAlign: "center", padding: "40px", color: "#a8977f" }}>
+                    <div style={{ textAlign: "center", padding: "40px", color: "rgba(245,240,232,0.4)" }}>
                       <p style={{ fontSize: "15px", fontWeight: "600" }}>{t.aucuneCorrespondance}</p>
                     </div>
                   ) : (
@@ -1136,15 +1141,15 @@ export default function Dashboard() {
                               <td>
                                 {c.tracking_number ? (
                                   <a href={`https://tracking.yalidine.com/${c.tracking_number}`} target="_blank" rel="noopener noreferrer"
-                                    style={{ color: "#b45309", fontWeight: "700", fontSize: "12px", textDecoration: "none" }}>
+                                    style={{ color: "#d4a854", fontWeight: "700", fontSize: "12px", textDecoration: "none" }}>
                                     {c.tracking_number} ↗
                                   </a>
                                 ) : (
-                                  <span style={{ color: "#a8977f", fontSize: "12px" }}>—</span>
+                                  <span style={{ color: "rgba(245,240,232,0.4)", fontSize: "12px" }}>—</span>
                                 )}
                               </td>
-                              <td><strong style={{ color: "#92400e" }}>{Number(c.total).toLocaleString()} DA</strong></td>
-                              <td style={{ color: "#6b6055", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
+                              <td><strong style={{ color: "#e8c97a" }}>{Number(c.total).toLocaleString()} DA</strong></td>
+                              <td style={{ color: "#a09080", fontSize: "12px" }}>{new Date(c.created_at).toLocaleDateString("fr-DZ")}</td>
                               <td><BadgeStatut statut={c.statut} /></td>
                               <td>
                                 {c.client_telephone ? (
@@ -1163,7 +1168,7 @@ export default function Dashboard() {
                                     📲 {c.client_telephone}
                                   </a>
                                 ) : (
-                                  <span style={{ color: "#a8977f", fontSize: "12px" }}>—</span>
+                                  <span style={{ color: "rgba(245,240,232,0.4)", fontSize: "12px" }}>—</span>
                                 )}
                               </td>
                               <td>
@@ -1173,8 +1178,8 @@ export default function Dashboard() {
                                       <option key={s.id} value={s.id}>{s.label}</option>
                                     ))}
                                   </select>
-                                  <button onClick={() => genererFacture(c)} title={isAr ? "تحميل الفاتورة" : "Télécharger la facture"} style={{
-                                    background: "#dc2626", color: "white", border: "none",
+                                  <button onClick={() => genererFacture(c)} title={isAr ? "تحميل الفاتورة" : "Télécharger la facture"} className="btn-gold" style={{
+                                    background: "transparent", color: "#d4a854", border: "1px solid rgba(212,168,84,0.5)",
                                     borderRadius: "6px", padding: "5px 7px", cursor: "pointer",
                                     fontSize: "13px", lineHeight: "1", whiteSpace: "nowrap",
                                   }}>
@@ -1197,15 +1202,15 @@ export default function Dashboard() {
                           disabled={pageCommandes === 1}
                           style={{
                             padding: "8px 18px", borderRadius: "8px", border: "none",
-                            background: pageCommandes === 1 ? "#e5e7eb" : "#b45309",
-                            color: pageCommandes === 1 ? "#9ca3af" : "white",
+                            background: pageCommandes === 1 ? "#2a2a2a" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+                            color: pageCommandes === 1 ? "#666" : "#0a0a0a",
                             fontWeight: "700", fontSize: "14px",
                             cursor: pageCommandes === 1 ? "not-allowed" : "pointer",
                           }}
                         >
                           {t.pagePrecedente || "Précédent"}
                         </button>
-                        <span style={{ fontSize: "14px", fontWeight: "600", color: "#6b6055" }}>
+                        <span style={{ fontSize: "14px", fontWeight: "600", color: "rgba(245,240,232,0.4)" }}>
                           {isAr ? `الصفحة ${pageCommandes} من ${pageCommandesCount}` : `Page ${pageCommandes} sur ${pageCommandesCount}`}
                         </span>
                         <button
@@ -1213,8 +1218,8 @@ export default function Dashboard() {
                           disabled={pageCommandes === pageCommandesCount}
                           style={{
                             padding: "8px 18px", borderRadius: "8px", border: "none",
-                            background: pageCommandes === pageCommandesCount ? "#e5e7eb" : "#b45309",
-                            color: pageCommandes === pageCommandesCount ? "#9ca3af" : "white",
+                            background: pageCommandes === pageCommandesCount ? "#2a2a2a" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+                            color: pageCommandes === pageCommandesCount ? "#666" : "#0a0a0a",
                             fontWeight: "700", fontSize: "14px",
                             cursor: pageCommandes === pageCommandesCount ? "not-allowed" : "pointer",
                           }}
@@ -1231,21 +1236,21 @@ export default function Dashboard() {
 
             {onglet === "statistiques" && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "24px" }}>
-                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
-                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Ventes mensuelles</h3>
+                <div className="card-glass" style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,0.2)" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Ventes mensuelles</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={donneesVentesMensuelles}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
-                      <XAxis dataKey="mois" tick={{ fontSize: 12, fill: "#6b6055" }} />
-                      <YAxis tick={{ fontSize: 12, fill: "#6b6055" }} />
-                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
-                      <Bar dataKey="ventes" fill="#b45309" radius={[4, 4, 0, 0]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                      <XAxis dataKey="mois" tick={{ fontSize: 12, fill: "#a09080" }} />
+                      <YAxis tick={{ fontSize: 12, fill: "#a09080" }} />
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)", background: "#141414", color: "#f5f0e8" }} />
+                      <Bar dataKey="ventes" fill="#d4a854" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
 
-                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
-                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Répartition des commandes</h3>
+                <div className="card-glass" style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "24px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Répartition des commandes</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
                       <Pie data={commandesParStatut} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={100} label>
@@ -1253,21 +1258,21 @@ export default function Dashboard() {
                           <Cell key={i} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)", background: "#141414", color: "#f5f0e8" }} />
                       <Legend />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
 
-                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
-                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Produits les plus vendus</h3>
+                <div className="card-glass" style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "14px", padding: "24px" }}>
+                  <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Produits les plus vendus</h3>
                   <ResponsiveContainer width="100%" height={350}>
                     <BarChart data={topProduits} layout="vertical" margin={{ left: 100 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#f0ebe3" />
-                      <XAxis type="number" tick={{ fontSize: 12, fill: "#6b6055" }} />
-                      <YAxis type="category" dataKey="nom" tick={{ fontSize: 12, fill: "#6b6055" }} width={90} />
-                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid #f0ebe3" }} />
-                      <Bar dataKey="quantite" fill="#92400e" radius={[0, 4, 4, 0]} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
+                      <XAxis type="number" tick={{ fontSize: 12, fill: "#a09080" }} />
+                      <YAxis type="category" dataKey="nom" tick={{ fontSize: 12, fill: "#a09080" }} width={90} />
+                      <Tooltip contentStyle={{ borderRadius: "8px", border: "1px solid rgba(255,255,255,0.06)", background: "#141414", color: "#f5f0e8" }} />
+                      <Bar dataKey="quantite" fill="#e8c97a" radius={[0, 4, 4, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -1275,10 +1280,10 @@ export default function Dashboard() {
             )}
 
             {onglet === "produits" && (
-              <div style={{ background: "white", borderRadius: "14px", border: "1px solid #f0ebe3", overflow: "hidden", padding: "24px" }}>
+              <div className="card-glass" style={{ background: "#141414", borderRadius: "14px", border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden", padding: "24px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                  <h3 style={{ margin: 0, fontSize: "16px", color: "#1c1008" }}>{t.listeProduits}</h3>
-                  <button onClick={() => setAjouterProduit(true)} style={{ background: "#b45309", color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "700", cursor: "pointer", fontSize: "13px" }}>
+                  <h3 style={{ margin: 0, fontSize: "16px", color: "#f5f0e8" }}>{t.listeProduits}</h3>
+                  <button onClick={() => setAjouterProduit(true)} className="btn-gold-filled" style={{ background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "700", cursor: "pointer", fontSize: "13px" }}>
                     {t.ajouterProduitBtn}
                   </button>
                 </div>
@@ -1303,11 +1308,11 @@ export default function Dashboard() {
                                 {p.images && p.images[0] ? (
                                   <img src={p.images[0]} alt="" style={{ width: "40px", height: "40px", borderRadius: "6px", objectFit: "cover" }} />
                                 ) : (
-                                  <div style={{ width: "40px", height: "40px", borderRadius: "6px", background: "#fdf8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📷</div>
+                                  <div style={{ width: "40px", height: "40px", borderRadius: "6px", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "18px" }}>📷</div>
                                 )}
                                 <div>
                                   <div style={{ fontWeight: "700" }}>{p.nom}</div>
-                                  <div style={{ fontSize: "12px", color: "#6b6055", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description || t.aucuneDescription}</div>
+                                  <div style={{ fontSize: "12px", color: "#a09080", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.description || t.aucuneDescription}</div>
                                 </div>
                               </div>
                             </td>
@@ -1320,13 +1325,13 @@ export default function Dashboard() {
                             </td>
                             <td>
                               <div style={{ display: "flex", gap: "6px" }}>
-                                <button onClick={() => setGererPhotos(p)} style={{ background: "#f3f4f6", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
+                                <button onClick={() => setGererPhotos(p)} className="btn-ghost" style={{ background: "rgba(255,255,255,0.06)", color: "#f5f0e8", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
                                   {t.photos}
                                 </button>
-                                <button onClick={() => setModifierProduit(p)} style={{ background: "#eff6ff", color: "#2563eb", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
+                                <button onClick={() => setModifierProduit(p)} style={{ background: "rgba(212,168,84,0.15)", color: "#d4a854", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "600" }}>
                                   {t.modifierProduit}
                                 </button>
-                                <button onClick={() => supprimerProduit(p.id)} style={{ background: "#fee2e2", color: "#dc2626", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "700" }}>
+                                <button onClick={() => supprimerProduit(p.id)} style={{ background: "rgba(220,38,38,0.15)", color: "#ef4444", border: "none", borderRadius: "6px", padding: "5px 10px", cursor: "pointer", fontSize: "12px", fontWeight: "700" }}>
                                   {t.supprimer}
                                 </button>
                               </div>
