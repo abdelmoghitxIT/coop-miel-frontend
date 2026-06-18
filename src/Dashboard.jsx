@@ -89,6 +89,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
     width: "100%", padding: "11px 14px", borderRadius: "10px",
     border: "1.5px solid #e5ddd0", fontSize: "14px",
     color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s",
   };
   const labelStyle = {
     fontSize: "13px", fontWeight: "600", color: "#6b6055",
@@ -97,6 +98,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      backdropFilter: "blur(4px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
@@ -104,6 +106,7 @@ function FormulaireAjoutProduit({ categories, onAjouter, onAnnuler, t, isAr }) {
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
@@ -287,6 +290,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
     width: "100%", padding: "11px 14px", borderRadius: "10px",
     border: "1.5px solid #e5ddd0", fontSize: "14px",
     color: "#1c1008", fontFamily: "'DM Sans', sans-serif", outline: "none",
+    transition: "border-color 0.2s, box-shadow 0.2s",
   };
   const labelStyle = {
     fontSize: "13px", fontWeight: "600", color: "#6b6055",
@@ -295,6 +299,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      backdropFilter: "blur(4px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
@@ -302,6 +307,7 @@ function ModifierProduit({ produit, categories, onFermer, onMiseAJour, t, isAr }
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "500px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif" }}>
@@ -565,6 +571,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
   return (
     <div style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)",
+      backdropFilter: "blur(4px)",
       zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", padding: "20px",
       animation: "fadeIn 0.2s ease",
     }}>
@@ -572,6 +579,7 @@ function GestionPhotos({ produit, onFermer, onMiseAJour, t, isAr }) {
         background: "white", borderRadius: "20px", padding: "32px",
         width: "100%", maxWidth: "560px", maxHeight: "90vh", overflowY: "auto",
         animation: "slideInUp 0.3s ease",
+        boxShadow: "0 24px 64px rgba(0,0,0,0.15)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
           <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "800", color: "#1c1008" }}>
@@ -1000,6 +1008,7 @@ export default function Dashboard() {
         tbody tr:nth-child(even) td { background: #fdfaf5; }
         tbody tr:hover td { background: #fef9ee; }
         select { border: 1.5px solid #e5ddd0; border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Sans', sans-serif; background: white; cursor: pointer; color: #1c1008; }
+        input:focus, select:focus, textarea:focus { border-color: #b45309 !important; box-shadow: 0 0 0 3px rgba(180,83,9,0.12) !important; outline: none !important; }
         @media (max-width: 768px) {
           table { font-size: 12px; }
           th, td { padding: 8px 10px; }
@@ -1019,7 +1028,7 @@ export default function Dashboard() {
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <span style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-            <span style={{ display: "inline-block", width: "8px", height: "8px", borderRadius: "50%", background: "#22c55e", animation: "pulse 1.5s infinite" }} />
+            <span style={{ display: "inline-block", width: "10px", height: "10px", borderRadius: "50%", background: "#22c55e", animation: "pulse 1.5s infinite", boxShadow: "0 0 6px rgba(34,197,94,0.5)" }} />
             <span style={{ fontSize: "10px", fontWeight: "700", color: "#86efac" }}>LIVE</span>
           </span>
           <span style={{ fontSize: "13px", color: "rgba(255,255,255,0.85)" }}>👑 {utilisateur?.nom}</span>
@@ -1039,14 +1048,14 @@ export default function Dashboard() {
             { label: t.livrees, value: stats.livrees, icon: "✅", color: "#16a34a", bg: "#dcfce7" },
             { label: t.stockFaible, value: stats.stockFaible + (isAr ? " منتجات" : " produits"), icon: "⚠️", color: "#dc2626", bg: "#fee2e2" },
           ].map((stat, i) => (
-            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", transition: "transform 0.2s, box-shadow 0.2s" }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(180,120,0,0.1)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}>
+            <div key={i} style={{ background: "white", borderRadius: "14px", padding: "20px", border: "1px solid #f0ebe3", borderLeft: "4px solid " + stat.color, boxShadow: "0 1px 4px rgba(0,0,0,0.04), inset 0 -3px 0 " + stat.color, transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease", position: "relative", overflow: "hidden" }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 12px 32px rgba(180,120,0,0.12)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04), inset 0 -3px 0 " + stat.color; }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "10px" }}>
                 <span style={{ fontSize: "11px", fontWeight: "700", color: "#a8977f", textTransform: "uppercase", letterSpacing: "0.06em" }}>{stat.label}</span>
                 <span style={{ fontSize: "20px", background: stat.bg, padding: "6px", borderRadius: "8px" }}>{stat.icon}</span>
               </div>
-              <p style={{ margin: 0, fontSize: "24px", fontWeight: "800", color: stat.color }}>{stat.value}</p>
+              <p style={{ margin: 0, fontSize: "26px", fontWeight: "800", color: stat.color }}>{stat.value}</p>
             </div>
           ))}
         </div>
@@ -1057,7 +1066,7 @@ export default function Dashboard() {
             { id: "statistiques", label: t.tabStatistiques },
             { id: "produits", label: t.tabProduits },
           ].map((o) => (
-            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.2s" }}>
+            <button key={o.id} onClick={() => setOnglet(o.id)} style={{ padding: "9px 20px", borderRadius: "8px", border: "none", cursor: "pointer", fontWeight: "700", fontSize: "13px", fontFamily: "'DM Sans', sans-serif", background: onglet === o.id ? "white" : "transparent", color: onglet === o.id ? "#b45309" : "#6b6055", boxShadow: onglet === o.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", transition: "all 0.25s ease" }}>
               {o.label}
             </button>
           ))}
@@ -1119,7 +1128,7 @@ export default function Dashboard() {
                         </thead>
                         <tbody>
                           {commandesAffichees.map((c, index) => (
-                            <tr key={c.id}>
+                            <tr key={c.id} style={{ animation: "slideInUp 0.3s ease forwards", animationDelay: `${index * 0.03}s`, opacity: 0 }}>
                               <td><strong>#{index + 1}</strong></td>
                               <td>{c.client_nom || "—"}</td>
                               <td>{c.client_telephone || "—"}</td>
@@ -1222,7 +1231,7 @@ export default function Dashboard() {
 
             {onglet === "statistiques" && (
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))", gap: "24px" }}>
-                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px" }}>
+                <div style={{ background: "white", border: "1px solid #f0ebe3", borderRadius: "14px", padding: "24px", boxShadow: "0 2px 12px rgba(0,0,0,0.04)" }}>
                   <h3 style={{ fontSize: "16px", fontWeight: "800", color: "#1c1008", fontFamily: "'Playfair Display', serif", margin: "0 0 20px" }}>Ventes mensuelles</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={donneesVentesMensuelles}>
@@ -1285,10 +1294,10 @@ export default function Dashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {produits.map((p) => {
+                      {produits.map((p, idx) => {
                         const cat = categories.find((c) => c.id === p.categorie_id);
                         return (
-                          <tr key={p.id}>
+                          <tr key={p.id} style={{ animation: "slideInUp 0.3s ease forwards", animationDelay: `${idx * 0.03}s`, opacity: 0 }}>
                             <td>
                               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                 {p.images && p.images[0] ? (

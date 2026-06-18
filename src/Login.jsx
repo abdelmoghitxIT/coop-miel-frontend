@@ -75,7 +75,8 @@ export default function Login() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        .login-input:focus { border-color: #b45309 !important; outline: none; }
+        @keyframes borderGlow { 0%,100% { border-color: #f0ebe3; box-shadow: 0 8px 40px rgba(180,120,0,0.12); } 50% { border-color: #d97706; box-shadow: 0 8px 40px rgba(180,120,0,0.22); } }
+        .login-input:focus { border-color: #b45309 !important; box-shadow: 0 0 0 3px rgba(180,83,9,0.12) !important; outline: none !important; }
       `}</style>
 
       <div style={{
@@ -86,12 +87,14 @@ export default function Login() {
         maxWidth: "420px",
         boxShadow: "0 8px 40px rgba(180,120,0,0.12)",
         border: "1px solid #f0ebe3",
+        animation: "borderGlow 3s ease-in-out infinite",
       }}>
         {/* Logo */}
         <div style={{ textAlign: "center", marginBottom: "28px" }}>
           <img
             src="https://res.cloudinary.com/dvqb5othw/image/upload/455519797_519692147275310_6436353706485380204_n_tzyopo"
             alt="logo"
+            className="float"
             style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover", marginBottom: "8px" }}
           />
           <h1 style={{
@@ -148,6 +151,7 @@ export default function Login() {
                   borderRadius: "10px", border: "1.5px solid #e5ddd0",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
                   color: "#1c1008", background: "white",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
             </div>
@@ -169,6 +173,7 @@ export default function Login() {
                 borderRadius: "10px", border: "1.5px solid #e5ddd0",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
                 color: "#1c1008", background: "white",
+                transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             />
           </div>
@@ -189,6 +194,7 @@ export default function Login() {
                 borderRadius: "10px", border: "1.5px solid #e5ddd0",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
                 color: "#1c1008", background: "white",
+                transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             />
           </div>
@@ -200,7 +206,10 @@ export default function Login() {
               textAlign: "right", padding: "4px 0 0",
               fontFamily: "'DM Sans', sans-serif",
               alignSelf: "flex-end",
-            }}>
+              transition: "color 0.2s",
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "#78350f"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "#b45309"}>
               {t.motDePasseOublie}
             </button>
           )}
@@ -221,6 +230,7 @@ export default function Login() {
                   borderRadius: "10px", border: "1.5px solid #e5ddd0",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
                   color: "#1c1008", background: "white",
+                  transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
             </div>
@@ -232,6 +242,7 @@ export default function Login() {
               borderRadius: "8px", padding: "10px 14px",
               fontSize: "13px", color: "#dc2626",
               fontFamily: "'DM Sans', sans-serif",
+              animation: "fadeIn 0.25s ease",
             }}>
               ⚠️ {erreur}
             </div>
@@ -240,6 +251,9 @@ export default function Login() {
           <button
             onClick={handleSubmit}
             disabled={chargement}
+            onMouseDown={(e) => { if (!chargement) e.currentTarget.style.transform = "scale(0.97)"; }}
+            onMouseUp={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
             style={{
               width: "100%", padding: "13px",
               borderRadius: "10px", border: "none",
@@ -247,7 +261,7 @@ export default function Login() {
               color: "white", fontWeight: "700", fontSize: "15px",
               cursor: chargement ? "not-allowed" : "pointer",
               fontFamily: "'DM Sans', sans-serif",
-              transition: "background 0.2s",
+              transition: "background 0.2s, transform 0.1s",
               marginTop: "4px",
             }}
           >
@@ -273,7 +287,10 @@ export default function Login() {
               textDecoration: "underline", display: "block",
               margin: "0 auto 12px",
               fontFamily: "'DM Sans', sans-serif",
+              transition: "color 0.2s",
             }}
+            onMouseEnter={(e) => e.currentTarget.style.color = "#b45309"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "#a8977f"}
           >
             {t.retourAccueil}
           </button>

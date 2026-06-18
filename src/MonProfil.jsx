@@ -161,7 +161,7 @@ export default function MonProfil() {
   const inputStyle = {
     width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid #e5ddd0",
     fontSize: "14px", color: "#1c1008", background: modeEdition ? "white" : "#f9f6f1",
-    boxSizing: "border-box", outline: "none",
+    boxSizing: "border-box", outline: "none", transition: "border-color 0.2s, box-shadow 0.2s",
   };
 
   return (
@@ -169,12 +169,13 @@ export default function MonProfil() {
       minHeight: "100vh", background: "#fdf8f0", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
+      <style>{`input:focus, select:focus { border-color: #b45309 !important; box-shadow: 0 0 0 3px rgba(180,83,9,0.12) !important; outline: none !important; }`}</style>
       <header style={{
         background: "linear-gradient(135deg, #78350f, #b45309)", padding: "16px 32px",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <img src={LOGO_URL} alt="" style={{ height: "36px", width: "36px", borderRadius: "50%", objectFit: "cover" }} />
+          <img src={LOGO_URL} alt="" style={{ height: "36px", width: "36px", borderRadius: "50%", objectFit: "cover", boxShadow: "0 0 0 3px rgba(255,255,255,0.2)" }} />
           <div>
             <p style={{ margin: 0, fontWeight: "700", color: "white", fontSize: "14px" }}>
               {isAr ? "التعاونية الفلاحية" : "Mon Profil"}
@@ -266,11 +267,15 @@ export default function MonProfil() {
 
           {/* Mot de passe */}
           <div style={{ borderTop: "1px solid #f0ebe3", paddingTop: "20px", marginTop: "8px" }}>
+            <div style={{ background: afficherMdp ? "#fdf8f0" : "transparent", borderRadius: "12px", padding: afficherMdp ? "16px" : "0", border: afficherMdp ? "1px solid #f0ebe3" : "none", transition: "all 0.3s ease" }}>
             <button onClick={() => setAfficherMdp(!afficherMdp)} style={{
               background: "none", border: "none", cursor: "pointer", padding: 0,
               display: "flex", alignItems: "center", gap: "8px",
               fontSize: "14px", fontWeight: "700", color: "#b45309", fontFamily: "inherit",
-            }}>
+              transition: "color 0.2s",
+            }}
+              onMouseEnter={(e) => e.currentTarget.style.color = "#78350f"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "#b45309"}>
               🔑 {isAr ? "تغيير كلمة المرور" : "Changer le mot de passe"}
               <span style={{ fontSize: "12px", color: "#a8977f" }}>{afficherMdp ? "▲" : "▼"}</span>
             </button>
@@ -313,6 +318,7 @@ export default function MonProfil() {
               </form>
             )}
           </div>
+          </div>
 
           {message && <p style={{ color: "#16a34a", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>✅ {message}</p>}
           {erreur && <p style={{ color: "#dc2626", fontSize: "14px", fontWeight: "bold", margin: "0 0 16px" }}>⚠️ {erreur}</p>}
@@ -325,10 +331,16 @@ export default function MonProfil() {
               }}>
                 {isAr ? "إلغاء" : "Annuler"}
               </button>
-              <button type="submit" disabled={sauvegarde} onClick={handleSauvegarder} style={{
+              <button type="submit" disabled={sauvegarde} onClick={handleSauvegarder}
+                onMouseEnter={(e) => { if (!sauvegarde) { e.currentTarget.style.background = "#92400e"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; } }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "#b45309"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                onMouseDown={(e) => { if (!sauvegarde) e.currentTarget.style.transform = "scale(0.97)"; }}
+                onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
+                style={{
                 flex: 1, padding: "14px", borderRadius: "12px", border: "none",
                 background: sauvegarde ? "#d4b483" : "#b45309", color: "white", fontWeight: "700",
                 fontSize: "15px", cursor: sauvegarde ? "not-allowed" : "pointer",
+                transition: "all 0.2s",
               }}>
                 {sauvegarde ? "..." : "Enregistrer"}
               </button>

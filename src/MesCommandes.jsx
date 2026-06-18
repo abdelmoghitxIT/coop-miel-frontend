@@ -84,10 +84,14 @@ export default function MesCommandes() {
             </p>
           </div>
         </div>
-        <button onClick={() => navigate('/')} style={{
+        <button onClick={() => navigate('/')}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "#92400e"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "#b45309"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+          style={{
           background: "#b45309", color: "white", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",
+          transition: "all 0.2s",
         }}>
           {isAr ? "العودة إلى الكتالوج →" : "← Retour au catalogue"}
         </button>
@@ -108,33 +112,42 @@ export default function MesCommandes() {
           <div style={{
             textAlign: "center", padding: "80px 20px",
             background: "white", borderRadius: "16px", border: "1px solid #f0ebe3",
+            animation: "fadeInUp 0.4s ease",
           }}>
-            <div style={{ fontSize: "60px", marginBottom: "16px" }}>🛒</div>
+            <div style={{ fontSize: "60px", marginBottom: "16px", opacity: 0.8 }}>🛒</div>
             <p style={{ fontSize: "18px", fontWeight: "700", color: "#1c1008", margin: "0 0 8px" }}>
               {isAr ? "لا توجد طلبات بعد" : "Aucune commande pour l'instant"}
             </p>
             <p style={{ fontSize: "14px", color: "#a8977f", margin: 0 }}>
               {isAr ? "تصفح منتجاتنا وضع طلبك الأول !" : "Parcourez nos produits et passez votre première commande !"}
             </p>
-        <button onClick={() => navigate('/')} style={{
-              marginTop: "20px", background: "#b45309", color: "white",
-              border: "none", borderRadius: "10px", padding: "12px 24px",
+        <button onClick={() => navigate('/')}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "#92400e"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "#b45309"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+              style={{
+              marginTop: "24px", background: "#b45309", color: "white",
+              border: "none", borderRadius: "10px", padding: "14px 28px",
               cursor: "pointer", fontWeight: "700", fontSize: "14px",
+              transition: "all 0.2s",
             }}>
               {isAr ? "تصفح المنتجات 🍯" : "Voir les produits 🍯"}
             </button>
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-            {commandes.map((c) => {
+            {commandes.map((c, index) => {
               const statut = STATUTS[c.statut] || STATUTS.en_attente;
               const isOpen = commandeOuverte === c.id;
               return (
-                <div key={c.id} style={{
+                <div key={c.id} className="fade-in-up" style={{
                   background: "white", borderRadius: "16px",
                   border: "1px solid #f0ebe3", overflow: "hidden",
                   boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                }}>
+                  transition: "transform 0.25s ease, box-shadow 0.25s ease",
+                  animationDelay: `${index * 0.05}s`,
+                }}
+                  onMouseEnter={(e) => { if (!isOpen) { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 8px 24px rgba(180,120,0,0.1)"; } }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 1px 4px rgba(0,0,0,0.04)"; }}>
                   {/* En-tête commande */}
                   <div
                     onClick={() => setCommandeOuverte(isOpen ? null : c.id)}
@@ -161,8 +174,9 @@ export default function MesCommandes() {
 
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", flexDirection: isAr ? "row-reverse" : "row" }}>
                       <span style={{
-                        padding: "4px 12px", borderRadius: "20px", fontSize: "12px",
+                        padding: "5px 14px", borderRadius: "20px", fontSize: "13px",
                         fontWeight: "700", background: statut.bg, color: statut.color,
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
                       }}>
                         {isAr ? statut.labelAr : statut.label}
                       </span>
@@ -177,7 +191,7 @@ export default function MesCommandes() {
 
                   {/* Détails commande */}
                   {isOpen && (
-                    <div style={{ borderTop: "1px solid #f0ebe3", padding: "16px 20px", background: "#fdf8f0" }}>
+                    <div style={{ borderTop: "1px solid #f0ebe3", padding: "16px 20px", background: "#fdf8f0", animation: "fadeInUp 0.25s ease" }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "14px" }}>
                         <div style={{ background: "white", borderRadius: "10px", padding: "12px", border: "1px solid #f0ebe3" }}>
                           <p style={{ margin: "0 0 4px", fontSize: "11px", fontWeight: "700", color: "#a57c3a", textTransform: "uppercase" }}>
@@ -214,10 +228,13 @@ export default function MesCommandes() {
                               href={`https://tracking.yalidine.com/${c.tracking_number}`}
                               target="_blank"
                               rel="noopener noreferrer"
+                              onMouseEnter={(e) => { e.currentTarget.style.background = "#92400e"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = "#b45309"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                               style={{
                                 marginLeft: "auto", fontSize: "12px", fontWeight: "700", color: "white",
                                 background: "#b45309", padding: "6px 14px", borderRadius: "8px",
                                 textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px",
+                                transition: "all 0.2s",
                               }}
                             >
                               {isAr ? "تتبع 🚚" : "Suivre 🚚"}
@@ -236,6 +253,8 @@ export default function MesCommandes() {
                         <button
                           onClick={() => annulerCommande(c.id)}
                           disabled={annulationEnCours === c.id}
+                          onMouseEnter={(e) => { if (annulationEnCours !== c.id) { e.currentTarget.style.background = "#dc2626"; e.currentTarget.style.color = "white"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(220,38,38,0.25)"; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "white"; e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                           style={{
                             width: "100%", marginBottom: "12px", padding: "10px",
                             borderRadius: "10px", border: "1.5px solid #dc2626",
@@ -243,6 +262,7 @@ export default function MesCommandes() {
                             color: "#dc2626", fontWeight: "700", fontSize: "13px",
                             cursor: annulationEnCours === c.id ? "not-allowed" : "pointer",
                             fontFamily: "inherit",
+                            transition: "all 0.2s",
                           }}
                         >
                           {annulationEnCours === c.id

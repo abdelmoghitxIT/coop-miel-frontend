@@ -231,18 +231,21 @@ export default function DetailProduit() {
 
           {/* Galerie photos */}
           <div>
-            <div style={{
-              height: "380px", borderRadius: "16px", overflow: "hidden",
-              background: "repeating-linear-gradient(45deg,#fef9ee,#fef9ee 10px,#fdf3d8 10px,#fdf3d8 20px)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              marginBottom: "12px", border: "1px solid #f0ebe3",
-            }}>
+            <div
+              onMouseEnter={(e) => { const img = e.currentTarget.querySelector('img'); if (img) { img.style.transform = 'scale(1.05)'; img.style.transition = 'transform 0.4s ease'; } }}
+              onMouseLeave={(e) => { const img = e.currentTarget.querySelector('img'); if (img) img.style.transform = 'scale(1)'; }}
+              style={{
+                height: "380px", borderRadius: "16px", overflow: "hidden",
+                background: "repeating-linear-gradient(45deg,#fef9ee,#fef9ee 10px,#fdf3d8 10px,#fdf3d8 20px)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                marginBottom: "12px", border: "1px solid #f0ebe3",
+              }}>
               {images[photoActive] ? (
                 <img
                   src={images[photoActive]}
                   alt={produit.nom}
                   onClick={() => setPhotoAgrandie(true)}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", cursor: "pointer" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", cursor: "pointer", transition: "transform 0.4s ease" }}
                 />
               ) : (
                 <span style={{ fontSize: "100px" }}>{iconProduit}</span>
@@ -293,7 +296,7 @@ export default function DetailProduit() {
           </div>
 
           {/* Infos produit */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "sticky", top: "100px", alignSelf: "flex-start" }}>
 
             <span style={{
               fontSize: "12px", fontWeight: "700", color: "#a57c3a",
@@ -409,13 +412,16 @@ export default function DetailProduit() {
             <button
               onClick={handleAjouter}
               disabled={produit.stock_quantite === 0}
+              onMouseDown={(e) => { if (produit.stock_quantite !== 0) e.currentTarget.style.transform = "scale(0.97)"; }}
+              onMouseUp={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
               style={{
                 width: "100%", padding: "14px", borderRadius: "12px", border: "none",
                 background: ajoute ? "#16a34a" : produit.stock_quantite === 0 ? "#e5e7eb" : "#b45309",
                 color: produit.stock_quantite === 0 ? "#9ca3af" : "white",
                 fontWeight: "700", fontSize: "16px",
                 cursor: produit.stock_quantite === 0 ? "not-allowed" : "pointer",
-                transition: "all 0.2s",
+                transition: "all 0.2s, transform 0.1s",
                 fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
               }}
             >
@@ -431,10 +437,10 @@ export default function DetailProduit() {
                 padding: "12px", borderRadius: "10px", border: "1.5px solid #25D366",
                 background: "white", color: "#25D366", fontWeight: "700",
                 fontSize: "14px", cursor: "pointer", textDecoration: "none",
-                transition: "all 0.2s",
+                transition: "all 0.25s ease",
               }}
-              onMouseEnter={(e) => { e.target.style.background = "#25D366"; e.target.style.color = "white"; }}
-              onMouseLeave={(e) => { e.target.style.background = "white"; e.target.style.color = "#25D366"; }}
+              onMouseEnter={(e) => { e.target.style.background = "#25D366"; e.target.style.color = "white"; e.target.style.transform = "scale(1.02)"; e.target.style.boxShadow = "0 4px 16px rgba(37,211,102,0.25)"; }}
+              onMouseLeave={(e) => { e.target.style.background = "white"; e.target.style.color = "#25D366"; e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}
             >
               📤 {t.partagerWhatsapp}
             </a>
@@ -498,10 +504,12 @@ export default function DetailProduit() {
                 {avis.map((a, idx) => (
                   <div key={a.id} style={{
                     background: "white", borderRadius: "12px", padding: "16px",
-                    border: "1px solid #f0ebe3", animation: "fadeInUp 0.3s ease",
-                    transition: "transform 0.2s, box-shadow 0.2s",
+                    border: "1px solid #f0ebe3", animation: "fadeInUp 0.35s ease forwards",
+                    animationDelay: `${idx * 0.08}s`,
+                    opacity: 0,
+                    transition: "transform 0.25s ease, box-shadow 0.25s ease",
                   }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(180,120,0,0.08)"; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(180,120,0,0.1)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                   >
                     <div style={{
@@ -550,10 +558,10 @@ export default function DetailProduit() {
                           onClick={() => setNouvelleNote(n)}
                           style={{
                             fontSize: "28px", cursor: "pointer", color: n <= nouvelleNote ? "#b45309" : "#e5ddd0",
-                            transition: "color 0.15s", userSelect: "none",
+                            transition: "color 0.15s, transform 0.2s", userSelect: "none", display: "inline-block",
                           }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = "#b45309"}
-                          onMouseLeave={(e) => e.currentTarget.style.color = n <= nouvelleNote ? "#b45309" : "#e5ddd0"}
+                          onMouseEnter={(e) => { e.currentTarget.style.color = "#b45309"; e.currentTarget.style.transform = "scale(1.25)"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.color = n <= nouvelleNote ? "#b45309" : "#e5ddd0"; e.currentTarget.style.transform = "scale(1)"; }}
                         >
                           {n <= nouvelleNote ? "★" : "☆"}
                         </span>
@@ -602,9 +610,11 @@ export default function DetailProduit() {
           onClick={() => { setPhotoAgrandie(false); setZoom(1); }}
           style={{
             position: "fixed", inset: 0, zIndex: 9999,
-            background: "rgba(0,0,0,0.9)",
+            background: "rgba(0,0,0,0.85)",
+            backdropFilter: "blur(6px)",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "zoom-out",
+            animation: "fadeIn 0.2s ease",
           }}
         >
           <button

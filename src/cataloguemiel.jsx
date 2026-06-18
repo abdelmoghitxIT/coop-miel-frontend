@@ -23,11 +23,19 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
   const navigate = useNavigate();
   const imgRef = useRef(null);
   const borderRef = useRef(null);
+  const iconRef = useRef(null);
+  const btnRef = useRef(null);
 
   const handleAjouter = (e) => {
     e.stopPropagation();
     onAjouterPanier(produit);
     setAjoute(true);
+    if (btnRef.current) {
+      btnRef.current.style.transform = "scale(0.93)";
+      setTimeout(() => {
+        if (btnRef.current) btnRef.current.style.transform = "scale(1)";
+      }, 150);
+    }
     setTimeout(() => setAjoute(false), 1500);
   };
 
@@ -35,6 +43,7 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
 
   return (
     <div
+      className="fade-in-up"
       onClick={() => navigate(`/produit/${produit.id}`)}
       style={{
         background: "white",
@@ -43,23 +52,25 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
-        transition: "transform 0.3s, box-shadow 0.3s, border-color 0.3s",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+        transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02)",
         cursor: "pointer",
         position: "relative",
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-4px) scale(1.02)";
-        e.currentTarget.style.boxShadow = "0 12px 32px rgba(180,120,0,0.16)";
-        e.currentTarget.style.borderColor = "#e5ddd0";
+        e.currentTarget.style.transform = "translateY(-6px) scale(1.02)";
+        e.currentTarget.style.boxShadow = "0 20px 40px rgba(180,83,9,0.14), 0 8px 20px rgba(180,83,9,0.08), 0 0 0 1px rgba(180,83,9,0.08)";
+        e.currentTarget.style.borderColor = "rgba(180,83,9,0.2)";
         if (imgRef.current) imgRef.current.style.transform = "scale(1.08)";
+        if (iconRef.current) iconRef.current.style.transform = "scale(1.15)";
         if (borderRef.current) borderRef.current.style.transform = "scaleX(1)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = "translateY(0) scale(1)";
-        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04)";
+        e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02)";
         e.currentTarget.style.borderColor = "#f0ebe3";
         if (imgRef.current) imgRef.current.style.transform = "scale(1)";
+        if (iconRef.current) iconRef.current.style.transform = "scale(1)";
         if (borderRef.current) borderRef.current.style.transform = "scaleX(0)";
       }}
     >
@@ -73,21 +84,21 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         overflow: "hidden",
         position: "relative",
       }}>
-        <div ref={borderRef} style={{ position: "absolute", top: 0, left: 0, right: 0, height: "3px", background: "#b45309", transform: "scaleX(0)", transition: "transform 0.3s", transformOrigin: isAr ? "right" : "left" }} />
+        <div ref={borderRef} style={{ position: "absolute", top: 0, left: 0, right: 0, height: "4px", background: "linear-gradient(90deg, transparent, #b45309, #d97706, transparent)", transform: "scaleX(0)", transition: "transform 0.35s ease", transformOrigin: isAr ? "right" : "left" }} />
         {produit.images && produit.images[0] ? (
           <img
             ref={imgRef}
             src={produit.images[0]}
             alt={produit.nom}
-            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.3s" }}
+            style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform 0.35s ease" }}
           />
         ) : (
-          <>
+          <div ref={iconRef} style={{ transition: "transform 0.3s ease" }}>
             {produit.categorie_nom?.toLowerCase().includes("miel") && "🍯"}
             {produit.categorie_nom?.toLowerCase().includes("pollen") && "🌼"}
             {produit.categorie_nom?.toLowerCase().includes("cire") && "🕯️"}
             {produit.categorie_nom?.toLowerCase().includes("coffret") && "🎁"}
-          </>
+          </div>
         )}
       </div>
 
@@ -105,7 +116,12 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
             <span style={{ fontSize: "22px", fontWeight: "800", color: "#92400e" }}>
               {Number(produit.prix).toLocaleString("fr-DZ")}
             </span>
-            <span style={{ fontSize: "11px", fontWeight: "700", color: "#b45309", background: "#fef9ee", padding: "1px 6px", borderRadius: "4px" }}>
+            <span style={{
+              fontSize: "11px", fontWeight: "700", color: "#92400e",
+              background: "linear-gradient(135deg, #fef9ee, #fdf3d8)",
+              padding: "1px 6px", borderRadius: "4px",
+              boxShadow: "0 1px 3px rgba(180,83,9,0.08)",
+            }}>
               DA
             </span>
           </div>
@@ -121,15 +137,17 @@ function CarteProduit({ produit, onAjouterPanier, t, isAr }) {
         </div>
 
         <button
+          ref={btnRef}
           onClick={handleAjouter}
           disabled={produit.stock_quantite === 0}
           style={{
             width: "100%", padding: "11px", borderRadius: "10px", border: "none",
             cursor: produit.stock_quantite === 0 ? "not-allowed" : "pointer",
-            fontWeight: "700", fontSize: "14px", transition: "all 0.2s",
+            fontWeight: "700", fontSize: "14px", transition: "all 0.2s, transform 0.15s ease",
             background: ajoute ? "#16a34a" : produit.stock_quantite === 0 ? "#e5e7eb" : "#b45309",
             color: produit.stock_quantite === 0 ? "#9ca3af" : "white",
             fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+            transform: "scale(1)",
           }}
         >
           {ajoute ? `✓ ${t.ajoute}` : produit.stock_quantite === 0 ? t.rupture : `🛒 ${t.ajouterPanier}`}
@@ -148,21 +166,28 @@ function Panier({ items, onFermer, onCommander, t, isAr }) {
       zIndex: 1000, display: "flex", flexDirection: "column",
       direction: isAr ? "rtl" : "ltr",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+      animation: "slideInRight 0.35s ease-out",
     }}>
       <div style={{ padding: "24px", borderBottom: "1px solid #f0ebe3", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2 style={{ margin: 0, fontSize: "20px", fontWeight: "700", color: "#1c1008" }}>{t.votrePanier}</h2>
-        <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055" }}>✕</button>
+        <button onClick={onFermer} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#6b6055", transition: "transform 0.2s", padding: "4px" }}
+          onMouseEnter={(e) => e.target.style.transform = "rotate(90deg)"}
+          onMouseLeave={(e) => e.target.style.transform = "rotate(0)"}
+        >✕</button>
       </div>
 
       <div style={{ flex: 1, overflowY: "auto", padding: "16px" }}>
         {items.length === 0 ? (
           <div style={{ textAlign: "center", padding: "60px 20px", color: "#a8977f" }}>
-            <div style={{ fontSize: "48px", marginBottom: "12px" }}>🍯</div>
+            <div className="float" style={{ fontSize: "48px", marginBottom: "12px" }}>🍯</div>
             <p style={{ margin: 0, fontSize: "15px" }}>{t.panierVide}</p>
           </div>
         ) : (
-          items.map((item) => (
-            <div key={item.id} style={{ display: "flex", gap: "12px", padding: "14px 0", borderBottom: "1px solid #f8f4ef", alignItems: "center" }}>
+          items.map((item, idx) => (
+            <div key={item.id} style={{
+              display: "flex", gap: "12px", padding: "14px 0", borderBottom: "1px solid #f8f4ef", alignItems: "center",
+              animation: `fadeInUp 0.3s ease ${idx * 0.06}s both`,
+            }}>
               <div style={{ fontSize: "28px", width: "44px", height: "44px", background: "#fef9ee", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", flexShrink: 0 }}>
                 {item.images && item.images[0] ? (
                   <img src={item.images[0]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -191,9 +216,11 @@ function Panier({ items, onFermer, onCommander, t, isAr }) {
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
               background: "#b45309", color: "white", fontWeight: "700",
-              fontSize: "15px", cursor: "pointer",
+              fontSize: "15px", cursor: "pointer", transition: "transform 0.2s, box-shadow 0.2s",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}
+            onMouseEnter={(e) => { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)"; }}
+            onMouseLeave={(e) => { e.target.style.transform = "translateY(0)"; e.target.style.boxShadow = "none"; }}
           >
            {t.commander}
           </button>
@@ -221,6 +248,7 @@ export default function CatalogueMiel(){
   const menuRef = useRef(null);
   const [page, setPage] = useState(1);
   const [produitsParPage] = useState(12);
+  const searchIconRef = useRef(null);
 
   const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
@@ -280,6 +308,18 @@ export default function CatalogueMiel(){
 
   const totalPanier = panier.reduce((sum, p) => sum + p.qte, 0);
 
+  const getPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= pageCount; i++) {
+      if (i === 1 || i === pageCount || (i >= page - 1 && i <= page + 1)) {
+        pages.push(i);
+      } else if (pages[pages.length - 1] !== "...") {
+        pages.push("...");
+      }
+    }
+    return pages;
+  };
+
   return (
     <div style={{
       minHeight: "100vh",
@@ -288,7 +328,7 @@ export default function CatalogueMiel(){
       direction: isAr ? "rtl" : "ltr",
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght=600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700;800&family=Amiri:wght@400;700&display=swap');
         * { box-sizing: border-box; }
         html, body { overflow-x: hidden; max-width: 100vw; margin: 0; padding: 0; }
         @media (max-width: 700px) {
@@ -301,16 +341,16 @@ export default function CatalogueMiel(){
         <div style={{ padding: "0 40px 60px", maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px", paddingTop: "200px" }}>
           {[1,2,3,4,5,6].map((i) => (
             <div key={i} style={{ background: "white", borderRadius: "16px", border: "1px solid #f0ebe3", overflow: "hidden" }}>
-              <div className="skeleton" style={{ height: "160px" }} />
+              <div className="shimmer-pulse" style={{ height: "160px", background: "#f0ebe3" }} />
               <div style={{ padding: "18px", display: "flex", flexDirection: "column", gap: "10px" }}>
-                <div className="skeleton" style={{ height: "20px", width: "70%" }} />
-                <div className="skeleton" style={{ height: "14px", width: "100%" }} />
-                <div className="skeleton" style={{ height: "14px", width: "80%" }} />
+                <div className="shimmer-pulse" style={{ height: "20px", width: `clamp(120px, ${50 + i * 7}%, ${80 + i * 3}%)`, background: "#f0ebe3", borderRadius: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "14px", width: "100%", background: "#f0ebe3", borderRadius: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "14px", width: "75%", background: "#f0ebe3", borderRadius: "6px" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-                  <div className="skeleton" style={{ height: "24px", width: "80px" }} />
-                  <div className="skeleton" style={{ height: "20px", width: "60px", borderRadius: "20px" }} />
+                  <div className="shimmer-pulse" style={{ height: "24px", width: "80px", background: "#f0ebe3", borderRadius: "6px" }} />
+                  <div className="shimmer-pulse" style={{ height: "20px", width: "60px", background: "#f0ebe3", borderRadius: "20px" }} />
                 </div>
-                <div className="skeleton" style={{ height: "40px", width: "100%", borderRadius: "10px", marginTop: "6px" }} />
+                <div className="shimmer-pulse" style={{ height: "40px", width: "100%", background: "#f0ebe3", borderRadius: "10px", marginTop: "6px" }} />
               </div>
             </div>
           ))}
@@ -478,12 +518,13 @@ export default function CatalogueMiel(){
               fontSize: "15px", lineHeight: 1, flexShrink: 0,
             }}>🛒</span> <span className="r-hide">{t.panier}</span>
             {totalPanier > 0 && (
-              <span style={{
+              <span key={totalPanier} style={{
                 position: "absolute", top: "-8px", right: "-8px",
                 background: "#dc2626", color: "white", borderRadius: "50%",
                 width: "22px", height: "22px", display: "flex",
                 alignItems: "center", justifyContent: "center",
                 fontSize: "12px", fontWeight: "800",
+                animation: "scaleIn 0.35s ease",
               }}>
                 {totalPanier}
               </span>
@@ -495,34 +536,59 @@ export default function CatalogueMiel(){
       {/* Hero */}
       <div style={{
         background: "linear-gradient(135deg, #78350f 0%, #b45309 50%, #d97706 100%)",
-        padding: "80px 40px", textAlign: "center", position: "relative",
+        padding: "clamp(60px, 8vw, 100px) clamp(20px, 5vw, 40px)",
+        textAlign: "center", position: "relative",
         overflow: "hidden",
       }}>
+        {/* Honeycomb pattern */}
         <div style={{
-          position: "absolute", inset: 0, opacity: 0.08,
-          backgroundImage: "radial-gradient(circle at 25% 50%, white 1px, transparent 1px), radial-gradient(circle at 75% 50%, white 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
+          position: "absolute", inset: 0, opacity: 0.06,
+          backgroundImage: `
+            repeating-linear-gradient(60deg, transparent, transparent 30px, rgba(255,255,255,0.12) 30px, rgba(255,255,255,0.12) 32px),
+            repeating-linear-gradient(-60deg, transparent, transparent 30px, rgba(255,255,255,0.12) 30px, rgba(255,255,255,0.12) 32px),
+            repeating-linear-gradient(0deg, transparent, transparent 26px, rgba(255,255,255,0.08) 26px, rgba(255,255,255,0.08) 28px)
+          `,
         }} />
-        <h2 style={{
-          margin: "0 0 16px", fontSize: "clamp(28px, 4vw, 42px)", fontWeight: "800", color: "white",
-          fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
-          position: "relative",
-        }}>
-          {t.heroTitle}
-        </h2>
-        <p style={{
-          margin: "0 auto", fontSize: "16px", color: "rgba(255,255,255,0.85)",
-          maxWidth: "600px", lineHeight: "1.8", position: "relative",
-        }}>
-          {t.heroSub}
-        </p>
+        {/* Glow effect */}
+        <div className="glow" style={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "clamp(300px, 50vw, 500px)", height: "clamp(300px, 50vw, 500px)",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%)",
+          pointerEvents: "none",
+        }} />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <div className="float" style={{ fontSize: "clamp(48px, 6vw, 64px)", marginBottom: "8px", lineHeight: 1 }}>🍯</div>
+          <h2 style={{
+            margin: "0 0 16px",
+            fontSize: "clamp(28px, 4vw, 42px)",
+            fontWeight: "800",
+            fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
+            position: "relative",
+            background: "linear-gradient(90deg, #fff, #fef9ee, #fdf3d8, #fff)",
+            backgroundSize: "300% auto",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            animation: "shimmer 4s linear infinite",
+          }}>
+            {t.heroTitle}
+          </h2>
+          <p style={{
+            margin: "0 auto", fontSize: "16px", color: "rgba(255,255,255,0.85)",
+            maxWidth: "600px", lineHeight: "1.8", position: "relative",
+          }}>
+            {t.heroSub}
+          </p>
+        </div>
       </div>
 
       {/* Filtres */}
       <div style={{ padding: "36px 40px 0", maxWidth: "1200px", margin: "0 auto" }}>
         <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "24px", flexWrap: "wrap" }}>
           <div style={{ position: "relative", flex: "1 1 280px", maxWidth: "400px" }}>
-            <span style={{ position: "absolute", left: isAr ? "auto" : "16px", right: isAr ? "16px" : "auto", top: "50%", transform: "translateY(-50%)", fontSize: "16px", opacity: 0.5 }}>🔍</span>
+            <span ref={searchIconRef} style={{ position: "absolute", left: isAr ? "auto" : "16px", right: isAr ? "16px" : "auto", top: "50%", transform: "translateY(-50%)", fontSize: "16px", transition: "transform 0.25s ease, opacity 0.25s ease" }}>🔍</span>
             <input
               type="text"
               placeholder={t.rechercherProduit}
@@ -535,6 +601,17 @@ export default function CatalogueMiel(){
                 background: "white", fontSize: "15px", color: "#1c1008", outline: "none",
                 fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
                 direction: isAr ? "rtl" : "ltr",
+                transition: "border-color 0.25s ease, box-shadow 0.25s ease",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#b45309";
+                e.target.style.boxShadow = "0 0 0 3px rgba(180,83,9,0.1), 0 0 0 1px #b45309";
+                if (searchIconRef.current) searchIconRef.current.style.transform = "translateY(-50%) scale(1.1)";
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#e5ddd0";
+                e.target.style.boxShadow = "none";
+                if (searchIconRef.current) searchIconRef.current.style.transform = "translateY(-50%) scale(1)";
               }}
             />
           </div>
@@ -550,11 +627,26 @@ export default function CatalogueMiel(){
               onClick={() => setCategorieActive(cat.id)}
               style={{
                 padding: "9px 20px", borderRadius: "30px",
-                border: categorieActive === cat.id ? "none" : "1.5px solid #e5ddd0",
-                background: categorieActive === cat.id ? "#b45309" : "white",
+                border: "1.5px solid",
+                borderColor: categorieActive === cat.id ? "transparent" : "#e5ddd0",
+                background: categorieActive === cat.id ? "linear-gradient(135deg, #b45309, #d97706)" : "transparent",
                 color: categorieActive === cat.id ? "white" : "#6b6055",
                 fontWeight: "600", fontSize: "14px", cursor: "pointer",
                 fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+                transition: "all 0.2s ease",
+                boxShadow: categorieActive === cat.id ? "0 2px 8px rgba(180,83,9,0.2)" : "none",
+              }}
+              onMouseEnter={(e) => {
+                if (categorieActive !== cat.id) {
+                  e.target.style.background = "#fef9ee";
+                  e.target.style.borderColor = "#d4b483";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (categorieActive !== cat.id) {
+                  e.target.style.background = "transparent";
+                  e.target.style.borderColor = "#e5ddd0";
+                }
               }}
             >
               {cat.label}
@@ -564,14 +656,15 @@ export default function CatalogueMiel(){
       </div>
 
       {/* Grille produits */}
-      <div style={{
+      <div className="card-stagger" style={{
         padding: "0 40px 60px", maxWidth: "1200px", margin: "0 auto",
         display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "24px",
       }}>
         {produitsFiltres.length === 0 ? (
           <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: "80px 20px", color: "#a8977f", animation: "fadeInUp 0.4s ease" }}>
-            <div style={{ fontSize: "52px", marginBottom: "16px" }}>🔍</div>
-            <p style={{ fontSize: "18px", fontWeight: "600", margin: 0 }}>{t.aucunProduit}</p>
+            <div className="float" style={{ fontSize: "64px", marginBottom: "20px" }}>🔍</div>
+            <p style={{ fontSize: "20px", fontWeight: "700", margin: "0 0 6px", color: "#6b6055" }}>{t.aucunProduit}</p>
+            <p style={{ fontSize: "14px", fontWeight: "400", margin: 0, color: "#a8977f" }}>{t.essayerAutreRecherche || "Essayez de modifier vos filtres ou votre recherche"}</p>
           </div>
         ) : (
           produitsAffiches.map((produit) => (
@@ -589,37 +682,94 @@ export default function CatalogueMiel(){
       {pageCount > 1 && (
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "center",
-          gap: "12px", padding: "0 40px 40px",
+          gap: "8px", padding: "0 40px 40px",
           maxWidth: "1200px", margin: "0 auto", fontFamily: "'DM Sans', sans-serif",
         }}>
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: "8px 18px", borderRadius: "8px", border: "none",
+              padding: "8px 16px", borderRadius: "8px", border: "none",
               background: page === 1 ? "#e5e7eb" : "#b45309",
               color: page === 1 ? "#9ca3af" : "white",
-              fontWeight: "700", fontSize: "14px", cursor: page === 1 ? "not-allowed" : "pointer",
-              transition: "all 0.2s",
+              fontWeight: "700", fontSize: "13px", cursor: page === 1 ? "not-allowed" : "pointer",
+              transition: "all 0.25s ease",
+              boxShadow: page === 1 ? "none" : "0 2px 8px rgba(180,83,9,0.2)",
+            }}
+            onMouseEnter={(e) => {
+              if (page !== 1) {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (page !== 1) {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = "0 2px 8px rgba(180,83,9,0.2)";
+              }
             }}
           >
-            {t.pagePrecedente || "Précédent"}
+            ◀
           </button>
-          <span style={{ fontSize: "14px", fontWeight: "600", color: "#6b6055" }}>
-            {isAr ? `الصفحة ${page} من ${pageCount}` : `Page ${page} sur ${pageCount}`}
-          </span>
+
+          {getPageNumbers().map((p, idx) =>
+            p === "..." ? (
+              <span key={`ellipsis-${idx}`} style={{ fontSize: "14px", color: "#a8977f", padding: "0 4px" }}>...</span>
+            ) : (
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                style={{
+                  width: "36px", height: "36px", borderRadius: "8px", border: "none",
+                  background: p === page ? "#b45309" : "transparent",
+                  color: p === page ? "white" : "#6b6055",
+                  fontWeight: "700", fontSize: "14px", cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  boxShadow: p === page ? "0 2px 8px rgba(180,83,9,0.2)" : "none",
+                }}
+                onMouseEnter={(e) => {
+                  if (p !== page) {
+                    e.target.style.background = "#fef9ee";
+                    e.target.style.color = "#b45309";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (p !== page) {
+                    e.target.style.background = "transparent";
+                    e.target.style.color = "#6b6055";
+                  }
+                }}
+              >
+                {p}
+              </button>
+            )
+          )}
+
           <button
             onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
             disabled={page === pageCount}
             style={{
-              padding: "8px 18px", borderRadius: "8px", border: "none",
+              padding: "8px 16px", borderRadius: "8px", border: "none",
               background: page === pageCount ? "#e5e7eb" : "#b45309",
               color: page === pageCount ? "#9ca3af" : "white",
-              fontWeight: "700", fontSize: "14px", cursor: page === pageCount ? "not-allowed" : "pointer",
-              transition: "all 0.2s",
+              fontWeight: "700", fontSize: "13px", cursor: page === pageCount ? "not-allowed" : "pointer",
+              transition: "all 0.25s ease",
+              boxShadow: page === pageCount ? "none" : "0 2px 8px rgba(180,83,9,0.2)",
+            }}
+            onMouseEnter={(e) => {
+              if (page !== pageCount) {
+                e.target.style.transform = "translateY(-2px)";
+                e.target.style.boxShadow = "0 4px 12px rgba(180,83,9,0.3)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (page !== pageCount) {
+                e.target.style.transform = "translateY(0)";
+                e.target.style.boxShadow = "0 2px 8px rgba(180,83,9,0.2)";
+              }
             }}
           >
-            {t.pageSuivante || "Suivant"}
+            ▶
           </button>
         </div>
       )}
@@ -627,16 +777,20 @@ export default function CatalogueMiel(){
       {/* Panier */}
       {panierOuvert && (
         <>
-          <div onClick={() => setPanierOuvert(false)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 999, animation: "fadeIn 0.3s ease" }} />
-            <div style={{ animation: "slideInRight 0.3s ease-out" }}>
-            <Panier
-              items={panier}
-              onFermer={() => setPanierOuvert(false)}
-              onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
-              t={t}
-              isAr={isAr}
-            />
-        </div>
+          <div onClick={() => setPanierOuvert(false)} style={{
+            position: "fixed", inset: 0,
+            background: "rgba(0,0,0,0.4)",
+            backdropFilter: "blur(4px)",
+            WebkitBackdropFilter: "blur(4px)",
+            zIndex: 999, animation: "fadeIn 0.3s ease",
+          }} />
+          <Panier
+            items={panier}
+            onFermer={() => setPanierOuvert(false)}
+            onCommander={() => { setPanierOuvert(false); setCommandeEnCours(true); }}
+            t={t}
+            isAr={isAr}
+          />
         </>
       )}
 
@@ -650,7 +804,7 @@ export default function CatalogueMiel(){
             setCommandeEnCours(false);
             const telClient = formaterTelephoneAlgerie(infoClient.telephone);
             const adminTel = getAdminWhatsapp();
-            
+
             setCommandeConfirmee({
               ...commande,
               msgAdmin: messageNouvelleCommande(commande, infoClient),
