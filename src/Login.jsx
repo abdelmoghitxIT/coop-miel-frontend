@@ -66,7 +66,7 @@ export default function Login() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#0a0a0a",
+      background: "var(--page-bg)",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -75,12 +75,12 @@ export default function Login() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
-        @keyframes borderGlow { 0%,100% { border-color: rgba(212,168,84,0.15); box-shadow: 0 8px 40px rgba(212,168,84,0.06); } 50% { border-color: #d4a854; box-shadow: 0 8px 40px rgba(212,168,84,0.18); } }
-        .login-input:focus { border-color: #d4a854 !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }
+        @keyframes borderGlow { 0%,100% { border-color: rgba(212,168,84,0.15); box-shadow: 0 8px 40px var(--gold-tint); } 50% { border-color: var(--accent); box-shadow: 0 8px 40px rgba(212,168,84,0.18); } }
+        .login-input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }
       `}</style>
 
       <div style={{
-        background: "#141414",
+        background: "var(--card-bg)",
         borderRadius: "20px",
         padding: "40px",
         width: "100%",
@@ -99,18 +99,18 @@ export default function Login() {
           />
           <h1 style={{
             margin: 0, fontSize: "22px", fontWeight: "800",
-            color: "#f5f0e8", fontFamily: "'Playfair Display', serif",
+            color: "var(--text-primary)", fontFamily: "'Playfair Display', serif",
           }}>
             التعاونية الفلاحية لتربية النحل كاويت
           </h1>
-          <p style={{ margin: "4px 0 0", fontSize: "13px", color: "#d4a854" }}>
+          <p style={{ margin: "4px 0 0", fontSize: "13px", color: "var(--accent)" }}>
             Coopérative apicole
           </p>
         </div>
 
         {/* Tabs */}
         <div style={{
-          display: "flex", background: "#0a0a0a",
+          display: "flex", background: "var(--page-bg)",
           borderRadius: "10px", padding: "4px", marginBottom: "24px",
         }}>
           {["connexion", "inscription"].map((m) => (
@@ -123,8 +123,8 @@ export default function Login() {
                 fontFamily: "'DM Sans', sans-serif",
                 fontWeight: "700", fontSize: "13px",
                 transition: "all 0.2s",
-                background: mode === m ? "#141414" : "transparent",
-                color: mode === m ? "#d4a854" : "rgba(245,240,232,0.4)",
+                background: mode === m ? "var(--card-bg)" : "transparent",
+                color: mode === m ? "var(--accent)" : "var(--text-muted)",
                 boxShadow: mode === m ? "0 1px 4px rgba(0,0,0,0.2)" : "none",
               }}
             >
@@ -137,7 +137,7 @@ export default function Login() {
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           {mode === "inscription" && (
             <div>
-              <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
                 {t.nomComplet}
               </label>
               <input
@@ -148,9 +148,9 @@ export default function Login() {
                 placeholder="Ahmed Benaissa"
                 style={{
                   width: "100%", padding: "12px 14px",
-                  borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
+                  borderRadius: "10px", border: "1.5px solid var(--border-input)",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                  color: "#f5f0e8", background: "#0a0a0a",
+                  color: "var(--text-primary)", background: "var(--page-bg)",
                   transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
@@ -158,7 +158,7 @@ export default function Login() {
           )}
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
               {t.email}
             </label>
             <input
@@ -170,16 +170,16 @@ export default function Login() {
               placeholder="ahmed@example.com"
               style={{
                 width: "100%", padding: "12px 14px",
-                borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
+                borderRadius: "10px", border: "1.5px solid var(--border-input)",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                  color: "#f5f0e8", background: "#0a0a0a",
+                  color: "var(--text-primary)", background: "var(--page-bg)",
                   transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
             </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
               {t.motDePasse}
             </label>
             <input
@@ -191,9 +191,9 @@ export default function Login() {
               placeholder="••••••••"
               style={{
                 width: "100%", padding: "12px 14px",
-                borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
+                borderRadius: "10px", border: "1.5px solid var(--border-input)",
                 fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                color: "#f5f0e8", background: "#0a0a0a",
+                color: "var(--text-primary)", background: "var(--page-bg)",
                 transition: "border-color 0.2s, box-shadow 0.2s",
               }}
             />
@@ -202,21 +202,21 @@ export default function Login() {
           {mode === "connexion" && (
             <button type="button" onClick={() => navigate('/mot-de-passe-oublie')} style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "13px", color: "#d4a854", fontWeight: "600",
+              fontSize: "13px", color: "var(--accent)", fontWeight: "600",
               textAlign: "right", padding: "4px 0 0",
               fontFamily: "'DM Sans', sans-serif",
               alignSelf: "flex-end",
               transition: "color 0.2s",
             }}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#c49a3c"}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#d4a854"}>
+              onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent-dark)"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "var(--accent)"}>
               {t.motDePasseOublie}
             </button>
           )}
 
           {mode === "inscription" && (
             <div>
-              <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
+              <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px", fontFamily: "'DM Sans', sans-serif" }}>
                 {t.telephone}
               </label>
               <input
@@ -227,9 +227,9 @@ export default function Login() {
                 placeholder="0555 123 456"
                 style={{
                   width: "100%", padding: "12px 14px",
-                  borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
+                  borderRadius: "10px", border: "1.5px solid var(--border-input)",
                   fontSize: "14px", fontFamily: "'DM Sans', sans-serif",
-                  color: "#f5f0e8", background: "#0a0a0a",
+                  color: "var(--text-primary)", background: "var(--page-bg)",
                   transition: "border-color 0.2s, box-shadow 0.2s",
                 }}
               />
@@ -257,7 +257,7 @@ export default function Login() {
             style={{
               width: "100%", padding: "13px",
               borderRadius: "10px", border: "none",
-              background: chargement ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              background: chargement ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))",
               color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
               cursor: chargement ? "not-allowed" : "pointer",
               fontFamily: "'DM Sans', sans-serif",
@@ -275,7 +275,7 @@ export default function Login() {
 
         <div style={{
           textAlign: "center", margin: "20px 0 0",
-          fontSize: "12px", color: "rgba(245,240,232,0.4)",
+          fontSize: "12px", color: "var(--text-muted)",
           fontFamily: "'DM Sans', sans-serif",
           lineHeight: "1.6",
         }}>
@@ -283,14 +283,14 @@ export default function Login() {
             onClick={() => navigate('/')}
             style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "14px", color: "rgba(245,240,232,0.4)",
+              fontSize: "14px", color: "var(--text-muted)",
               textDecoration: "underline", display: "block",
               margin: "0 auto 12px",
               fontFamily: "'DM Sans', sans-serif",
               transition: "color 0.2s",
             }}
-            onMouseEnter={(e) => e.currentTarget.style.color = "#d4a854"}
-            onMouseLeave={(e) => e.currentTarget.style.color = "rgba(245,240,232,0.4)"}
+            onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent)"}
+            onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-muted)"}
           >
             {t.retourAccueil}
           </button>

@@ -84,8 +84,8 @@ onSuccess(data.commande, {
 
   const inputStyle = {
     width: "100%", padding: "12px 14px", borderRadius: "10px",
-    border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "14px",
-    color: "#f5f0e8", outline: "none",
+    border: "1.5px solid var(--border-input)", fontSize: "14px",
+    color: "var(--text-primary)", outline: "none",
     background: "rgba(255,255,255,0.04)",
     fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
     direction: isAr ? "rtl" : "ltr",
@@ -104,43 +104,43 @@ onSuccess(data.commande, {
         width: "100%", maxWidth: "480px", maxHeight: "90vh", overflowY: "auto",
         direction: isAr ? "rtl" : "ltr",
         fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
-        backgroundColor: "#141414",
+        backgroundColor: "var(--card-bg)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-          <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: "#f5f0e8" }}>
+          <h2 style={{ margin: 0, fontSize: "22px", fontWeight: "800", color: "var(--text-primary)" }}>
             {t ? t.finaliserCommande : "Finaliser la commande"}
           </h2>
-          <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "#a09080" }}>✕</button>
+          <button onClick={onAnnuler} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "20px", color: "var(--text-secondary)" }}>✕</button>
         </div>
 
         {/* Récapitulatif */}
         <div style={{ background: "rgba(255,255,255,0.03)", borderRadius: "12px", padding: "16px", marginBottom: "20px" }}>
-          <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+          <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
             {t ? t.recapitulatif : "Récapitulatif"}
           </p>
           {panier.map((item) => (
-            <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <span style={{ fontSize: "13px", color: "#f5f0e8" }}>{item.nom} × {item.qte}</span>
-              <span style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
+            <div key={item.id} style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid var(--border)" }}>
+              <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>{item.nom} × {item.qte}</span>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "var(--accent)" }}>
                 {(Number(item.prix) * item.qte).toLocaleString()} DA
               </span>
             </div>
           ))}
           {wilaya && (
-            <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <span style={{ fontSize: "13px", color: "#f5f0e8" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", padding: "6px 0", borderBottom: "1px solid var(--border)" }}>
+              <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>
                 {t ? t.fraisLivraison || "Frais de livraison" : "Frais de livraison"}
               </span>
-              <span style={{ fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
+              <span style={{ fontSize: "13px", fontWeight: "700", color: "var(--accent)" }}>
                 {chargementFrais ? "..." : `${frais.toLocaleString()} DA`}
               </span>
             </div>
           )}
           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-            <span style={{ fontSize: "15px", fontWeight: "700", color: "#f5f0e8" }}>
+            <span style={{ fontSize: "15px", fontWeight: "700", color: "var(--text-primary)" }}>
               {t ? t.total : "Total"}
             </span>
-            <span style={{ fontSize: "18px", fontWeight: "800", color: "#d4a854" }}>
+            <span style={{ fontSize: "18px", fontWeight: "800", color: "var(--accent)" }}>
               {total.toLocaleString()} DA
             </span>
           </div>
@@ -149,7 +149,7 @@ onSuccess(data.commande, {
         {/* Formulaire */}
         <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {t ? t.nomComplet : "Nom complet"} *
             </label>
             <input
@@ -161,7 +161,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {t ? t.telephone : "Téléphone"} *
             </label>
             <input
@@ -173,7 +173,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {t ? t.adresseLivraison : "Adresse de livraison"} *
             </label>
             <select
@@ -189,7 +189,7 @@ onSuccess(data.commande, {
           </div>
 
           <div>
-            <label style={{ fontSize: "12px", fontWeight: "500", color: "#a09080", display: "block", marginBottom: "4px" }}>
+            <label style={{ fontSize: "12px", fontWeight: "500", color: "var(--text-secondary)", display: "block", marginBottom: "4px" }}>
               {t ? t.adresseDetails || "Rue, commune (optionnel)" : "Rue, commune (optionnel)"}
             </label>
             <input
@@ -203,16 +203,16 @@ onSuccess(data.commande, {
           {/* Paiement */}
 
           <div style={{
-            background: "rgba(212,168,84,0.06)", border: "1px solid rgba(212,168,84,0.15)",
+            background: "var(--gold-tint)", border: "1px solid rgba(212,168,84,0.15)",
             borderRadius: "10px", padding: "12px 14px",
             display: "flex", alignItems: "center", gap: "10px",
           }}>
             <span style={{ fontSize: "20px" }}>💵</span>
             <div>
-              <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
+              <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "var(--accent)" }}>
                 {t ? t.paiementLivraison : "Paiement à la livraison"}
               </p>
-              <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#d4a854" }}>
+              <p style={{ margin: "2px 0 0", fontSize: "12px", color: "var(--accent)" }}>
                 {t ? t.paiementDesc : "Vous payez en cash à la réception de votre commande"}
               </p>
             </div>
@@ -229,7 +229,7 @@ onSuccess(data.commande, {
             disabled={chargement}
             style={{
               width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-              background: chargement ? "rgba(212,168,84,0.4)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+              background: chargement ? "rgba(212,168,84,0.4)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))",
               color: "#0a0a0a", fontWeight: "700", fontSize: "15px",
               cursor: chargement ? "not-allowed" : "pointer",
             }}
@@ -239,8 +239,8 @@ onSuccess(data.commande, {
 
           <button onClick={onAnnuler} style={{
             width: "100%", padding: "12px", borderRadius: "12px",
-            border: "1.5px solid rgba(255,255,255,0.1)", background: "transparent",
-            color: "#a09080", fontWeight: "600", fontSize: "14px", cursor: "pointer",
+            border: "1.5px solid var(--border-input)", background: "transparent",
+            color: "var(--text-secondary)", fontWeight: "600", fontSize: "14px", cursor: "pointer",
           }}>
             {t ? t.annuler : "Annuler"}
           </button>

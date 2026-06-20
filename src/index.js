@@ -5,14 +5,17 @@ import './index.css';
 import App from './App';
 import { LangueProvider } from './LangueContext';
 import { AuthProvider } from './AuthContext';
+import { ThemeProvider } from './ThemeContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-    <LangueProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </LangueProvider>
+    <ThemeProvider>
+      <LangueProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </LangueProvider>
+    </ThemeProvider>
   </BrowserRouter>
 );

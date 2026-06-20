@@ -59,7 +59,7 @@ export default function MesCommandes() {
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#0a0a0a",
+      minHeight: "100vh", background: "var(--page-bg)",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
@@ -67,7 +67,7 @@ export default function MesCommandes() {
 
       {/* Navbar */}
       <header style={{
-        background: "rgba(10,10,10,0.85)", borderBottom: "1px solid rgba(212,168,84,0.15)",
+        background: "var(--header-bg)", borderBottom: "1px solid rgba(212,168,84,0.15)",
         padding: "0 32px", height: "64px", display: "flex",
         alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
@@ -77,19 +77,19 @@ export default function MesCommandes() {
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
           <div>
-            <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "#f5f0e8", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
+            <h1 style={{ margin: 0, fontSize: "16px", fontWeight: "800", color: "var(--text-primary)", fontFamily: "'Playfair Display', serif", lineHeight: 1 }}>
               {isAr ? "طلباتي" : "Mes Commandes"}
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#d4a854" }}>
+            <p style={{ margin: 0, fontSize: "11px", color: "var(--accent)" }}>
               {utilisateur?.nom}
             </p>
           </div>
         </div>
         <button onClick={() => navigate('/')}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "#e8c97a"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "#d4a854"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-light)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
           style={{
-          background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none",
+          background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", border: "none",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
           fontSize: "13px", fontWeight: "700",
           transition: "all 0.2s",
@@ -101,7 +101,7 @@ export default function MesCommandes() {
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "32px 24px" }}>
 
         <h2 style={{
-          margin: "0 0 24px", fontSize: "24px", fontWeight: "800", color: "#f5f0e8",
+          margin: "0 0 24px", fontSize: "24px", fontWeight: "800", color: "var(--text-primary)",
           fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
         }}>
           {isAr ? `مرحباً ${utilisateur?.nom} 👋` : `Bonjour ${utilisateur?.nom} 👋`}
@@ -112,21 +112,21 @@ export default function MesCommandes() {
         ) : commandes.length === 0 ? (
           <div style={{
             textAlign: "center", padding: "80px 20px",
-            background: "#141414", borderRadius: "16px", border: "1px solid rgba(255,255,255,0.06)",
+            background: "var(--card-bg)", borderRadius: "16px", border: "1px solid var(--border)",
             animation: "fadeInUp 0.4s ease",
           }}>
             <div style={{ fontSize: "60px", marginBottom: "16px", opacity: 0.8 }}>🛒</div>
-            <p style={{ fontSize: "18px", fontWeight: "700", color: "#f5f0e8", margin: "0 0 8px" }}>
+            <p style={{ fontSize: "18px", fontWeight: "700", color: "var(--text-primary)", margin: "0 0 8px" }}>
               {isAr ? "لا توجد طلبات بعد" : "Aucune commande pour l'instant"}
             </p>
-            <p style={{ fontSize: "14px", color: "rgba(245,240,232,0.4)", margin: 0 }}>
+            <p style={{ fontSize: "14px", color: "var(--text-muted)", margin: 0 }}>
               {isAr ? "تصفح منتجاتنا وضع طلبك الأول !" : "Parcourez nos produits et passez votre première commande !"}
             </p>
         <button onClick={() => navigate('/')}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "#e8c97a"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "#d4a854"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-light)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
               style={{
-              marginTop: "24px", background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a",
+              marginTop: "24px", background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a",
               border: "none", borderRadius: "10px", padding: "14px 28px",
               cursor: "pointer", fontWeight: "700", fontSize: "14px",
               transition: "all 0.2s",
@@ -141,8 +141,8 @@ export default function MesCommandes() {
               const isOpen = commandeOuverte === c.id;
               return (
                 <div key={c.id} className="fade-in-up card-glass" style={{
-                  background: "#141414", borderRadius: "16px",
-                  border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden",
+                  background: "var(--card-bg)", borderRadius: "16px",
+                  border: "1px solid var(--border)", overflow: "hidden",
                   boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
                   transition: "transform 0.25s ease, box-shadow 0.25s ease",
                   animationDelay: `${index * 0.05}s`,
@@ -162,10 +162,10 @@ export default function MesCommandes() {
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", flexDirection: isAr ? "row-reverse" : "row" }}>
                       <span style={{ fontSize: "24px" }}>{statut.icon}</span>
                       <div>
-                        <p style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "#f5f0e8" }}>
+                        <p style={{ margin: 0, fontSize: "15px", fontWeight: "700", color: "var(--text-primary)" }}>
                           {isAr ? `طلب رقم #${c.id}` : `Commande #${c.id}`}
                         </p>
-                        <p style={{ margin: "3px 0 0", fontSize: "12px", color: "rgba(245,240,232,0.4)" }}>
+                        <p style={{ margin: "3px 0 0", fontSize: "12px", color: "var(--text-muted)" }}>
                           {new Date(c.created_at).toLocaleDateString(isAr ? "ar-DZ" : "fr-DZ", {
                             year: "numeric", month: "long", day: "numeric"
                           })}
@@ -181,10 +181,10 @@ export default function MesCommandes() {
                       }}>
                         {isAr ? statut.labelAr : statut.label}
                       </span>
-                      <span style={{ fontSize: "16px", fontWeight: "800", color: "#e8c97a" }}>
+                      <span style={{ fontSize: "16px", fontWeight: "800", color: "var(--accent-light)" }}>
                         {Number(c.total).toLocaleString()} DA
                       </span>
-                      <span style={{ fontSize: "18px", color: "rgba(245,240,232,0.4)" }}>
+                      <span style={{ fontSize: "18px", color: "var(--text-muted)" }}>
                         {isOpen ? "▲" : "▼"}
                       </span>
                     </div>
@@ -192,21 +192,21 @@ export default function MesCommandes() {
 
                   {/* Détails commande */}
                   {isOpen && (
-                    <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "16px 20px", background: "#0a0a0a", animation: "fadeInUp 0.25s ease" }}>
+                    <div style={{ borderTop: "1px solid var(--border)", padding: "16px 20px", background: "var(--page-bg)", animation: "fadeInUp 0.25s ease" }}>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "14px" }}>
-                        <div style={{ background: "#141414", borderRadius: "10px", padding: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                          <p style={{ margin: "0 0 4px", fontSize: "11px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase" }}>
+                        <div style={{ background: "var(--card-bg)", borderRadius: "10px", padding: "12px", border: "1px solid var(--border)" }}>
+                          <p style={{ margin: "0 0 4px", fontSize: "11px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase" }}>
                             {isAr ? "عنوان التوصيل" : "Adresse de livraison"}
                           </p>
-                          <p style={{ margin: 0, fontSize: "13px", color: "#f5f0e8" }}>
+                          <p style={{ margin: 0, fontSize: "13px", color: "var(--text-primary)" }}>
                             {c.adresse_livraison || "—"}
                           </p>
                         </div>
-                        <div style={{ background: "#141414", borderRadius: "10px", padding: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                          <p style={{ margin: "0 0 4px", fontSize: "11px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase" }}>
+                        <div style={{ background: "var(--card-bg)", borderRadius: "10px", padding: "12px", border: "1px solid var(--border)" }}>
+                          <p style={{ margin: "0 0 4px", fontSize: "11px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase" }}>
                             {isAr ? "تاريخ الطلب" : "Date de commande"}
                           </p>
-                          <p style={{ margin: 0, fontSize: "13px", color: "#f5f0e8" }}>
+                          <p style={{ margin: 0, fontSize: "13px", color: "var(--text-primary)" }}>
                             {new Date(c.created_at).toLocaleDateString(isAr ? "ar-DZ" : "fr-DZ")}
                           </p>
                         </div>
@@ -214,26 +214,26 @@ export default function MesCommandes() {
 
                       {/* Tracking Yalidine */}
                       {c.tracking_number && (
-                        <div style={{ background: "#141414", borderRadius: "10px", padding: "12px", border: "1px solid rgba(255,255,255,0.06)", marginBottom: "12px" }}>
-                          <p style={{ margin: "0 0 6px", fontSize: "11px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase" }}>
+                        <div style={{ background: "var(--card-bg)", borderRadius: "10px", padding: "12px", border: "1px solid var(--border)", marginBottom: "12px" }}>
+                          <p style={{ margin: "0 0 6px", fontSize: "11px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase" }}>
                             {isAr ? "تتبع الشحنة" : "Suivi de livraison"} 🚚
                           </p>
                           <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
-                            <span style={{ fontSize: "13px", color: "#f5f0e8", fontWeight: "600" }}>
+                            <span style={{ fontSize: "13px", color: "var(--text-primary)", fontWeight: "600" }}>
                               {isAr ? "رقم التتبع" : "Tracking"}:
                             </span>
-                            <code style={{ fontSize: "14px", fontWeight: "800", color: "#d4a854", background: "rgba(212,168,84,0.06)", padding: "2px 10px", borderRadius: "6px" }}>
+                            <code style={{ fontSize: "14px", fontWeight: "800", color: "var(--accent)", background: "var(--gold-tint)", padding: "2px 10px", borderRadius: "6px" }}>
                               {c.tracking_number}
                             </code>
                             <a
                               href={`https://tracking.yalidine.com/${c.tracking_number}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              onMouseEnter={(e) => { e.currentTarget.style.background = "#e8c97a"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
-                              onMouseLeave={(e) => { e.currentTarget.style.background = "#d4a854"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                              onMouseEnter={(e) => { e.currentTarget.style.background = "var(--accent-light)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; }}
+                              onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                                 style={{
                                 marginLeft: "auto", fontSize: "12px", fontWeight: "700", color: "#0a0a0a",
-                                background: "linear-gradient(135deg, #d4a854, #c49a3c)", padding: "6px 14px", borderRadius: "8px",
+                                background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", padding: "6px 14px", borderRadius: "8px",
                                 textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "4px",
                                 transition: "all 0.2s",
                               }}
@@ -242,7 +242,7 @@ export default function MesCommandes() {
                             </a>
                           </div>
                           {c.yalidine_status && (
-                            <p style={{ margin: "6px 0 0", fontSize: "12px", color: "#a09080" }}>
+                            <p style={{ margin: "6px 0 0", fontSize: "12px", color: "var(--text-secondary)" }}>
                               {isAr ? "الحالة" : "Statut Yalidine"}: <strong>{c.yalidine_status}</strong>
                             </p>
                           )}
@@ -254,12 +254,12 @@ export default function MesCommandes() {
                         <button
                           onClick={() => annulerCommande(c.id)}
                           disabled={annulationEnCours === c.id}
-                          onMouseEnter={(e) => { if (annulationEnCours !== c.id) { e.currentTarget.style.background = "#dc2626"; e.currentTarget.style.color = "#f5f0e8"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(220,38,38,0.25)"; } }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = "#141414"; e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                          onMouseEnter={(e) => { if (annulationEnCours !== c.id) { e.currentTarget.style.background = "#dc2626"; e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(220,38,38,0.25)"; } }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "var(--card-bg)"; e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                           style={{
                             width: "100%", marginBottom: "12px", padding: "10px",
                             borderRadius: "10px", border: "1.5px solid #dc2626",
-                            background: annulationEnCours === c.id ? "rgba(220,38,38,0.1)" : "#141414",
+                            background: annulationEnCours === c.id ? "rgba(220,38,38,0.1)" : "var(--card-bg)",
                             color: "#dc2626", fontWeight: "700", fontSize: "13px",
                             cursor: annulationEnCours === c.id ? "not-allowed" : "pointer",
                             fontFamily: "inherit",
@@ -274,8 +274,8 @@ export default function MesCommandes() {
 
                       {/* Produits */}
                       {c.produits && c.produits[0] && (
-                        <div style={{ background: "#141414", borderRadius: "10px", padding: "12px", border: "1px solid rgba(255,255,255,0.06)" }}>
-                          <p style={{ margin: "0 0 10px", fontSize: "11px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase" }}>
+                        <div style={{ background: "var(--card-bg)", borderRadius: "10px", padding: "12px", border: "1px solid var(--border)" }}>
+                          <p style={{ margin: "0 0 10px", fontSize: "11px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase" }}>
                             {isAr ? "المنتجات" : "Produits commandés"}
                           </p>
                           {c.produits.map((p, i) => p && (
@@ -284,19 +284,19 @@ export default function MesCommandes() {
                               padding: "6px 0", borderBottom: i < c.produits.length - 1 ? "1px solid rgba(255,255,255,0.03)" : "none",
                               flexDirection: isAr ? "row-reverse" : "row",
                             }}>
-                              <span style={{ fontSize: "13px", color: "#f5f0e8" }}>
+                              <span style={{ fontSize: "13px", color: "var(--text-primary)" }}>
                                 {p.nom} × {p.quantite}
                               </span>
-                              <span style={{ fontSize: "13px", fontWeight: "700", color: "#e8c97a" }}>
+                              <span style={{ fontSize: "13px", fontWeight: "700", color: "var(--accent-light)" }}>
                                 {(Number(p.prix) * p.quantite).toLocaleString()} DA
                               </span>
                             </div>
                           ))}
                           <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", flexDirection: isAr ? "row-reverse" : "row" }}>
-                            <span style={{ fontSize: "14px", fontWeight: "700", color: "#f5f0e8" }}>
+                            <span style={{ fontSize: "14px", fontWeight: "700", color: "var(--text-primary)" }}>
                               {isAr ? "المجموع" : "Total"}
                             </span>
-                            <span style={{ fontSize: "16px", fontWeight: "800", color: "#e8c97a" }}>
+                            <span style={{ fontSize: "16px", fontWeight: "800", color: "var(--accent-light)" }}>
                               {Number(c.total).toLocaleString()} DA
                             </span>
                           </div>

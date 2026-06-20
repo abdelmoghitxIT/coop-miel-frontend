@@ -43,24 +43,24 @@ export default function VerifierEmail() {
   return (
       <div style={{
         minHeight: "100vh", display: "flex", justifyContent: "center", 
-        alignItems: "center", background: "#0a0a0a", fontFamily: "sans-serif"
+        alignItems: "center", background: "var(--page-bg)", fontFamily: "sans-serif"
       }}>
         <div style={{
-          background: "#141414", padding: "40px", borderRadius: "12px", 
+          background: "var(--card-bg)", padding: "40px", borderRadius: "12px", 
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)", textAlign: "center", maxWidth: "450px",
           border: "1px solid rgba(212,168,84,0.2)",
         }}>
-        <h2 style={{ color: "#d4a854", margin: "0 0 16px" }}>{t.verificationEmail}</h2>
+        <h2 style={{ color: "var(--accent)", margin: "0 0 16px" }}>{t.verificationEmail}</h2>
         
         {statut === "chargement" && (
-          <p style={{ color: "#a09080" }}>{t.verificationEnCours}</p>
+          <p style={{ color: "var(--text-secondary)" }}>{t.verificationEnCours}</p>
         )}
 
         {statut === "succes" && (
           <div>
             <p style={{ fontSize: "48px", margin: "0" }}>✅</p>
             <p style={{ color: "#16a34a", fontWeight: "bold", fontSize: "18px" }}>{message}</p>
-            <p style={{ color: "rgba(245,240,232,0.4)", fontSize: "14px" }}>{t.redirectionConnexion}</p>
+            <p style={{ color: "var(--text-muted)", fontSize: "14px" }}>{t.redirectionConnexion}</p>
           </div>
         )}
 
@@ -68,11 +68,11 @@ export default function VerifierEmail() {
           <div>
             <p style={{ fontSize: "48px", margin: "0" }}>❌</p>
             <p style={{ color: "#dc2626", fontWeight: "bold", fontSize: "18px" }}>{t.lienInvalide}</p>
-            <p style={{ color: "#a09080", fontSize: "14px" }}>{message}</p>
+            <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>{message}</p>
             <button 
               onClick={() => navigate('/login')}
               style={{
-                background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none", 
+                background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", border: "none", 
                 padding: "10px 20px", borderRadius: "8px", cursor: "pointer", marginTop: "15px", fontWeight: "bold"
               }}
             >

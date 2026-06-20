@@ -152,32 +152,32 @@ export default function MonProfil() {
 
   if (chargement) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "#0a0a0a" }}>
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--page-bg)" }}>
         <BeeSpinner size={48} text={isAr ? "جاري التحميل..." : "Chargement..."} />
       </div>
     );
   }
 
   const inputStyle = {
-    width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
-    fontSize: "14px", color: "#f5f0e8", background: modeEdition ? "#0a0a0a" : "rgba(255,255,255,0.03)",
+    width: "100%", padding: "12px 14px", borderRadius: "10px", border: "1.5px solid var(--border-input)",
+    fontSize: "14px", color: "var(--text-primary)", background: modeEdition ? "var(--page-bg)" : "rgba(255,255,255,0.03)",
     boxSizing: "border-box", outline: "none", transition: "border-color 0.2s, box-shadow 0.2s",
   };
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#0a0a0a", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
+      minHeight: "100vh", background: "var(--page-bg)", fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
-      <style>{`input:focus, select:focus { border-color: #d4a854 !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }`}</style>
+      <style>{`input:focus, select:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(212,168,84,0.15) !important; outline: none !important; }`}</style>
       <header style={{
-        background: "linear-gradient(135deg, #c49a3c, #d4a854)", padding: "16px 32px",
+        background: "linear-gradient(135deg, var(--accent-dark), var(--accent))", padding: "16px 32px",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <img src={LOGO_URL} alt="" style={{ height: "36px", width: "36px", borderRadius: "50%", objectFit: "cover", boxShadow: "0 0 0 3px rgba(255,255,255,0.2)" }} />
           <div>
-            <p style={{ margin: 0, fontWeight: "700", color: "#f5f0e8", fontSize: "14px" }}>
+            <p style={{ margin: 0, fontWeight: "700", color: "var(--text-primary)", fontSize: "14px" }}>
               {isAr ? "التعاونية الفلاحية" : "Mon Profil"}
             </p>
             <p style={{ margin: 0, fontSize: "10px", color: "rgba(255,255,255,0.7)" }}>
@@ -186,7 +186,7 @@ export default function MonProfil() {
           </div>
         </div>
         <button onClick={() => navigate('/')} style={{
-          background: "rgba(212,168,84,0.15)", color: "#f5f0e8", border: "1px solid rgba(212,168,84,0.25)",
+          background: "rgba(212,168,84,0.15)", color: "var(--text-primary)", border: "1px solid rgba(212,168,84,0.25)",
           borderRadius: "8px", padding: "8px 16px", cursor: "pointer", fontSize: "12px", fontWeight: "700",
         }}>
           Retour au catalogue
@@ -195,16 +195,16 @@ export default function MonProfil() {
 
       <div style={{ maxWidth: "600px", margin: "40px auto", padding: "0 20px" }}>
         <div style={{
-          background: "#141414", borderRadius: "16px", padding: "32px",
+          background: "var(--card-bg)", borderRadius: "16px", padding: "32px",
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
-            <h2 style={{ color: "#f5f0e8", fontSize: "20px", margin: 0 }}>
+            <h2 style={{ color: "var(--text-primary)", fontSize: "20px", margin: 0 }}>
               {isAr ? "معلومات الحساب" : "Informations du compte"}
             </h2>
             {!modeEdition && (
               <button onClick={() => setModeEdition(true)} style={{
-                background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none",
+                background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", border: "none",
                 borderRadius: "8px", padding: "8px 16px", cursor: "pointer",
                 fontWeight: "600", fontSize: "13px",
               }}>
@@ -214,7 +214,7 @@ export default function MonProfil() {
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {isAr ? "الاسم الكامل" : "Nom complet"}
             </label>
             <input value={nom} onChange={(e) => setNom(e.target.value)}
@@ -222,14 +222,14 @@ export default function MonProfil() {
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {isAr ? "رقم الهاتف" : "Téléphone"}
             </label>
             <input value={telephone} disabled style={inputStyle} />
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               {isAr ? "الولاية" : "Wilaya"}
             </label>
             {modeEdition ? (
@@ -243,20 +243,20 @@ export default function MonProfil() {
           </div>
 
           <div style={{ marginBottom: "20px" }}>
-            <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+            <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
               Email
             </label>
             <div style={{
               display: "flex", alignItems: "center", gap: "10px",
-              padding: "12px 14px", borderRadius: "10px", border: "1.5px solid rgba(255,255,255,0.1)",
-              fontSize: "14px", color: "#a09080", background: "rgba(255,255,255,0.03)",
+              padding: "12px 14px", borderRadius: "10px", border: "1.5px solid var(--border-input)",
+              fontSize: "14px", color: "var(--text-secondary)", background: "rgba(255,255,255,0.03)",
             }}>
               <span style={{ flex: 1 }}>{email}</span>
               {emailVerifie ? (
                 <span style={{ fontSize: "12px", color: "#16a34a", fontWeight: "600" }}>✅ Vérifié</span>
               ) : (
                 <button type="button" onClick={handleRenvoiVerification} disabled={renvoi} style={{
-                  fontSize: "12px", color: "#d4a854", background: "none", border: "none",
+                  fontSize: "12px", color: "var(--accent)", background: "none", border: "none",
                   cursor: "pointer", fontWeight: "600", textDecoration: "underline", whiteSpace: "nowrap",
                 }}>
                   {renvoi ? "..." : "⚠️ Vérifier"}
@@ -266,24 +266,24 @@ export default function MonProfil() {
           </div>
 
           {/* Mot de passe */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "20px", marginTop: "8px" }}>
-            <div style={{ background: afficherMdp ? "#0a0a0a" : "transparent", borderRadius: "12px", padding: afficherMdp ? "16px" : "0", border: afficherMdp ? "1px solid rgba(255,255,255,0.06)" : "none", transition: "all 0.3s ease" }}>
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "20px", marginTop: "8px" }}>
+            <div style={{ background: afficherMdp ? "var(--page-bg)" : "transparent", borderRadius: "12px", padding: afficherMdp ? "16px" : "0", border: afficherMdp ? "1px solid var(--border)" : "none", transition: "all 0.3s ease" }}>
             <button onClick={() => setAfficherMdp(!afficherMdp)} style={{
               background: "none", border: "none", cursor: "pointer", padding: 0,
               display: "flex", alignItems: "center", gap: "8px",
-              fontSize: "14px", fontWeight: "700", color: "#d4a854", fontFamily: "inherit",
+              fontSize: "14px", fontWeight: "700", color: "var(--accent)", fontFamily: "inherit",
               transition: "color 0.2s",
             }}
-              onMouseEnter={(e) => e.currentTarget.style.color = "#c49a3c"}
-              onMouseLeave={(e) => e.currentTarget.style.color = "#d4a854"}>
+              onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent-dark)"}
+              onMouseLeave={(e) => e.currentTarget.style.color = "var(--accent)"}>
               🔑 {isAr ? "تغيير كلمة المرور" : "Changer le mot de passe"}
-              <span style={{ fontSize: "12px", color: "rgba(245,240,232,0.4)" }}>{afficherMdp ? "▲" : "▼"}</span>
+              <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>{afficherMdp ? "▲" : "▼"}</span>
             </button>
 
             {afficherMdp && (
               <form onSubmit={handleChangerMotDePasse} style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
                 <div>
-                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                     {isAr ? "كلمة المرور الحالية" : "Mot de passe actuel"}
                   </label>
                   <input type="password" value={ancienMotDePasse}
@@ -291,7 +291,7 @@ export default function MonProfil() {
                     required style={inputStyle} />
                 </div>
                 <div>
-                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                     {isAr ? "كلمة المرور الجديدة" : "Nouveau mot de passe"}
                   </label>
                   <input type="password" value={nouveauMotDePasse}
@@ -300,7 +300,7 @@ export default function MonProfil() {
                     placeholder={isAr ? "8 أحرف، حرف كبير، رقم" : "8 car., 1 maj., 1 chiffre"} />
                 </div>
                 <div>
-                  <label style={{ fontSize: "13px", fontWeight: "600", color: "#a09080", display: "block", marginBottom: "6px" }}>
+                  <label style={{ fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)", display: "block", marginBottom: "6px" }}>
                     {isAr ? "تأكيد كلمة المرور الجديدة" : "Confirmer le nouveau mot de passe"}
                   </label>
                   <input type="password" value={confirmerMotDePasse}
@@ -309,7 +309,7 @@ export default function MonProfil() {
                 </div>
                 <button type="submit" disabled={mdpChargement} style={{
                   padding: "12px", borderRadius: "10px", border: "none",
-                  background: mdpChargement ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
+                  background: mdpChargement ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))",
                   color: "#0a0a0a", fontWeight: "700", fontSize: "14px",
                   cursor: mdpChargement ? "not-allowed" : "pointer",
                 }}>
@@ -326,19 +326,19 @@ export default function MonProfil() {
           {modeEdition && (
             <div style={{ display: "flex", gap: "12px" }}>
               <button onClick={() => { setModeEdition(false); setErreur(""); setMessage(""); }} style={{
-                flex: 1, padding: "14px", borderRadius: "12px", border: "2px solid rgba(255,255,255,0.1)",
-                background: "transparent", color: "#a09080", fontWeight: "600", fontSize: "15px", cursor: "pointer",
+                flex: 1, padding: "14px", borderRadius: "12px", border: "2px solid var(--border-input)",
+                background: "transparent", color: "var(--text-secondary)", fontWeight: "600", fontSize: "15px", cursor: "pointer",
               }}>
                 {isAr ? "إلغاء" : "Annuler"}
               </button>
               <button type="submit" disabled={sauvegarde} onClick={handleSauvegarder}
-                onMouseEnter={(e) => { if (!sauvegarde) { e.currentTarget.style.background = "#e8c97a"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; } }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "#d4a854"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+                onMouseEnter={(e) => { if (!sauvegarde) { e.currentTarget.style.background = "var(--accent-light)"; e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(212,168,84,0.3)"; } }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "var(--accent)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                 onMouseDown={(e) => { if (!sauvegarde) e.currentTarget.style.transform = "scale(0.97)"; }}
                 onMouseUp={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; }}
                 style={{
                 flex: 1, padding: "14px", borderRadius: "12px", border: "none",
-                background: sauvegarde ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", fontWeight: "700",
+                background: sauvegarde ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", fontWeight: "700",
                 fontSize: "15px", cursor: sauvegarde ? "not-allowed" : "pointer",
                 transition: "all 0.2s",
               }}>

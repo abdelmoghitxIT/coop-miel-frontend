@@ -54,21 +54,21 @@ export default function ResetPassword() {
   return (
       <div style={{
         minHeight: "100vh", display: "flex", justifyContent: "center", 
-        alignItems: "center", background: "#0a0a0a", fontFamily: "sans-serif"
+        alignItems: "center", background: "var(--page-bg)", fontFamily: "sans-serif"
       }}>
         <div style={{
-          background: "#141414", padding: "40px", borderRadius: "12px", 
+          background: "var(--card-bg)", padding: "40px", borderRadius: "12px", 
           boxShadow: "0 4px 20px rgba(0,0,0,0.2)", width: "100%", maxWidth: "400px",
           border: "1px solid rgba(212,168,84,0.2)",
         }}>
-        <h2 style={{ color: "#d4a854", margin: "0 0 8px", textAlign: "center" }}>{t.nouveauMotDePasse}</h2>
-        <p style={{ color: "#a09080", textAlign: "center", fontSize: "14px", marginBottom: "24px" }}>
+        <h2 style={{ color: "var(--accent)", margin: "0 0 8px", textAlign: "center" }}>{t.nouveauMotDePasse}</h2>
+        <p style={{ color: "var(--text-secondary)", textAlign: "center", fontSize: "14px", marginBottom: "24px" }}>
           {t.choisirMotDePasse}
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
           <div>
-            <label style={{ display: "block", color: "#f5f0e8", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
+            <label style={{ display: "block", color: "var(--text-primary)", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
               {t.nouveauMotDePasse}
             </label>
             <input 
@@ -76,14 +76,14 @@ export default function ResetPassword() {
               required
               value={nouveauMdp}
               onChange={(e) => setNouveauMdp(e.target.value)}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid rgba(255,255,255,0.1)", background: "#0a0a0a", color: "#f5f0e8", outline: "none" }}
-              onFocus={(e) => { e.target.style.borderColor = "#d4a854"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
-              onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid var(--border-input)", background: "var(--page-bg)", color: "var(--text-primary)", outline: "none" }}
+              onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "var(--border-input)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
           <div>
-            <label style={{ display: "block", color: "#f5f0e8", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
+            <label style={{ display: "block", color: "var(--text-primary)", marginBottom: "6px", fontSize: "14px", fontWeight: "bold" }}>
               {t.confirmerMotDePasse}
             </label>
             <input 
@@ -91,9 +91,9 @@ export default function ResetPassword() {
               required
               value={confirmationMdp}
               onChange={(e) => setConfirmationMdp(e.target.value)}
-              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid rgba(255,255,255,0.1)", background: "#0a0a0a", color: "#f5f0e8", outline: "none" }}
-              onFocus={(e) => { e.target.style.borderColor = "#d4a854"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
-              onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.1)"; e.target.style.boxShadow = "none"; }}
+              style={{ width: "100%", padding: "10px", borderRadius: "8px", border: "1.5px solid var(--border-input)", background: "var(--page-bg)", color: "var(--text-primary)", outline: "none" }}
+              onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; e.target.style.boxShadow = "0 0 0 3px rgba(212,168,84,0.15)"; }}
+              onBlur={(e) => { e.target.style.borderColor = "var(--border-input)"; e.target.style.boxShadow = "none"; }}
             />
           </div>
 
@@ -104,7 +104,7 @@ export default function ResetPassword() {
             type="submit" 
             disabled={chargement}
             style={{
-              background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none", 
+              background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", border: "none", 
               padding: "12px", borderRadius: "8px", cursor: "pointer", 
               fontWeight: "bold", fontSize: "16px", marginTop: "8px"
             }}

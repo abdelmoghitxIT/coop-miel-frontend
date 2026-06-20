@@ -97,7 +97,7 @@ export default function DetailProduit() {
 
   if (chargement) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0a0a0a", fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: "var(--page-bg)", fontFamily: "'DM Sans', sans-serif" }}>
         <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 40px" }}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "40px" }}>
             <div>
@@ -125,13 +125,13 @@ export default function DetailProduit() {
 
   if (!produit) {
     return (
-      <div style={{ minHeight: "100vh", background: "#0a0a0a", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100vh", background: "var(--page-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: "48px" }}>❌</div>
-          <p style={{ fontSize: "16px", color: "#a09080", marginTop: "12px" }}>
+          <p style={{ fontSize: "16px", color: "var(--text-secondary)", marginTop: "12px" }}>
             {t.produitNonTrouve}
           </p>
-          <button onClick={() => navigate('/')} style={{ marginTop: "16px", background: "linear-gradient(135deg, #d4a854, #c49a3c)", color: "#0a0a0a", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
+          <button onClick={() => navigate('/')} style={{ marginTop: "16px", background: "linear-gradient(135deg, var(--accent), var(--accent-dark))", color: "#0a0a0a", border: "none", borderRadius: "10px", padding: "10px 20px", cursor: "pointer", fontWeight: "700" }}>
             {t.retourCatalogue}
           </button>
         </div>
@@ -164,7 +164,7 @@ export default function DetailProduit() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "#0a0a0a",
+      background: "var(--page-bg)",
       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
       direction: isAr ? "rtl" : "ltr",
     }}>
@@ -177,20 +177,20 @@ export default function DetailProduit() {
 
       {/* Navbar */}
       <header style={{
-        background: "rgba(10,10,10,0.85)", borderBottom: "1px solid rgba(255,255,255,0.06)",
+        background: "var(--header-bg)", borderBottom: "1px solid var(--border)",
         padding: "0 40px", height: "64px", display: "flex",
         alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
         backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-        boxShadow: "0 1px 8px rgba(0,0,0,0.4)",
+        boxShadow: "0 1px 8px var(--shadow)",
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img src={LOGO_URL} alt="logo" style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover" }} />
           <div>
-            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "#f5f0e8", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
+            <h1 style={{ margin: 0, fontSize: "15px", fontWeight: "800", color: "var(--text-primary)", fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif", lineHeight: 1 }}>
               {t.siteName}
             </h1>
-            <p style={{ margin: 0, fontSize: "11px", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+            <p style={{ margin: 0, fontSize: "11px", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
               {t.siteSubtitle}
             </p>
           </div>
@@ -198,18 +198,18 @@ export default function DetailProduit() {
 
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           {/* Bouton FR/AR */}
-          <div style={{ display: "flex", gap: "3px", background: "rgba(255,255,255,0.06)", borderRadius: "8px", padding: "3px" }}>
+          <div style={{ display: "flex", gap: "3px", background: "var(--border)", borderRadius: "8px", padding: "3px" }}>
             <button onClick={() => langue === 'ar' && toggleLangue()} style={{
               padding: "5px 10px", borderRadius: "6px", border: "none", cursor: "pointer",
               fontSize: "12px", fontWeight: "700",
-              background: langue === 'fr' ? "#d4a854" : "transparent",
-              color: langue === 'fr' ? "#0a0a0a" : "#a09080",
+              background: langue === 'fr' ? "var(--accent)" : "transparent",
+              color: langue === 'fr' ? "#0a0a0a" : "var(--text-secondary)",
             }}>FR</button>
             <button onClick={() => langue === 'fr' && toggleLangue()} style={{
               padding: "5px 10px", borderRadius: "6px", border: "none", cursor: "pointer",
               fontSize: "12px", fontWeight: "700",
-              background: langue === 'ar' ? "#d4a854" : "transparent",
-              color: langue === 'ar' ? "#0a0a0a" : "#a09080",
+              background: langue === 'ar' ? "var(--accent)" : "transparent",
+              color: langue === 'ar' ? "#0a0a0a" : "var(--text-secondary)",
             }}>AR</button>
           </div>
 
@@ -217,7 +217,7 @@ export default function DetailProduit() {
             onClick={() => navigate(-1)}
             style={{
               background: "none", border: "none", cursor: "pointer",
-              fontSize: "14px", color: "#d4a854", fontWeight: "700",
+              fontSize: "14px", color: "var(--accent)", fontWeight: "700",
               display: "flex", alignItems: "center", gap: "6px",
               fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
             }}
@@ -237,7 +237,7 @@ export default function DetailProduit() {
               onMouseLeave={(e) => { const img = e.currentTarget.querySelector('img'); if (img) img.style.transform = 'scale(1)'; }}
               style={{
                 height: "380px", borderRadius: "16px", overflow: "hidden",
-                background: "#141414",
+                background: "var(--card-bg)",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 marginBottom: "12px", border: "1px solid rgba(212,168,84,0.15)",
               }}>
@@ -262,8 +262,8 @@ export default function DetailProduit() {
                   style={{
                     width: "72px", height: "72px", borderRadius: "10px",
                     overflow: "hidden", cursor: "pointer",
-                    border: photoActive === i ? "2.5px solid #d4a854" : "2px solid rgba(255,255,255,0.06)",
-                    background: "#141414",
+                    border: photoActive === i ? "2.5px solid #d4a854" : "2px solid var(--border)",
+                    background: "var(--card-bg)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                   }}
                 >
@@ -282,9 +282,9 @@ export default function DetailProduit() {
                   style={{
                     width: "72px", height: "72px", borderRadius: "10px",
                     overflow: "hidden", cursor: "pointer",
-                    background: "#141414", display: "flex",
+                    background: "var(--card-bg)", display: "flex",
                     alignItems: "center", justifyContent: "center",
-                    border: "2px solid rgba(255,255,255,0.06)", flexDirection: "column", gap: "2px",
+                    border: "2px solid var(--border)", flexDirection: "column", gap: "2px",
                   }}
                 >
                   <span style={{ fontSize: "20px" }}>▶️</span>
@@ -300,14 +300,14 @@ export default function DetailProduit() {
           <div style={{ display: "flex", flexDirection: "column", gap: "16px", position: "sticky", top: "100px", alignSelf: "flex-start" }}>
 
             <span style={{
-              fontSize: "12px", fontWeight: "700", color: "#d4a854",
+              fontSize: "12px", fontWeight: "700", color: "var(--accent)",
               textTransform: "uppercase", letterSpacing: "0.08em",
             }}>
               {produit.categorie_nom}
             </span>
 
             <h1 style={{
-              margin: 0, fontSize: "28px", fontWeight: "800", color: "#f5f0e8",
+              margin: 0, fontSize: "28px", fontWeight: "800", color: "var(--text-primary)",
               fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
               lineHeight: "1.3",
             }}>
@@ -315,10 +315,10 @@ export default function DetailProduit() {
             </h1>
 
             <div style={{ display: "flex", alignItems: "baseline", gap: "8px" }}>
-              <span style={{ fontSize: "32px", fontWeight: "800", color: "#e8c97a" }}>
+              <span style={{ fontSize: "32px", fontWeight: "800", color: "var(--accent-light)" }}>
                 {Number(produit.prix).toLocaleString("fr-DZ")} DA
               </span>
-              <span style={{ fontSize: "14px", color: "#a09080" }}>
+              <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
                 / {t.unite}
               </span>
             </div>
@@ -337,38 +337,38 @@ export default function DetailProduit() {
 
             {/* Description */}
             <div className="card-glass" style={{ borderRadius: "12px", padding: "16px" }}>
-              <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <p style={{ margin: "0 0 8px", fontSize: "13px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {t.description}
               </p>
-              <p style={{ margin: 0, fontSize: "14px", color: "#a09080", lineHeight: "1.7" }}>
+              <p style={{ margin: 0, fontSize: "14px", color: "var(--text-secondary)", lineHeight: "1.7" }}>
                 {produit.description || t.descriptionDefaut}
               </p>
             </div>
 
             {/* Caractéristiques */}
             <div className="card-glass" style={{ borderRadius: "12px", padding: "16px" }}>
-              <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "#d4a854", textTransform: "uppercase", letterSpacing: "0.06em" }}>
+              <p style={{ margin: "0 0 10px", fontSize: "13px", fontWeight: "700", color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
                 {t.caracteristiques}
               </p>
               {specs.map((spec, i) => (
                 <div key={i} style={{
                   display: "flex", justifyContent: "space-between",
-                  padding: "8px 0", borderBottom: i < specs.length - 1 ? "1px solid rgba(255,255,255,0.06)" : "none",
+                  padding: "8px 0", borderBottom: i < specs.length - 1 ? "1px solid var(--border)" : "none",
                   flexDirection: isAr ? "row-reverse" : "row",
                 }}>
-                  <span style={{ fontSize: "13px", color: "#a09080", fontWeight: "600" }}>{spec.label}</span>
-                  <span style={{ fontSize: "13px", color: "#f5f0e8", fontWeight: "600" }}>{spec.value}</span>
+                  <span style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "600" }}>{spec.label}</span>
+                  <span style={{ fontSize: "13px", color: "var(--text-primary)", fontWeight: "600" }}>{spec.value}</span>
                 </div>
               ))}
-              {caracteristiques.length > 0 && <div style={{ height: "1px", background: "rgba(255,255,255,0.06)", margin: "8px 0" }} />}
+              {caracteristiques.length > 0 && <div style={{ height: "1px", background: "var(--border)", margin: "8px 0" }} />}
               {caracteristiques.map((carac) => (
                 <div key={carac.id} style={{
                   display: "flex", justifyContent: "space-between",
-                  padding: "8px 0", borderBottom: "1px solid rgba(255,255,255,0.06)",
+                  padding: "8px 0", borderBottom: "1px solid var(--border)",
                   flexDirection: isAr ? "row-reverse" : "row",
                 }}>
-                  <span style={{ fontSize: "13px", color: "#a09080", fontWeight: "600" }}>{carac.cle}</span>
-                  <span style={{ fontSize: "13px", color: "#f5f0e8", fontWeight: "600" }}>{carac.valeur}</span>
+                  <span style={{ fontSize: "13px", color: "var(--text-secondary)", fontWeight: "600" }}>{carac.cle}</span>
+                  <span style={{ fontSize: "13px", color: "var(--text-primary)", fontWeight: "600" }}>{carac.valeur}</span>
                 </div>
               ))}
             </div>
@@ -377,7 +377,7 @@ export default function DetailProduit() {
             {/* Quantité */}
             {produit.stock_quantite > 0 && (
               <div style={{ display: "flex", alignItems: "center", gap: "12px", flexDirection: isAr ? "row-reverse" : "row" }}>
-                <span style={{ fontSize: "14px", fontWeight: "600", color: "#a09080" }}>
+                <span style={{ fontSize: "14px", fontWeight: "600", color: "var(--text-secondary)" }}>
                   {t.quantite} :
                 </span>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
@@ -385,25 +385,25 @@ export default function DetailProduit() {
                     onClick={() => setQuantite(q => Math.max(1, q - 1))}
                     style={{
                       width: "36px", height: "36px", borderRadius: "10px",
-                      border: "1.5px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
+                      border: "1.5px solid var(--border-input)", background: "rgba(255,255,255,0.04)",
                       fontSize: "18px", cursor: "pointer", fontWeight: "700",
-                      color: "#d4a854", display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center",
                     }}
                   >−</button>
-                  <span style={{ fontSize: "18px", fontWeight: "800", color: "#f5f0e8", minWidth: "30px", textAlign: "center" }}>
+                  <span style={{ fontSize: "18px", fontWeight: "800", color: "var(--text-primary)", minWidth: "30px", textAlign: "center" }}>
                     {quantite}
                   </span>
                   <button
                     onClick={() => setQuantite(q => Math.min(produit.stock_quantite, q + 1))}
                     style={{
                       width: "36px", height: "36px", borderRadius: "10px",
-                      border: "1.5px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)",
+                      border: "1.5px solid var(--border-input)", background: "rgba(255,255,255,0.04)",
                       fontSize: "18px", cursor: "pointer", fontWeight: "700",
-                      color: "#d4a854", display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center",
                     }}
                   >+</button>
                 </div>
-                <span style={{ fontSize: "14px", color: "#a09080" }}>
+                <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
                   = {(Number(produit.prix) * quantite).toLocaleString("fr-DZ")} DA
                 </span>
               </div>
@@ -418,8 +418,8 @@ export default function DetailProduit() {
               onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
               style={{
                 width: "100%", padding: "14px", borderRadius: "12px", border: "none",
-                background: ajoute ? "#22c55e" : produit.stock_quantite === 0 ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
-                color: produit.stock_quantite === 0 ? "rgba(245,240,232,0.4)" : "#0a0a0a",
+                background: ajoute ? "#22c55e" : produit.stock_quantite === 0 ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                color: produit.stock_quantite === 0 ? "var(--text-muted)" : "#0a0a0a",
                 fontWeight: "700", fontSize: "16px",
                 cursor: produit.stock_quantite === 0 ? "not-allowed" : "pointer",
                 transition: "all 0.2s, transform 0.1s",
@@ -436,12 +436,12 @@ export default function DetailProduit() {
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "8px",
                 padding: "12px", borderRadius: "10px", border: "1.5px solid rgba(212,168,84,0.5)",
-                background: "transparent", color: "#d4a854", fontWeight: "700",
+                background: "transparent", color: "var(--accent)", fontWeight: "700",
                 fontSize: "14px", cursor: "pointer", textDecoration: "none",
                 transition: "all 0.25s ease",
               }}
-              onMouseEnter={(e) => { e.target.style.background = "linear-gradient(135deg, #d4a854, #c49a3c)"; e.target.style.color = "#0a0a0a"; e.target.style.transform = "scale(1.02)"; e.target.style.boxShadow = "0 4px 16px rgba(212,168,84,0.25)"; }}
-              onMouseLeave={(e) => { e.target.style.background = "transparent"; e.target.style.color = "#d4a854"; e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}
+              onMouseEnter={(e) => { e.target.style.background = "linear-gradient(135deg, var(--accent), var(--accent-dark))"; e.target.style.color = "#0a0a0a"; e.target.style.transform = "scale(1.02)"; e.target.style.boxShadow = "0 4px 16px rgba(212,168,84,0.25)"; }}
+              onMouseLeave={(e) => { e.target.style.background = "transparent"; e.target.style.color = "var(--accent)"; e.target.style.transform = "scale(1)"; e.target.style.boxShadow = "none"; }}
             >
               📤 {t.partagerWhatsapp}
             </a>
@@ -455,10 +455,10 @@ export default function DetailProduit() {
             }}>
               <span style={{ fontSize: "20px" }}>🚚</span>
               <div>
-                <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "#d4a854" }}>
+                <p style={{ margin: 0, fontSize: "13px", fontWeight: "700", color: "var(--accent)" }}>
                   {t.livraisonDetail}
                 </p>
-                <p style={{ margin: "2px 0 0", fontSize: "12px", color: "#d4a854" }}>
+                <p style={{ margin: "2px 0 0", fontSize: "12px", color: "var(--accent)" }}>
                   {t.paiementReception}
                 </p>
               </div>
@@ -469,7 +469,7 @@ export default function DetailProduit() {
         {/* AVIS CLIENTS */}
         <div style={{ marginTop: "48px" }}>
           <h2 style={{
-            fontSize: "22px", fontWeight: "800", color: "#f5f0e8", margin: "0 0 4px",
+            fontSize: "22px", fontWeight: "800", color: "var(--text-primary)", margin: "0 0 4px",
             fontFamily: isAr ? "'Amiri', serif" : "'Playfair Display', serif",
           }}>
             {isAr ? "تقييمات العملاء" : "Avis clients"}
@@ -485,11 +485,11 @@ export default function DetailProduit() {
                   display: "flex", alignItems: "center", gap: "10px",
                   marginBottom: "24px", flexDirection: isAr ? "row-reverse" : "row",
                 }}>
-                  <span style={{ fontSize: "28px", color: "#d4a854", letterSpacing: "2px" }}>
+                  <span style={{ fontSize: "28px", color: "var(--accent)", letterSpacing: "2px" }}>
                     {renderEtoiles(Math.round(moyenne))}
                   </span>
-                  <span style={{ fontSize: "20px", fontWeight: "800", color: "#f5f0e8" }}>{moyenne}</span>
-                  <span style={{ fontSize: "14px", color: "#a09080" }}>
+                  <span style={{ fontSize: "20px", fontWeight: "800", color: "var(--text-primary)" }}>{moyenne}</span>
+                  <span style={{ fontSize: "14px", color: "var(--text-secondary)" }}>
                     ({avis.length} {isAr ? "تقييم" : "avis"})
                   </span>
                 </div>
@@ -497,7 +497,7 @@ export default function DetailProduit() {
 
               {/* Liste des avis */}
               {avis.length === 0 && !chargementAvis && (
-                <p style={{ color: "#a09080", fontSize: "14px", marginBottom: "24px" }}>
+                <p style={{ color: "var(--text-secondary)", fontSize: "14px", marginBottom: "24px" }}>
                   {isAr ? "لا توجد تقييمات بعد" : "Aucun avis pour le moment"}
                 </p>
               )}
@@ -510,7 +510,7 @@ export default function DetailProduit() {
                     opacity: 0,
                     transition: "transform 0.25s ease, box-shadow 0.25s ease",
                   }}
-                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.4)"; }}
+                    onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-3px)"; e.currentTarget.style.boxShadow = "0 6px 20px var(--shadow)"; }}
                     onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
                   >
                     <div style={{
@@ -518,17 +518,17 @@ export default function DetailProduit() {
                       marginBottom: "6px", flexDirection: isAr ? "row-reverse" : "row",
                     }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "8px", flexDirection: isAr ? "row-reverse" : "row" }}>
-                        <span style={{ fontWeight: "700", fontSize: "14px", color: "#f5f0e8" }}>{a.nom_utilisateur}</span>
-                        <span style={{ fontSize: "12px", color: "#a09080" }}>
+                        <span style={{ fontWeight: "700", fontSize: "14px", color: "var(--text-primary)" }}>{a.nom_utilisateur}</span>
+                        <span style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
                           {new Date(a.created_at).toLocaleDateString(isAr ? "ar-DZ" : "fr-FR")}
                         </span>
                       </div>
-                      <span style={{ fontSize: "16px", color: "#d4a854", letterSpacing: "1px" }}>
+                      <span style={{ fontSize: "16px", color: "var(--accent)", letterSpacing: "1px" }}>
                         {renderEtoiles(a.note)}
                       </span>
                     </div>
                     {a.commentaire && (
-                      <p style={{ margin: 0, fontSize: "14px", color: "#a09080", lineHeight: "1.6" }}>
+                      <p style={{ margin: 0, fontSize: "14px", color: "var(--text-secondary)", lineHeight: "1.6" }}>
                         {a.commentaire}
                       </p>
                     )}
@@ -542,13 +542,13 @@ export default function DetailProduit() {
                   borderRadius: "12px", padding: "20px",
                 }}>
                   <h3 style={{
-                    margin: "0 0 16px", fontSize: "16px", fontWeight: "700", color: "#f5f0e8",
+                    margin: "0 0 16px", fontSize: "16px", fontWeight: "700", color: "var(--text-primary)",
                     fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
                   }}>
                     {isAr ? "أضف تقييمك" : "Donnez votre avis"}
                   </h3>
                   <div style={{ marginBottom: "12px" }}>
-                    <p style={{ margin: "0 0 6px", fontSize: "13px", fontWeight: "600", color: "#a09080" }}>
+                    <p style={{ margin: "0 0 6px", fontSize: "13px", fontWeight: "600", color: "var(--text-secondary)" }}>
                       {isAr ? "تقييمك" : "Votre note"}
                     </p>
                     <div style={{ display: "flex", gap: "4px" }}>
@@ -557,11 +557,11 @@ export default function DetailProduit() {
                             key={n}
                             onClick={() => setNouvelleNote(n)}
                             style={{
-                              fontSize: "28px", cursor: "pointer", color: n <= nouvelleNote ? "#d4a854" : "rgba(255,255,255,0.1)",
+                              fontSize: "28px", cursor: "pointer", color: n <= nouvelleNote ? "var(--accent)" : "var(--border-input)",
                               transition: "color 0.15s, transform 0.2s", userSelect: "none", display: "inline-block",
                             }}
-                            onMouseEnter={(e) => { e.currentTarget.style.color = "#d4a854"; e.currentTarget.style.transform = "scale(1.25)"; }}
-                            onMouseLeave={(e) => { e.currentTarget.style.color = n <= nouvelleNote ? "#d4a854" : "rgba(255,255,255,0.1)"; e.currentTarget.style.transform = "scale(1)"; }}
+                            onMouseEnter={(e) => { e.currentTarget.style.color = "var(--accent)"; e.currentTarget.style.transform = "scale(1.25)"; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.color = n <= nouvelleNote ? "var(--accent)" : "var(--border-input)"; e.currentTarget.style.transform = "scale(1)"; }}
                         >
                           {n <= nouvelleNote ? "★" : "☆"}
                         </span>
@@ -575,9 +575,9 @@ export default function DetailProduit() {
                     rows={3}
                     style={{
                       width: "100%", padding: "12px", borderRadius: "10px",
-                      border: "1.5px solid rgba(255,255,255,0.1)", fontSize: "14px", fontFamily: "inherit",
+                      border: "1.5px solid var(--border-input)", fontSize: "14px", fontFamily: "inherit",
                       resize: "vertical", marginBottom: "12px", background: "rgba(255,255,255,0.04)",
-                      color: "#f5f0e8", boxSizing: "border-box",
+                      color: "var(--text-primary)", boxSizing: "border-box",
                     }}
                   />
                   <button
@@ -585,8 +585,8 @@ export default function DetailProduit() {
                     disabled={nouvelleNote === 0 || envoiAvis}
                     style={{
                       padding: "12px 24px", borderRadius: "10px", border: "none",
-                      background: nouvelleNote === 0 ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, #d4a854, #c49a3c)",
-                      color: nouvelleNote === 0 ? "rgba(245,240,232,0.4)" : "#0a0a0a",
+                      background: nouvelleNote === 0 ? "rgba(212,168,84,0.2)" : "linear-gradient(135deg, var(--accent), var(--accent-dark))",
+                      color: nouvelleNote === 0 ? "var(--text-muted)" : "#0a0a0a",
                       fontWeight: "700", fontSize: "14px", cursor: nouvelleNote === 0 ? "not-allowed" : "pointer",
                       fontFamily: isAr ? "'Amiri', serif" : "'DM Sans', sans-serif",
                     }}
@@ -595,7 +595,7 @@ export default function DetailProduit() {
                   </button>
                 </div>
               ) : (
-                <p style={{ color: "#a09080", fontSize: "14px", textAlign: "center" }}>
+                <p style={{ color: "var(--text-secondary)", fontSize: "14px", textAlign: "center" }}>
                   {isAr ? "قم بتسجيل الدخول لإضافة تقييم" : "Connectez-vous pour ajouter un avis"}
                 </p>
               )}
