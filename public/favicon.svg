@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4a854"/>
+      <stop offset="100%" stop-color="#c49a3c"/>
+    </linearGradient>
+    <linearGradient id="goldLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e8c97a"/>
+      <stop offset="100%" stop-color="#d4a854"/>
+    </linearGradient>
+  </defs>
+  <!-- Honeycomb hexagon -->
+  <polygon points="100,8 172,50 172,150 100,192 28,150 28,50" fill="none" stroke="url(#gold)" stroke-width="4"/>
+  <!-- Inner hexagon -->
+  <polygon points="100,30 155,60 155,140 100,170 45,140 45,60" fill="none" stroke="url(#goldLight)" stroke-width="1.5" opacity="0.5"/>
+  <!-- Bee body -->
+  <ellipse cx="100" cy="95" rx="22" ry="14" fill="url(#gold)"/>
+  <!-- Bee stripes -->
+  <rect x="89" y="82" width="6" height="26" rx="2" fill="#0a0a0a"/>
+  <rect x="100" y="82" width="6" height="26" rx="2" fill="#0a0a0a"/>
+  <rect x="111" y="82" width="6" height="26" rx="2" fill="#0a0a0a"/>
+  <!-- Wings -->
+  <ellipse cx="85" cy="78" rx="8" ry="5" fill="url(#goldLight)" opacity="0.7" transform="rotate(-20,85,78)"/>
+  <ellipse cx="115" cy="78" rx="8" ry="5" fill="url(#goldLight)" opacity="0.7" transform="rotate(20,115,78)"/>
+  <!-- Head -->
+  <circle cx="100" cy="78" r="6" fill="#0a0a0a"/>
+  <!-- Eyes -->
+  <circle cx="98" cy="77" r="1.5" fill="url(#goldLight)"/>
+  <circle cx="102" cy="77" r="1.5" fill="url(#goldLight)"/>
+  <!-- Letter K subtle -->
+  <text x="100" y="145" text-anchor="middle" font-family="'Playfair Display',serif" font-size="24" font-weight="700" fill="url(#gold)">K</text>
+</svg>
