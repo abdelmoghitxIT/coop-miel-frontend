@@ -6,19 +6,21 @@ const publicDir = path.join(__dirname, '..', 'public');
 const androidRes = path.join(__dirname, '..', 'android', 'app', 'src', 'main', 'res');
 
 async function generate() {
+  // === App Icons (PWA) ===
   const svg = fs.readFileSync(path.join(publicDir, 'logo.svg'), 'utf8');
-  const icons = [
+  const pwaIcons = [
     { file: 'logo192.png', size: 192 },
     { file: 'logo512.png', size: 512 },
     { file: 'apple-touch-icon.png', size: 180 },
   ];
-  for (const { file, size } of icons) {
+  for (const { file, size } of pwaIcons) {
     await sharp(Buffer.from(svg)).resize(size, size).png().toFile(path.join(publicDir, file));
     console.log(`✅ ${file}`);
   }
   fs.copyFileSync(path.join(publicDir, 'logo.svg'), path.join(publicDir, 'favicon.svg'));
   console.log('✅ favicon.svg');
 
+  // === Splash Screens ===
   const splashSvg = fs.readFileSync(path.join(publicDir, 'splash.svg'), 'utf8');
   const splashDirs = [
     { dir: 'drawable', w: 720, h: 1280 },
@@ -33,7 +35,6 @@ async function generate() {
     { dir: 'drawable-land-xxhdpi', w: 540, h: 960 },
     { dir: 'drawable-land-xxxhdpi', w: 720, h: 1280 },
   ];
-
   for (const { dir, w, h } of splashDirs) {
     const dirPath = path.join(androidRes, dir);
     if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
@@ -41,7 +42,25 @@ async function generate() {
     console.log(`✅ ${dir}/splash.png`);
   }
 
-  console.log('\n✔ Done!');
+  // === Android Launcher Icons ===
+  const iconSvg = fs.readFileSync(path.join(publicDir, 'icon-foreground.svg'), 'utf8');
+  const iconSizes = [
+    { dir: 'mipmap-mdpi', size: 48 },
+    { dir: 'mipmap-hdpi', size: 72 },
+    { dir: 'mipmap-xhdpi', size: 96 },
+    { dir: 'mipmap-xxhdpi', size: 144 },
+    { dir: 'mipmap-xxxhdpi', size: 192 },
+  ];
+  for (const { dir, size } of iconSizes) {
+    const dirPath = path.join(androidRes, dir);
+    if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
+    await sharp(Buffer.from(iconSvg)).resize(size, size).png().toFile(path.join(dirPath, 'ic_launcher.png'));
+    await sharp(Buffer.from(iconSvg)).resize(size, size).png().toFile(path.join(dirPath, 'ic_launcher_round.png'));
+    await sharp(Buffer.from(iconSvg)).resize(size, size).png().toFile(path.join(dirPath, 'ic_launcher_foreground.png'));
+    console.log(`✅ ${dir}/*.png`);
+  }
+
+  console.log('\n✔ All assets generated!');
 }
 
 generate().catch(err => { console.error('❌', err.message); process.exit(1); });
