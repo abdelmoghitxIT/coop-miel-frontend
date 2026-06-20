@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280">
+  <rect width="720" height="1280" fill="#0a0a0a"/>
+  <!-- Subtle radial glow -->
+  <circle cx="360" cy="520" r="300" fill="url(#glow)" opacity="0.08"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#d4a854"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4a854"/>
+      <stop offset="100%" stop-color="#c49a3c"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer hexagon -->
+  <polygon points="360,200 480,260 480,460 360,520 240,460 240,260" fill="none" stroke="url(#gold)" stroke-width="3"/>
+  <!-- Inner hexagon -->
+  <polygon points="360,230 455,278 455,442 360,490 265,442 265,278" fill="none" stroke="url(#gold)" stroke-width="1" opacity="0.4"/>
+  <!-- Bee body -->
+  <ellipse cx="360" cy="355" rx="20" ry="12" fill="url(#gold)"/>
+  <!-- Bee stripes -->
+  <rect x="351" y="345" width="5" height="22" rx="2" fill="#0a0a0a"/>
+  <rect x="360" y="345" width="5" height="22" rx="2" fill="#0a0a0a"/>
+  <rect x="369" y="345" width="5" height="22" rx="2" fill="#0a0a0a"/>
+  <!-- Wings -->
+  <ellipse cx="348" cy="340" rx="7" ry="4" fill="url(#gold)" opacity="0.6" transform="rotate(-20,348,340)"/>
+  <ellipse cx="372" cy="340" rx="7" ry="4" fill="url(#gold)" opacity="0.6" transform="rotate(20,372,340)"/>
+  <!-- Head -->
+  <circle cx="360" cy="340" r="5" fill="#0a0a0a"/>
+  <!-- Eyes -->
+  <circle cx="358" cy="339" r="1.2" fill="url(#gold)"/>
+  <circle cx="362" cy="339" r="1.2" fill="url(#gold)"/>
+  <!-- Brand Name -->
+  <text x="360" y="540" text-anchor="middle" font-family="'Playfair Display',serif" font-size="42" font-weight="700" fill="url(#gold)" letter-spacing="2">Nhal Tlemcen</text>
+  <!-- Subtitle -->
+  <text x="360" y="575" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="16" fill="#a09080" letter-spacing="4">COOPÉRATIVE APICOLE</text>
+  <text x="360" y="595" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="14" fill="#a09080" letter-spacing="3">KAWIT</text>
+  <!-- Bottom tagline -->
+  <text x="360" y="700" text-anchor="middle" font-family="'DM Sans',sans-serif" font-size="11" fill="rgba(160,144,128,0.5)" letter-spacing="2">MIEL · POLLEN · CIRE · COFFRETS</text>
+  <!-- Loading dots -->
+  <circle cx="340" cy="780" r="4" fill="#d4a854" opacity="0.3"/>
+  <circle cx="360" cy="780" r="4" fill="#d4a854" opacity="0.6"/>
+  <circle cx="380" cy="780" r="4" fill="#d4a854" opacity="1"/>
+</svg>
